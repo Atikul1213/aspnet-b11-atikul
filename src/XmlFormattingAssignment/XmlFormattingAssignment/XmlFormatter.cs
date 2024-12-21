@@ -44,9 +44,11 @@ namespace XmlFormattingAssignment
                 else
                 {
                     Type? propertyType = property?.PropertyType;
+                    var isArray = propertyType?.IsArray;
+                    Type? elementType = propertyType?.GetElementType();
 
                     var propertyTypeName = propertyType?.Name;
-                    if (propertyType?.IsClass == true && propertyTypeName != "String[]")
+                    if (propertyType?.IsClass == true && isArray == false)
                     {
                         if (propertyType?.IsGenericType == true && value is IEnumerable enumerableValue)
                         {
@@ -79,8 +81,7 @@ namespace XmlFormattingAssignment
                         {
                             foreach (var item in enumerableValue)
                             {
-                                if (propertyTypeName == "String[]")
-                                    xmlBuilder.AppendLine($"\t\t<String>{item}</String>");
+                                xmlBuilder.AppendLine($"\t\t<{elementType?.Name}>{item}</{elementType?.Name}>");
                             }
                         }
 
