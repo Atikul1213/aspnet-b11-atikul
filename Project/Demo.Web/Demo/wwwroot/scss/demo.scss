@@ -1,0 +1,25 @@
+﻿@import "./_another.scss";
+
+$btnColor: blue;
+
+h1{
+    color:red;
+}
+
+.primaryBtn{
+    width: $size;
+}
+
+.secondBtn{
+    width: $size;
+}
+
+div{
+    background-color: red;
+    button{
+        background-color: green;
+        &:hover{
+            background-color:blue;
+        }
+    }
+}
