@@ -7,6 +7,19 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
 
+#region BootStrap Logger
+
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .Build();
+
+Log.Logger = new LoggerConfiguration()
+             .ReadFrom.Configuration(configuration)
+             .CreateBootstrapLogger();
+
+#endregion
+
 try
 {
     Log.Information("Application is starting...");
