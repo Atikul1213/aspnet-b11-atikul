@@ -1,25 +1,25 @@
-﻿h1 {
-  color: red;
+﻿/*
+h1{
+    color:red;
 }
 
-.primaryBtn {
-  width: 300;
+.primaryBtn{
+    width: $size;
 }
 
-.secondBtn {
-  width: 300;
+.secondBtn{
+    width: $size;
 }
 
-div {
-  background-color: red;
-}
-div button {
-  background-color: green;
-}
-div button:hover {
-  background-color: blue;
-}
-
+div{
+    background-color: red;
+    button{
+        background-color: green;
+        &:hover{
+            background-color:blue;
+        }
+    }
+}*/
 /*
 $body-bg: #000;
 $body-bg: #000;
