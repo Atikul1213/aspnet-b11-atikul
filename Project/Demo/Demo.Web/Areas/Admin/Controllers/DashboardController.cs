@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Demo.Areas.Admin.Controllers
+namespace Demo.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class DashboardController : Controller

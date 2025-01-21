@@ -1,4 +1,4 @@
-using Demo.Data;
+using Demo.Web.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Demo.Data.Migrations
+namespace Demo.Web.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {
