@@ -11,12 +11,15 @@ namespace Demo.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
+        public void AddBook(Book book)
+        {
+            _dbContext.Books.Add(book);
+        }
+
         public List<Book> GetLatestBooks()
         {
             var date = DateTime.Now.AddDays(-10);
-
             var books = _dbContext.Books.Where(x => x.PublishDate > date).ToList();
-
             return books;
         }
 
