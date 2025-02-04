@@ -14,9 +14,5 @@ namespace Demo.Infrastructure
         }
         public IBookRepository bookRepository { get; private set; }
         public IAuthorRepository authorRepository { get; private set; }
-        public void Save()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
