@@ -1,5 +1,10 @@
 ﻿using Autofac;
-using Demo.Web.Data;
+using Demo.Domain;
+using Demo.Domain.Repositories;
+using Demo.Domain.Services;
+using Demo.Infrastructure;
+using Demo.Infrastructure.Repositories;
+using Demo.Infrastructure.Services;
 
 namespace Demo.Web
 {
@@ -17,6 +22,18 @@ namespace Demo.Web
             builder.RegisterType<ApplicationDbContext>().AsSelf()
                 .WithParameter("connectionString", _connectionString)
                 .WithParameter("migrationAssembly", _migrationAssembly)
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<ApplicationUnitOfWork>().As<IApplicationUnitOfWork>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<BookRepository>().As<IBookRepository>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<AuthorRepository>().As<IAuthorRepository>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<BookService>().As<IBookService>()
                 .InstancePerLifetimeScope();
 
             base.Load(builder);
