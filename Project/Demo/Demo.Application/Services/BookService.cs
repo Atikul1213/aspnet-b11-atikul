@@ -13,7 +13,7 @@ namespace Demo.Infrastructure.Services
         }
         public void AddBook(Book book)
         {
-            _applicationUnitOfWork.bookRepository.Add(book);
+            _applicationUnitOfWork.BookRepository.Add(book);
         }
     }
 }

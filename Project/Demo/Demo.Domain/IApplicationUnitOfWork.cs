@@ -4,7 +4,7 @@ namespace Demo.Domain
 {
     public interface IApplicationUnitOfWork : IUnitOfWork
     {
-        public IBookRepository bookRepository { get; }
-        public IAuthorRepository authorRepository { get; }
+        public IBookRepository BookRepository { get; }
+        public IAuthorRepository AuthorRepository { get; }
     }
 }

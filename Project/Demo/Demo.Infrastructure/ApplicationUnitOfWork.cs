@@ -9,10 +9,10 @@ namespace Demo.Infrastructure
             IBookRepository bookRepository,
             IAuthorRepository authorRepository) : base(dbContext)
         {
-            bookRepository = bookRepository;
-            authorRepository = authorRepository;
+            BookRepository = bookRepository;
+            AuthorRepository = authorRepository;
         }
-        public IBookRepository bookRepository { get; private set; }
-        public IAuthorRepository authorRepository { get; private set; }
+        public IBookRepository BookRepository { get; private set; }
+        public IAuthorRepository AuthorRepository { get; private set; }
     }
 }
