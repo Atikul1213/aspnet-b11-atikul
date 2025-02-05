@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
-
+using System.Reflection;
 #region BootStrap Logger
 
 var configuration = new ConfigurationBuilder()
@@ -28,14 +28,14 @@ try
 
     // Add services to the container.
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+    var migrationAssembly = Assembly.GetExecutingAssembly();
 
     #region Autofac Configuration
     builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
     builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     {
-        containerBuilder.RegisterModule(new WebModule());
+        containerBuilder.RegisterModule(new WebModule(connectionString, migrationAssembly?.FullName));
     });
-
     #endregion
 
     #region Serilog Configuration
@@ -48,7 +48,7 @@ try
     #endregion
 
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(connectionString));
+        options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly?.FullName)));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
     builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
