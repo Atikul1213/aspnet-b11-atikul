@@ -15,8 +15,8 @@ var configuration = new ConfigurationBuilder()
     .Build();
 
 Log.Logger = new LoggerConfiguration()
-             .ReadFrom.Configuration(configuration)
-             .CreateBootstrapLogger();
+            .ReadFrom.Configuration(configuration)
+            .CreateBootstrapLogger();
 #endregion
 
 
