@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Demo.Application.Services;
 using Demo.Domain;
 using Demo.Domain.Repositories;
 using Demo.Domain.Services;
@@ -34,6 +35,9 @@ namespace Demo.Web
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<BookService>().As<IBookService>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<AuthorService>().As<IAuthorService>()
                 .InstancePerLifetimeScope();
 
             base.Load(builder);

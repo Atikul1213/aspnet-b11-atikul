@@ -1,19 +1,19 @@
 ﻿using Demo.Domain;
 using Demo.Domain.Entities;
 using Demo.Domain.Services;
-namespace Demo.Infrastructure.Services
+
+namespace Demo.Application.Services
 {
-    public class BookService : IBookService
+    public class AuthorService : IAuthorService
     {
         private readonly IApplicationUnitOfWork _applicationUnitOfWork;
-
-        public BookService(IApplicationUnitOfWork applicationUnitOfWork)
+        public AuthorService(IApplicationUnitOfWork applicationUnitOfWork)
         {
             _applicationUnitOfWork = applicationUnitOfWork;
         }
-        public void AddBook(Book book)
+        public void AddAuthor(Author author)
         {
-            _applicationUnitOfWork.BookRepository.Add(book);
+            _applicationUnitOfWork.AuthorRepository.Add(author);
             _applicationUnitOfWork.Save();
         }
     }
