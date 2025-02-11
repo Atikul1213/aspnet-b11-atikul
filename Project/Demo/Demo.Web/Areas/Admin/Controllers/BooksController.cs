@@ -1,6 +1,6 @@
-﻿using Demo.Domain.Entities;
+﻿using Demo.Application.Features.Books.Commands;
 using Demo.Domain.Services;
-using Demo.Web.Areas.Admin.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.Web.Areas.Admin.Controllers
@@ -10,12 +10,15 @@ namespace Demo.Web.Areas.Admin.Controllers
     {
         #region Fields
         private readonly IBookService _bookService;
+        private readonly IMediator _mediator;
         #endregion
 
         #region Ctor
-        public BooksController(IBookService bookService)
+        public BooksController(IBookService bookService,
+            IMediator mediator)
         {
             _bookService = bookService;
+            _mediator = mediator;
         }
         #endregion
 
@@ -27,19 +30,20 @@ namespace Demo.Web.Areas.Admin.Controllers
 
         public IActionResult AddBook()
         {
-            var model = new AddBookModel();
+            var model = new BookAddCommand();
 
             return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult AddBook(AddBookModel model)
+        public async Task<IActionResult> AddBook(BookAddCommand bookAddCommand)
         {
             if (ModelState.IsValid)
             {
-                _bookService.AddBook(new Book { Title = model.Title });
+                await _mediator.Send(bookAddCommand);
             }
-            return View();
+
+            return View(bookAddCommand);
         }
         #endregion
     }
