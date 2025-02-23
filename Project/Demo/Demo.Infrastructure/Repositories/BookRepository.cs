@@ -13,7 +13,7 @@ namespace Demo.Infrastructure.Repositories
 
         public void AddBook(Book book)
         {
-            // _dbContext.Books.Add(book);
+            _dbContext.Books.Add(book);
         }
 
         public List<Book> GetLatestBooks()
