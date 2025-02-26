@@ -13,7 +13,13 @@ namespace Demo.Application.Features.Books.Commands
         }
         public async Task Handle(BookAddCommand request, CancellationToken cancellationToken)
         {
-            await _applicationUnitOfWork.BookRepository.AddAsync(new Book { Title = request.Title });
+            await _applicationUnitOfWork.BookRepository.AddAsync(new Book
+            {
+                Title = request.Title,
+                AuthorId = request.AuthorId
+            });
+
+            await _applicationUnitOfWork.SaveAsync();
         }
     }
 }

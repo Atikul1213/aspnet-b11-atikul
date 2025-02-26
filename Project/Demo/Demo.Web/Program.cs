@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Demo.Application.Features.Books.Commands;
 using Demo.Infrastructure;
 using Demo.Web;
 using Microsoft.AspNetCore.Identity;
@@ -50,7 +51,8 @@ try
     #region MediatR Configuration
     builder.Services.AddMediatR(cfg =>
     {
-        cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+        cfg.RegisterServicesFromAssembly(migrationAssembly);
+        cfg.RegisterServicesFromAssembly(typeof(BookAddCommand).Assembly);
     });
     #endregion
 

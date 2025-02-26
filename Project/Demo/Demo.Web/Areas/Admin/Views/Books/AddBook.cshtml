@@ -1,4 +1,4 @@
-﻿@model AddBookModel
+﻿@model BookAddCommand
 @{
     ViewData["Title"] = "Add Book";
 }
@@ -67,7 +67,7 @@
                 </div>
                 <div class="mb-3">
                 <label asp-for="AuthorId" class="form-label">Author</label>
-                <input type="password" asp-for="AuthorId" class="form-control"/>
+                <input type="text" asp-for="AuthorId" class="form-control"/>
                 </div>
             </div>
             <!--end::Body-->
