@@ -56,9 +56,9 @@ try
     });
     #endregion
 
-    //#region Docker IP Correction
-    //builder.WebHost.UseUrls("http://*:80");              // Must off when run the application in Https or Http
-    //#endregion
+    #region Docker IP Correction
+    builder.WebHost.UseUrls("http://*:80");              // Must off when run the application in Https or Http
+    #endregion
 
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly?.FullName)));
