@@ -37,5 +37,10 @@ namespace Demo.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
+        public IActionResult GetAuthorJsonData()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
