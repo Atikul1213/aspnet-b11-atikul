@@ -16,5 +16,9 @@ namespace Demo.Application.Services
             _applicationUnitOfWork.AuthorRepository.Add(author);
             _applicationUnitOfWork.Save();
         }
+        public (IList<Author> data, int total, int totalDisplay) GetAuthors(int pageIndex, int pageSize, string? order, DataTablesSearch search)
+        {
+            return _applicationUnitOfWork.AuthorRepository.GetPagedAuthors(pageIndex, pageSize, order, search);
+        }
     }
 }

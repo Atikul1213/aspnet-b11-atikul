@@ -40,6 +40,18 @@ namespace Demo.Web.Areas.Admin.Controllers
 
         public JsonResult GetAuthorJsonData(AuthorListModel model)
         {
+            try
+            {
+                var result = _authorService.GetAuthors(model.PageIndex, model.PageSize, FormatSortExpression("Name"), model.Search);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                return EmptyResult;
+            }
+
 
             return Json(model);
         }
