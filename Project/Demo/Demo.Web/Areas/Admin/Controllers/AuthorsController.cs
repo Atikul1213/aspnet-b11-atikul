@@ -10,14 +10,22 @@ namespace Demo.Web.Areas.Admin.Controllers
     [Area("Admin")]
     public class AuthorsController : Controller
     {
+        #region Fields
         private readonly IAuthorService _authorService;
         private readonly ILogger<AuthorsController> _logger;
+        #endregion
+
+        #region Ctor
         public AuthorsController(IAuthorService authorService,
             ILogger<AuthorsController> logger)
         {
             _authorService = authorService;
             _logger = logger;
         }
+
+        #endregion
+
+        #region Index / AddAuthor / GetAuthorJsonData
         public IActionResult Index()
         {
             return View();
@@ -77,5 +85,7 @@ namespace Demo.Web.Areas.Admin.Controllers
             }
 
         }
+
+        #endregion
     }
 }
