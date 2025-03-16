@@ -1,7 +1,9 @@
-﻿using Demo.Domain.Entities;
+﻿using Demo.Domain;
+using Demo.Domain.Entities;
 using Demo.Domain.Services;
 using Demo.Web.Areas.Admin.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Web;
 
 namespace Demo.Web.Areas.Admin.Controllers
 {
@@ -9,9 +11,12 @@ namespace Demo.Web.Areas.Admin.Controllers
     public class AuthorsController : Controller
     {
         private readonly IAuthorService _authorService;
-        public AuthorsController(IAuthorService authorService)
+        private readonly ILogger<AuthorsController> _logger;
+        public AuthorsController(IAuthorService authorService,
+            ILogger<AuthorsController> logger)
         {
             _authorService = authorService;
+            _logger = logger;
         }
         public IActionResult Index()
         {
@@ -30,7 +35,12 @@ namespace Demo.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var author = new Author() { Name = model.Name };
+                var author = new Author()
+                {
+                    Name = model.Name,
+                    Biography = model.Biography,
+                    Rating = model.Rating
+                };
 
                 _authorService.AddAuthor(author);
             }
@@ -42,18 +52,30 @@ namespace Demo.Web.Areas.Admin.Controllers
         {
             try
             {
-                var result = _authorService.GetAuthors(model.PageIndex, model.PageSize, FormatSortExpression("Name"), model.Search);
+                var result = _authorService.GetAuthors(model.PageIndex, model.PageSize, model.FormatSortExpression("Name", "Biography", "Rating", "Id"), model.Search);
 
-                return result;
+                var authors = new
+                {
+                    recordsTotal = result.total,
+                    recordsFiltered = result.totalDisplay,
+                    data = (from record in result.data
+                            select new string[]
+                            {
+                                HttpUtility.HtmlEncode(record.Name),
+                                HttpUtility.HtmlEncode(record.Biography),
+                                record.Rating.ToString(),
+                                record.Id.ToString(),
+                            }).ToArray()
+                };
+
+                return Json(authors);
             }
             catch (Exception ex)
             {
-
-                return EmptyResult;
+                _logger.LogError(ex, "There was an error getting the authors list.");
+                return Json(DataTables.EmptyResult);
             }
 
-
-            return Json(model);
         }
     }
 }
