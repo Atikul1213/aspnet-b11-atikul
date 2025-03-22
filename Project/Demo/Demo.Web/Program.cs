@@ -60,6 +60,10 @@ try
     //builder.WebHost.UseUrls("http://*:80");              // Must off when run the application in Https or Http
     #endregion
 
+    #region AutoMapper Configuration
+    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+    #endregion
+
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly?.FullName)));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();

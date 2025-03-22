@@ -84,9 +84,7 @@ namespace Demo.Web.Areas.Admin.Controllers
                 _logger.LogError(ex, "There was an error getting the authors list.");
                 return Json(DataTables.EmptyResult);
             }
-
         }
-
         #endregion
     }
 }
