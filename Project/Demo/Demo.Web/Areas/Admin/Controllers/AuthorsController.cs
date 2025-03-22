@@ -1,4 +1,5 @@
-﻿using Demo.Domain;
+﻿using AutoMapper;
+using Demo.Domain;
 using Demo.Domain.Entities;
 using Demo.Domain.Services;
 using Demo.Web.Areas.Admin.Models;
@@ -13,14 +14,17 @@ namespace Demo.Web.Areas.Admin.Controllers
         #region Fields
         private readonly IAuthorService _authorService;
         private readonly ILogger<AuthorsController> _logger;
+        private readonly IMapper _mapper;
         #endregion
 
         #region Ctor
         public AuthorsController(IAuthorService authorService,
-            ILogger<AuthorsController> logger)
+            ILogger<AuthorsController> logger,
+            IMapper mapper)
         {
             _authorService = authorService;
             _logger = logger;
+            _mapper = mapper;
         }
 
         #endregion
@@ -43,13 +47,8 @@ namespace Demo.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var author = new Author()
-                {
-                    Name = model.Name,
-                    Biography = model.Biography,
-                    Rating = model.Rating
-                };
-
+                var author = _mapper.Map<Author>(model);
+                author.Id = IdentityGenerator.NewSequentialGuid();
                 _authorService.AddAuthor(author);
             }
 
