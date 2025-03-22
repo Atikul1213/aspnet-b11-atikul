@@ -56,7 +56,8 @@ namespace Demo.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public JsonResult GetAuthorJsonData(AuthorListModel model)
+        [HttpPost]
+        public JsonResult GetAuthorJsonData([FromBody] AuthorListModel model)
         {
             try
             {

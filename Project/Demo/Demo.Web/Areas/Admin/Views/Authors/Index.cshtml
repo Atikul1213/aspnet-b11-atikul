@@ -88,8 +88,14 @@
                 ajax: {
                     url: "/Admin/Authors/GetAuthorJsonData",
                     type: "POST",
-                    // contentType: "application/json", //must be added
-                    // dataType: "json", //better to add, not mandatory
+                    contentType: "application/json", //must be added
+                    dataType: "json", //better to add, not mandatory
+                    data: function(d){
+                        d.SearchItem = {
+
+                        };
+                        return JSON.stringify(d);
+                    }
                 },
                 columnDefs: [
                     {
@@ -105,9 +111,7 @@
                         }
                     }
                 ],
-                dom: '<"row"<"col-sm-12 col-md-6"lB><"col-sm-12 col-md-6"f>><"row"<"col-sm-12"tr>><"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#authors_wrapper .col-md-6:eq(0)');
+        });
         });
     </script>
 }
