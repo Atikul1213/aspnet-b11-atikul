@@ -47,9 +47,16 @@ namespace Demo.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var author = _mapper.Map<Author>(model);
-                author.Id = IdentityGenerator.NewSequentialGuid();
-                _authorService.AddAuthor(author);
+                try
+                {
+                    var author = _mapper.Map<Author>(model);
+                    author.Id = IdentityGenerator.NewSequentialGuid();
+                    _authorService.AddAuthor(author);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to add exception in Author Add");
+                }
             }
 
             return View(model);
