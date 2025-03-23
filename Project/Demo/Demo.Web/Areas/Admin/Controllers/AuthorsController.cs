@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Demo.Application.Exceptions;
 using Demo.Domain;
 using Demo.Domain.Entities;
 using Demo.Domain.Services;
@@ -57,13 +58,19 @@ namespace Demo.Web.Areas.Admin.Controllers
 
                     return RedirectToAction("Index");
                 }
+                catch (DuplicateAuthorNameException dex)
+                {
+                    TempData["error"] = dex.Message;
+                }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Failed to add exception in Author Add");
                     TempData["error"] = "Failed to author create.";
                 }
             }
-            TempData["error"] = "Failed to author create.";
+            else
+                TempData["error"] = "Failed to author create.";
+
             return View(model);
         }
 
