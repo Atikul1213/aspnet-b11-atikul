@@ -52,13 +52,18 @@ namespace Demo.Web.Areas.Admin.Controllers
                     var author = _mapper.Map<Author>(model);
                     author.Id = IdentityGenerator.NewSequentialGuid();
                     _authorService.AddAuthor(author);
+
+                    TempData["success"] = "Author created successfully.";
+
+                    return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Failed to add exception in Author Add");
+                    TempData["error"] = "Failed to author create.";
                 }
             }
-
+            TempData["error"] = "Failed to author create.";
             return View(model);
         }
 
