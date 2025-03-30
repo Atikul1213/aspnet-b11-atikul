@@ -134,7 +134,10 @@
             $("#delete-id").val(id);
             $("#delete-form").attr("action","/admin/authors/delete");
             deleteModel.modal("show");
+        });
 
+        $("#delete-button").click(function(){
+            $("#delete-form").submit();
         });
 
         });

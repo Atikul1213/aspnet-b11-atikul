@@ -22,6 +22,18 @@ public class AuthorService : IAuthorService
         else
             throw new DuplicateAuthorNameException();
     }
+
+    public void DeleteAuthor(Author author)
+    {
+        _applicationUnitOfWork.AuthorRepository.Remove(author.Id);
+        _applicationUnitOfWork.Save();
+    }
+
+    public Author GetAuthorById(Guid id)
+    {
+        return _applicationUnitOfWork.AuthorRepository.GetById(id);
+    }
+
     public (IList<Author> data, int total, int totalDisplay) GetAuthors(int pageIndex, int pageSize, string? order, DataTablesSearch search)
     {
         return _applicationUnitOfWork.AuthorRepository.GetPagedAuthors(pageIndex, pageSize, order, search);

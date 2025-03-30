@@ -77,6 +77,9 @@ namespace Demo.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(Guid id)
         {
+            var author = _authorService.GetAuthorById(id);
+
+            //var model = _mapper.Map<Author>(UpdateAuthorModel);
 
 
             return View();
@@ -93,6 +96,28 @@ namespace Demo.Web.Areas.Admin.Controllers
 
             TempData["error"] = "Author Delete failed.";
             return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Delete(Guid id)
+        {
+            try
+            {
+                var author = _authorService.GetAuthorById(id);
+
+                if (author is not null)
+                {
+                    _authorService.DeleteAuthor(author);
+                    TempData["success"] = "Author Deleted Successfully.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to delete author");
+                TempData["error"] = "Author delete Failed";
+            }
+
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
