@@ -103,7 +103,7 @@ namespace Demo.Web.Areas.Admin.Controllers
                 }
             }
 
-            return View(model);
+            return RedirectToAction("Index");
         }
 
         [HttpPost, ValidateAntiForgeryToken]
