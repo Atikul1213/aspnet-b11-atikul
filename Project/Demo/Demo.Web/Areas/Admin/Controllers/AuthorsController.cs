@@ -74,6 +74,27 @@ namespace Demo.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+
+        public IActionResult Edit(Guid id)
+        {
+
+
+            return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Edit(UpdateAuthorModel model)
+        {
+            if (ModelState.IsValid)
+            {
+
+                TempData["success"] = "Author Deleted Successfully.";
+            }
+
+            TempData["error"] = "Author Delete failed.";
+            return View(model);
+        }
+
         [HttpPost]
         public JsonResult GetAuthorJsonData([FromBody] AuthorListModel model)
         {
