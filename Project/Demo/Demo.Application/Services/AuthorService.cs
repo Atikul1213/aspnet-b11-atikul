@@ -38,4 +38,10 @@ public class AuthorService : IAuthorService
     {
         return _applicationUnitOfWork.AuthorRepository.GetPagedAuthors(pageIndex, pageSize, order, search);
     }
+
+    public void UpdateAuthor(Author author)
+    {
+        _applicationUnitOfWork.AuthorRepository.Update(author);
+        _applicationUnitOfWork.Save();
+    }
 }

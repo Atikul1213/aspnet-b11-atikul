@@ -60,6 +60,11 @@ namespace Demo.Infrastructure.Repositories
             });
         }
 
+        public virtual void Update(TEntity entity)
+        {
+            _dbSet.Update(entity);
+        }
+
         public virtual async Task<TEntity> GetByIdAsync(TKey id)
         {
             return await _dbSet.FindAsync(id);

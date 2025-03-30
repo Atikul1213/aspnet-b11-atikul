@@ -30,7 +30,7 @@ namespace Demo.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Index / AddAuthor / GetAuthorJsonData
+        #region Index / AddAuthor / Edit / Delete / GetAuthorJsonData
         public IActionResult Index()
         {
             return View();
@@ -79,10 +79,9 @@ namespace Demo.Web.Areas.Admin.Controllers
         {
             var author = _authorService.GetAuthorById(id);
 
-            //var model = _mapper.Map<Author>(UpdateAuthorModel);
+            var model = _mapper.Map<UpdateAuthorModel>(author);
 
-
-            return View();
+            return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -90,11 +89,20 @@ namespace Demo.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                try
+                {
+                    var author = _mapper.Map<Author>(model);
+                    _authorService.UpdateAuthor(author);
 
-                TempData["success"] = "Author Deleted Successfully.";
+                    TempData["success"] = "Author Updated Successfully.";
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to update author");
+                    TempData["error"] = "Author update failed.";
+                }
             }
 
-            TempData["error"] = "Author Delete failed.";
             return View(model);
         }
 

@@ -10,6 +10,7 @@ namespace Demo.Domain.Repositories
         void Add(TEntity entity);
         Task AddAsync(TEntity entity);
         void Edit(TEntity entityToUpdate);
+        void Update(TEntity entityToUpdate);
         Task EditAsync(TEntity entityToUpdate);
         IList<TEntity> GetAll();
         Task<IList<TEntity>> GetAllAsync();
