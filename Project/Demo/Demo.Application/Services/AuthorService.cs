@@ -41,7 +41,13 @@ public class AuthorService : IAuthorService
 
     public void UpdateAuthor(Author author)
     {
-        _applicationUnitOfWork.AuthorRepository.Update(author);
-        _applicationUnitOfWork.Save();
+        if (!_applicationUnitOfWork.AuthorRepository.IsNameDuplicate(author.Name, author.Id))
+        {
+            _applicationUnitOfWork.AuthorRepository.Update(author);
+            _applicationUnitOfWork.Save();
+        }
+
+        else
+            throw new DuplicateAuthorNameException();
     }
 }
