@@ -93,10 +93,11 @@ try
 
     app.UseAuthorization();
 
+    #region Area Route Configure
     app.MapControllerRoute(
         name: "areas",
         pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
+    #endregion
 
     app.MapControllerRoute(
         name: "default",
