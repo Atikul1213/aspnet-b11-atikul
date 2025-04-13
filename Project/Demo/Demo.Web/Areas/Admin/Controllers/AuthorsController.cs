@@ -33,13 +33,14 @@ namespace Demo.Web.Areas.Admin.Controllers
         #region Index / AddAuthor / Edit / Delete / GetAuthorJsonData
         public IActionResult Index()
         {
+
             return View();
         }
 
         public IActionResult IndexSP()
         {
-
-            return View();
+            var model = new AuthorListModel();
+            return View(model);
         }
 
         public IActionResult AddAuthor()
@@ -163,6 +164,39 @@ namespace Demo.Web.Areas.Admin.Controllers
                 return Json(DataTables.EmptyResult);
             }
         }
+
+        [HttpPost]
+        public JsonResult GetAuthorJsonDataSP([FromBody] AuthorListModel model)
+        {
+            try
+            {
+                var result = _authorService.GetAuthors(model.PageIndex, model.PageSize, model.FormatSortExpression("Name", "Biography", "Rating", "Id"), model.Search);
+
+                var authors = new
+                {
+                    recordsTotal = result.total,
+                    recordsFiltered = result.totalDisplay,
+                    data = (from record in result.data
+                            select new string[]
+                            {
+                                HttpUtility.HtmlEncode(record.Name),
+                                HttpUtility.HtmlEncode(record.Biography),
+                                record.Rating.ToString(),
+                                record.Id.ToString(),
+                            }).ToArray()
+                };
+
+                return Json(authors);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "There was an error getting the authors list.");
+                return Json(DataTables.EmptyResult);
+            }
+        }
+
+
+
         #endregion
     }
 }
