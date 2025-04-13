@@ -1,0 +1,198 @@
+﻿@model AuthorListModel
+
+@{
+    ViewData["Title"] = "Authors";
+}
+@section Styles
+{
+        <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.min.css">
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Authors Tables</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Authors Tables</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <div class="col-12">
+        <div class="card card-outline card-primary collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-search mr-1"></i>Search Author</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label>Text</label>
+                            <input type="text" asp-for="SearchItem.Name" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label>Text</label>
+                            <input type="text" asp-for="SearchItem.Biography" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label>Rating From</label>
+                            <input type="number" asp-for="SearchItem.RatingFrom" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label>Rating To</label>
+                            <input type="number" asp-for="SearchItem.RatingTo" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <button id="searchButton" type="submit" class="btn btn-primary float-right">Search</button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-12">
+                    <div class="card-header"><h3 class="card-title">Available Authors</h3></div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <partial name="_ModalPartial"/>
+                        <table id="authors-table" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Biography</th>
+                                    <th>Rating</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody> 
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Biography</th>
+                                    <th>Rating</th>
+                                    <th>Action</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+
+            </div>
+
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+
+@section Scripts
+{
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
+        <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+
+        <script>
+            $(function () {
+                $("#authors-table").DataTable({
+                    processing: true,
+                    serverSide: true,
+                    responsive: true,
+                    lengthChange: true,
+                    autoWidth: false,
+                    lengthMenu: [
+                        [10, 25, 50, -1],
+                        [10, 25, 50, 'All']
+                    ],
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
+                    ajax: {
+                        url: "/Admin/Authors/GetAuthorJsonData",
+                        type: "POST",
+                        contentType: "application/json", //must be added
+                        dataType: "json", //better to add, not mandatory
+                        data: function(d){
+                            d.SearchItem = {
+
+                            };
+                            return JSON.stringify(d);
+                        }
+                    },
+                    columnDefs: [
+                        {
+                            orderable: false,
+                            targets: 3,
+                            render: function (data, type, row) {
+                                console.log(type);
+                                return `<button type="submit" class="btn btn-info btn-sm" onclick="window.location.href='/admin/authors/edit/${data}'" value='${data}'>
+                                                    <i class="fas fa-pencil-alt"> </i>  Edit </button>
+
+                                        <button type="submit" class="btn btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
+                                            <i class="fas fa-trash"></i> Delete </button>`;
+                            }
+                        }
+                    ],
+            });
+
+            $("#authors-table").on('click',".show-bs-modal", function(){
+                let id = $(this).data("id");
+                let deleteModel = $("#modal-delete");
+                deleteModel.find(".modal-body p").text("Are your sure, you want to delete this author");
+                $("#delete-id").val(id);
+                $("#delete-form").attr("action","/admin/authors/delete");
+                deleteModel.modal("show");
+            });
+
+            $("#delete-button").click(function(){
+                $("#delete-form").submit();
+            });
+
+            });
+        </script>
+}

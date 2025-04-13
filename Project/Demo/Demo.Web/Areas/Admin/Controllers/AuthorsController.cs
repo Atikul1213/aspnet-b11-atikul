@@ -36,6 +36,12 @@ namespace Demo.Web.Areas.Admin.Controllers
             return View();
         }
 
+        public IActionResult IndexSP()
+        {
+
+            return View();
+        }
+
         public IActionResult AddAuthor()
         {
             var model = new AddAuthorModel();
