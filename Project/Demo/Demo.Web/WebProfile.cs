@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Demo.Domain.Dtos;
 using Demo.Domain.Entities;
 using Demo.Web.Areas.Admin.Models;
 
@@ -10,6 +11,7 @@ namespace Demo.Web
         {
             CreateMap<Author, AddAuthorModel>().ReverseMap();
             CreateMap<Author, UpdateAuthorModel>().ReverseMap();
+            CreateMap<AuthorSearchModel, AuthorSearchDto>().ReverseMap();
         }
     }
 }

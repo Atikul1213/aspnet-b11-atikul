@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Demo.Application.Exceptions;
 using Demo.Domain;
+using Demo.Domain.Dtos;
 using Demo.Domain.Entities;
 using Demo.Domain.Services;
 using Demo.Web.Areas.Admin.Models;
@@ -166,11 +167,12 @@ namespace Demo.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetAuthorJsonDataSP([FromBody] AuthorListModel model)
+        public async Task<JsonResult> GetAuthorJsonDataSP([FromBody] AuthorListModel model)
         {
             try
             {
-                var result = _authorService.GetAuthors(model.PageIndex, model.PageSize, model.FormatSortExpression("Name", "Biography", "Rating", "Id"), model.Search);
+                var authorSearchDto = _mapper.Map<AuthorSearchDto>(model.SearchItem);
+                var result = await _authorService.GetAuthorsSP(model.PageIndex, model.PageSize, model.FormatSortExpression("Name", "Biography", "Rating", "Id"), authorSearchDto);
 
                 var authors = new
                 {

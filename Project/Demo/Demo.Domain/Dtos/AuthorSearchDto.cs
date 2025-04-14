@@ -1,6 +1,6 @@
-﻿namespace Demo.Web.Areas.Admin.Models
+﻿namespace Demo.Domain.Dtos
 {
-    public class AuthorSearchModel
+    public class AuthorSearchDto
     {
         public string Name { get; set; }
         public string Biography { get; set; }
