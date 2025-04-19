@@ -75,6 +75,10 @@ try
     //    .AddEntityFrameworkStores<ApplicationDbContext>();
     builder.Services.AddControllersWithViews();
 
+    #region Razor Configuration
+    builder.Services.AddRazorPages();
+    #endregion
+
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
