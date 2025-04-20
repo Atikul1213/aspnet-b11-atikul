@@ -1,6 +1,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Demo.Application.Features.Books.Commands;
+using Demo.Domain;
 using Demo.Infrastructure;
 using Demo.Infrastructure.Extensions;
 using Demo.Web;
@@ -77,6 +78,10 @@ try
 
     #region Razor Configuration
     builder.Services.AddRazorPages();
+    #endregion
+
+    #region Smtp Configuration
+    builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
     #endregion
 
     var app = builder.Build();
