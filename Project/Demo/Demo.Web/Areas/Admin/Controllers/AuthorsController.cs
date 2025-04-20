@@ -5,12 +5,13 @@ using Demo.Domain.Dtos;
 using Demo.Domain.Entities;
 using Demo.Domain.Services;
 using Demo.Web.Areas.Admin.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Web;
 
 namespace Demo.Web.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"), Authorize(Roles = "Admin, HR")]
     public class AuthorsController : Controller
     {
         #region Fields

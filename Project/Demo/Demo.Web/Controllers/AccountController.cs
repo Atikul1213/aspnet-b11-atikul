@@ -36,7 +36,7 @@ namespace Demo.Web.Controllers
         #region Register Login
 
         [AllowAnonymous]
-        public async Task<IActionResult> Register(string returnUrl = null)
+        public async Task<IActionResult> RegisterAsync(string returnUrl = null)
         {
             var model = new RegisterModel();
 
@@ -48,7 +48,7 @@ namespace Demo.Web.Controllers
 
 
         [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterModel model)
+        public async Task<IActionResult> RegisterAsync(RegisterModel model)
         {
             model.ReturnUrl ??= Url.Content("~/");
             model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -100,7 +100,7 @@ namespace Demo.Web.Controllers
 
 
         [AllowAnonymous]
-        public async Task<IActionResult> Login(string returnUrl = null)
+        public async Task<IActionResult> LoginAsync(string returnUrl = null)
         {
             var model = new LoginModel();
 
@@ -124,7 +124,7 @@ namespace Demo.Web.Controllers
 
 
         [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginModel model)
+        public async Task<IActionResult> LoginAsync(LoginModel model)
         {
             model.ReturnUrl ??= Url.Content("~/");
 
@@ -160,10 +160,14 @@ namespace Demo.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Logout()
+        public async Task<IActionResult> LogoutAsync(string returnUrl = null)
         {
+            await _signInManager.SignOutAsync();
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            return RedirectToAction("Index", "Home");
+            returnUrl ??= Url.Content("~/");
+
+            return LocalRedirect(returnUrl);
         }
 
         #endregion
