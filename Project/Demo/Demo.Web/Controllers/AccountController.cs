@@ -64,6 +64,7 @@ namespace Demo.Web.Controllers
                 user.RegistrationDate = DateTime.UtcNow;
 
                 var result = await _userManager.CreateAsync(user, model.Password);
+                await _userManager.AddToRoleAsync(user, "Author");
 
                 if (result.Succeeded)
                 {
