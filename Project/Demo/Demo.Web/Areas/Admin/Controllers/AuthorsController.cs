@@ -197,9 +197,6 @@ namespace Demo.Web.Areas.Admin.Controllers
                 return Json(DataTables.EmptyResult);
             }
         }
-
-
-
         #endregion
     }
 }

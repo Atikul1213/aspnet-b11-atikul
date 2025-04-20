@@ -171,6 +171,11 @@ namespace Demo.Web.Controllers
             return LocalRedirect(returnUrl);
         }
 
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
         #endregion
 
         #region Utilities
