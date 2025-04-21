@@ -38,7 +38,7 @@ namespace Demo.Web.Controllers
         }
         #endregion
 
-        #region Register Login
+        #region Register Login Logout AccessDenied
 
         [AllowAnonymous]
         public async Task<IActionResult> RegisterAsync(string returnUrl = null)
