@@ -71,6 +71,8 @@ namespace Demo.Web.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 await _userManager.AddToRoleAsync(user, "Author");
 
+                // await _userManager.AddClaimAsync(user, new Claim("create_user", "allowed"));
+
                 if (result.Succeeded)
                 {
                     var userId = await _userManager.GetUserIdAsync(user);

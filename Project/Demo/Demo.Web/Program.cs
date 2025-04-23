@@ -68,6 +68,10 @@ try
     #region Identity Configuration
     builder.Services.AddIdentity();
     #endregion
+
+    #region Authorization Configuration
+    builder.Services.AddPolicy();
+    #endregion
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly?.FullName)));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -102,7 +106,7 @@ try
     app.UseStaticFiles();
 
     app.UseRouting();
-
+    app.UseAuthentication();
     app.UseAuthorization();
 
     #region Area Route Configure

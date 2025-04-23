@@ -116,6 +116,7 @@ namespace Demo.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Policy = "CustomAccess")]
         public IActionResult Delete(Guid id)
         {
             try
