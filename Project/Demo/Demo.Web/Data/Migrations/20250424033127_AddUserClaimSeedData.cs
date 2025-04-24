@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Demo.Web.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddClaimSeedData : Migration
+    public partial class AddUserClaimSeedData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,7 +14,7 @@ namespace Demo.Web.Data.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUserClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "UserId" },
-                values: new object[] { -1, "create_user", "allowed", new Guid("8db2dfb1-3150-4d72-ad44-a4d3a28db1d1") });
+                values: new object[] { 1, "create_user", "allowed", new Guid("8db2dfb1-3150-4d72-ad44-a4d3a28db1d1") });
         }
 
         /// <inheritdoc />
@@ -23,7 +23,7 @@ namespace Demo.Web.Data.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetUserClaims",
                 keyColumn: "Id",
-                keyValue: -1);
+                keyValue: 1);
         }
     }
 }

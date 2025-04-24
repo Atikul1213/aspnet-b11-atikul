@@ -241,7 +241,7 @@ namespace Demo.Web.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = -1,
+                            Id = 1,
                             ClaimType = "create_user",
                             ClaimValue = "allowed",
                             UserId = new Guid("8db2dfb1-3150-4d72-ad44-a4d3a28db1d1")

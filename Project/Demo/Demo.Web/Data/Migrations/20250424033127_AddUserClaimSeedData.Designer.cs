@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demo.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250423170614_AddClaimSeedData")]
-    partial class AddClaimSeedData
+    [Migration("20250424033127_AddUserClaimSeedData")]
+    partial class AddUserClaimSeedData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -244,7 +244,7 @@ namespace Demo.Web.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = -1,
+                            Id = 1,
                             ClaimType = "create_user",
                             ClaimValue = "allowed",
                             UserId = new Guid("8db2dfb1-3150-4d72-ad44-a4d3a28db1d1")
