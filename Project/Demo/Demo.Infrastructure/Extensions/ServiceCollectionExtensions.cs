@@ -1,4 +1,6 @@
 ﻿using Demo.Infrastructure.Identity;
+using Demo.Infrastructure.Identity.Requirement;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -52,8 +54,14 @@ namespace Demo.Infrastructure.Extensions
                     policy.RequireClaim("create_user", "allowed");
                 });
 
+                options.AddPolicy("AgeRestriction", policy =>
+                {
+                    policy.Requirements.Add(new AgeRequirement());
+                });
+
             });
 
+            services.AddSingleton<IAuthorizationHandler, AgeRequirementHandler>();
         }
     }
 }

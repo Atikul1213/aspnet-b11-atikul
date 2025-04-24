@@ -7,5 +7,6 @@ namespace Demo.Infrastructure.Identity
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public DateTime? RegistrationDate { get; set; }
+        public DateTime DateOfBirth { get; set; }
     }
 }
