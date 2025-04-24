@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 
@@ -47,6 +48,7 @@ namespace Demo.Web.Controllers
 
             model.ReturnUrl = returnUrl;
             model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            model.DateOfBirth = DateTime.UtcNow;
 
             return View(model);
         }
@@ -70,6 +72,10 @@ namespace Demo.Web.Controllers
 
                 var result = await _userManager.CreateAsync(user, model.Password);
                 await _userManager.AddToRoleAsync(user, "Author");
+
+                var age = DateTime.UtcNow.Subtract(model.DateOfBirth).Days / 365;
+
+                await _userManager.AddClaimAsync(user, new Claim("age", age.ToString()));
 
                 // await _userManager.AddClaimAsync(user, new Claim("create_user", "allowed"));
 

@@ -27,5 +27,7 @@ namespace Demo.Web.Models
         public string ConfirmPassword { get; set; }
         public string? ReturnUrl { get; set; }
         public IList<AuthenticationScheme>? ExternalLogins { get; set; }
+        [Required]
+        public DateTime DateOfBirth { get; set; }
     }
 }

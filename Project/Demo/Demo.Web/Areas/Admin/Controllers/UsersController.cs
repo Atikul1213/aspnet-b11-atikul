@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Demo.Web.Areas.Admin.Controllers
 {
     [Area("Admin"), Authorize(Roles = "Admin")]
-    [Authorize(Policy = "UserAddPermission")]
+    //[Authorize(Policy = "UserAddPermission")]
     public class UsersController : Controller
     {
         #region  Fields

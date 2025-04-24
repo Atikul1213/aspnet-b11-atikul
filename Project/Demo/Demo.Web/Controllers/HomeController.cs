@@ -1,4 +1,5 @@
 using Demo.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -22,6 +23,13 @@ namespace Demo.Web.Controllers
         {
             return View();
         }
+
+        [Authorize(Policy = "AgeRestriction")]
+        public IActionResult AgeTest()
+        {
+            return View();
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -1,7 +1,6 @@
-﻿using Demo.Infrastructure.Identity.Requirement;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Demo.Infrastructure.Extensions
+namespace Demo.Infrastructure.Identity.Requirement
 {
     public class AgeRequirementHandler : AuthorizationHandler<AgeRequirement>
     {
