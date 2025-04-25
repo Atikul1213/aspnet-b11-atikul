@@ -1,12 +1,10 @@
 ﻿using Assignment_2.Models;
-using System.ComponentModel.DataAnnotations;
 
 namespace Assignment_2.Model
 {
-    public class Course
+    public class Course : TEntity<Guid>
     {
-        [Key]
-        public Guid GuidId { get; set; }
+        public Guid Id { get; set; }
         public string Title { get; set; }
         public Instructor Teacher { get; set; }
         public List<Topic> Topics { get; set; }

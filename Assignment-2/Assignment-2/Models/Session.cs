@@ -1,11 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Assignment_2.Models
+﻿namespace Assignment_2.Models
 {
-    public class Session
+    public class Session : TEntity<Guid>
     {
-        [Key]
-        public Guid GuidId { get; set; }
+        public Guid Id { get; set; }
         public int DurationInHour { get; set; }
         public string LearningObjective { get; set; }
 

@@ -1,11 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Assignment_2.Models
+﻿namespace Assignment_2.Models
 {
-    public class Address
+    public class Address : TEntity<Guid>
     {
-        [Key]
-        public Guid GuidId { get; set; }
+        public Guid Id { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
