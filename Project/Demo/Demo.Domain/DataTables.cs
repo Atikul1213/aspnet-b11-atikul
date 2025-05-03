@@ -2,7 +2,7 @@
 
 namespace Demo.Domain
 {
-    public abstract class DataTables
+    public abstract class DataTables : IDataTable
     {
         public int Start { get; set; }
         public int Length { get; set; }

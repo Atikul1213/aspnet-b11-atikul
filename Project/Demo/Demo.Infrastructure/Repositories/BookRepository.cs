@@ -1,5 +1,7 @@
 ﻿using Demo.Domain.Entities;
+using Demo.Domain.Features.Books.Queries;
 using Demo.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Demo.Infrastructure.Repositories
 {
@@ -23,5 +25,12 @@ namespace Demo.Infrastructure.Repositories
             return books;
         }
 
+        public async Task<(IList<Book>, int, int)> GetPagedBooksAsync(IGetBooksQuery request)
+        {
+            return await GetDynamicAsync(
+                x => x.Title.Contains(request.Search.Value) || x.Author.Name.Contains(request.Search.Value),
+                request.FormatSortExpression("Title", "AuthorName", "Price", "PublishDate"),
+                y => y.Include(z => z.Author), request.PageIndex, request.PageSize, true);
+        }
     }
 }

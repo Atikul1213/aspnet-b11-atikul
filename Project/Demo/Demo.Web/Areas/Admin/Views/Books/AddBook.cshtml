@@ -29,21 +29,6 @@
     <!--begin::Row-->
     <div class="row g-4">
         <!--begin::Col-->
-        <div class="col-12">
-        <div class="callout callout-info">
-            For detailed documentation of Form visit
-            <a
-            href="https://getbootstrap.com/docs/5.3/forms/overview/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="callout-link"
-            >
-            Bootstrap Form
-            </a>
-        </div>
-        </div>
-        <!--end::Col-->
-        <!--begin::Col-->
         <div class="col-md-6">
         <!--begin::Quick Example-->
         <div class="card card-primary card-outline mb-4">
@@ -88,4 +73,9 @@
     <!--end::Container-->
 </div>
 <!--end::App Content-->
-    
+
+@section Scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

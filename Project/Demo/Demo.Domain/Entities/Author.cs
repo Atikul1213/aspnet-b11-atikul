@@ -6,5 +6,6 @@
         public string Name { get; set; }
         public string Biography { get; set; }
         public double Rating { get; set; }
+        public IList<Book> Books { get; set; }
     }
 }
