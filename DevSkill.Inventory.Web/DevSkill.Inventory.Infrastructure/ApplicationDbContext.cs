@@ -1,6 +1,9 @@
-﻿namespace DevSkill.Inventory.Infrastructure
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace DevSkill.Inventory.Infrastructure
 {
-    public class ApplicationDbContext
+    public class ApplicationDbContext : DbContext
     {
+
     }
 }
