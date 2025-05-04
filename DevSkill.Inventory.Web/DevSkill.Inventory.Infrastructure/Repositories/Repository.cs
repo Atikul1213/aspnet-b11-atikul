@@ -1,6 +1,7 @@
 ﻿using DevSkill.Inventory.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 
 namespace DevSkill.Inventory.Infrastructure.Repositories
