@@ -8,7 +8,6 @@ using Serilog;
 using Serilog.Events;
 
 #region BootStrap Logger
-
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
@@ -17,7 +16,6 @@ var configuration = new ConfigurationBuilder()
 Log.Logger = new LoggerConfiguration()
              .ReadFrom.Configuration(configuration)
              .CreateBootstrapLogger();
-
 #endregion
 
 try
@@ -30,15 +28,12 @@ try
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
     #region Autofac Configuration
-
     builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
     builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     {
         containerBuilder.RegisterModule(new WebModule());
     });
-
     #endregion
-
 
     #region Serilog configure
     builder.Host.UseSerilog((context, lc) => lc
