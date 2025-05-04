@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevSkill.Inventory.Web", "D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevSkill.Inventory.Domain", "..\DevSkill.Inventory.Domain\DevSkill.Inventory.Domain.csproj", "{18DCA78A-F537-4B6B-89AF-B5D3D062FF9C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevSkill.Inventory.Application", "..\DevSkill.Inventory.Application\DevSkill.Inventory.Application.csproj", "{43D98935-0776-4185-8E32-A8E4A3D3670D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevSkill.Inventory.Infrastructure", "..\DevSkill.Inventory.Infrastructure\DevSkill.Inventory.Infrastructure.csproj", "{857B414E-5BA5-4C3E-AEAA-9DB9663AEECC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +25,19 @@ Global
 		{18DCA78A-F537-4B6B-89AF-B5D3D062FF9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18DCA78A-F537-4B6B-89AF-B5D3D062FF9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18DCA78A-F537-4B6B-89AF-B5D3D062FF9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43D98935-0776-4185-8E32-A8E4A3D3670D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43D98935-0776-4185-8E32-A8E4A3D3670D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43D98935-0776-4185-8E32-A8E4A3D3670D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43D98935-0776-4185-8E32-A8E4A3D3670D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{857B414E-5BA5-4C3E-AEAA-9DB9663AEECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{857B414E-5BA5-4C3E-AEAA-9DB9663AEECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{857B414E-5BA5-4C3E-AEAA-9DB9663AEECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{857B414E-5BA5-4C3E-AEAA-9DB9663AEECC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8EFE9C30-79CC-479F-8C66-868DA4B867BF}
 	EndGlobalSection
 EndGlobal
