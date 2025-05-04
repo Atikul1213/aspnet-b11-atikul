@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.Moq;
+using Demo.Application.Exceptions;
 using Demo.Application.Services;
 using Demo.Domain;
 using Demo.Domain.Entities;
@@ -48,6 +49,7 @@ namespace Demo.ApplicationTests
         [Test]
         public async Task AddAuthor_UniqueName_AddsAuthor()
         {
+            // Arrange
             Author author = new Author()
             {
                 Name = "Test Author",
@@ -61,8 +63,10 @@ namespace Demo.ApplicationTests
             _authorRepositoryMock.Setup(x => x.Add(author)).Verifiable();
             _applicationUnitOfWorkMock.Setup(x => x.Save()).Verifiable();
 
+            // Act
             _authorService.AddAuthor(author);
 
+            // Assert
             this.ShouldSatisfyAllConditions(
                 _applicationUnitOfWorkMock.VerifyAll,
                 _authorRepositoryMock.VerifyAll
@@ -70,10 +74,27 @@ namespace Demo.ApplicationTests
         }
 
 
-
         [Test]
         public void AddAuthor_DuplicateName_ThrowsException()
         {
+            // Arrange
+            Author author = new Author()
+            {
+                Name = "Test Author",
+                Biography = "I am a test author.",
+                Rating = 3.4
+            };
+
+            _applicationUnitOfWorkMock.SetupGet(x => x.AuthorRepository)
+                .Returns(_authorRepositoryMock.Object);
+
+            _authorRepositoryMock.Setup(x => x.IsNameDuplicate(author.Name, null))
+                .Returns(true).Verifiable();
+
+            // Act & Assert
+            Should.Throw<DuplicateAuthorNameException>(
+                () => _authorService.AddAuthor(author)
+                );
         }
     }
 }
