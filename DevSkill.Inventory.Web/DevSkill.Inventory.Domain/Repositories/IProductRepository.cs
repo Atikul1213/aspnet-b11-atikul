@@ -1,6 +1,9 @@
-﻿namespace DevSkill.Inventory.Domain.Repositories
+﻿using DevSkill.Inventory.Domain.Entities;
+using DevSkill.Inventory.Infrastructure.Repositories;
+
+namespace DevSkill.Inventory.Domain.Repositories
 {
-    public interface IProductRepository
+    public interface IProductRepository : IRepository<Product, Guid>
     {
     }
 }
