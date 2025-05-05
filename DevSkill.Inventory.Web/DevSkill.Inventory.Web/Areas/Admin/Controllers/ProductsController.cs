@@ -33,7 +33,10 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Create(AddProductModel mode)
         {
+            if (ModelState.IsValid)
+            {
 
+            }
 
             return View(mode);
         }
