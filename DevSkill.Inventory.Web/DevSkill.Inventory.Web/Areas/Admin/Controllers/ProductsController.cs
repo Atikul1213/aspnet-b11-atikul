@@ -1,4 +1,5 @@
-﻿using DevSkill.Inventory.Web.Areas.Admin.Models;
+﻿using DevSkill.Inventory.Domain.Services;
+using DevSkill.Inventory.Web.Areas.Admin.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
@@ -7,13 +8,13 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
     public class ProductsController : Controller
     {
         #region Fields
-
+        private readonly IProductService _productService;
         #endregion
 
         #region Ctor
-        public ProductsController()
+        public ProductsController(IProductService productService)
         {
-
+            _productService = productService;
         }
         #endregion
 

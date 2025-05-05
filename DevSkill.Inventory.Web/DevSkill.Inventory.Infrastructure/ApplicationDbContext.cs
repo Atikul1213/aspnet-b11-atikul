@@ -1,18 +1,18 @@
 ﻿using DevSkill.Inventory.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevSkill.Inventory.Infrastructure
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         private readonly string _connectionString;
         private readonly string _migrationAssembly;
-        public ApplicationDbContext(string connectionString, string MigrationAssembly)
+        public ApplicationDbContext(string connectionString, string migrationAssembly)
         {
             _connectionString = connectionString;
-            _migrationAssembly = MigrationAssembly;
+            _migrationAssembly = migrationAssembly;
         }
-
         public DbSet<Product> Products { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
