@@ -1,6 +1,6 @@
 ﻿using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
-using DevSkill.Inventory.Web.Areas.Admin.Models;
+using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -58,8 +58,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         [HttpPost]
-        public IActionResult GetProductJsonData()
+        public IActionResult GetProductJsonData([FromBody] ProductListModel model)
         {
+
             return Json(true);
         }
         #endregion
