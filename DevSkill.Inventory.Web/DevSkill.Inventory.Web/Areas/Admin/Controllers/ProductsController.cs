@@ -1,4 +1,5 @@
-﻿using DevSkill.Inventory.Domain.Services;
+﻿using DevSkill.Inventory.Domain.Entities;
+using DevSkill.Inventory.Domain.Services;
 using DevSkill.Inventory.Web.Areas.Admin.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,14 +33,23 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Create(AddProductModel mode)
+        public async Task<IActionResult> Create(AddProductModel model)
         {
             if (ModelState.IsValid)
             {
+                var product = new Product()
+                {
+                    Name = model.Name,
+                    Price = model.Price,
+                    Quantity = model.Quantity,
+                    IsAvailable = model.IsAvailable,
+                    CreateOnUtc = DateTime.UtcNow
+                };
 
+                await _productService.AddProductAsync(product);
             }
 
-            return View(mode);
+            return View(model);
         }
         #endregion
     }

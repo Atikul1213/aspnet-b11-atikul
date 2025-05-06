@@ -1,6 +1,5 @@
 ﻿@model AddProductModel
 
-
 <!--begin::App Content Header-->
 <div class="app-content-header">
     <!--begin::Container-->
@@ -38,23 +37,23 @@
                         <!--begin::Body-->
                         <div class="card-body">
                             <div class="mb-3">
-                                <label for="Name" class="form-label">Product Name</label>
-                                <input type="text" class="form-control" id="Name" aria-describedby="emailHelp" />
-                                <div id="emailHelp" class="form-text">
+                                <label asp-for="Name" class="form-label">Product Name</label>
+                                <input type="text" class="form-control" asp-for="Name" id="Name" aria-describedby="titleHelp" />
+                                <div id="titleHelp" class="form-text">
                                     Provide a friendly name
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="Price" class="form-label">Price</label>
-                                <input type="number" class="form-control" id="Price" />
+                                <label asp-for="Price" class="form-label">Price</label>
+                                <input type="number"  class="form-control" asp-for="Price" id="Price" />
                             </div> 
                             <div class="mb-3">
-                                <label for="Quantity" class="form-label">Quantity</label>
-                                <input type="number" class="form-control" id="Quantity" />
+                                <label asp-for="Quantity" class="form-label">Quantity</label>
+                                <input type="number" class="form-control" asp-for="Quantity" id="Quantity" />
                             </div>
                             <div class="mb-3">
-                                <label for="IsAvailable" class="form-check-label">IsAvailable</label>
-                                <input type="checkbox" class="form-check-input" id="IsAvailable" />
+                                <label asp-for="IsAvailable" class="form-check-label">IsAvailable</label>
+                                <input type="checkbox" class="form-check-input" asp-for="IsAvailable" id="IsAvailable" />
                             </div>
                             
                         </div>
