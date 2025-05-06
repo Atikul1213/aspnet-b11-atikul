@@ -2,7 +2,7 @@
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Models.Products
 {
-    public class ProductListModel : DataTable
+    public class ProductListModel : DataTables
     {
         public ProductSearchModel SearchItem { get; set; }
     }

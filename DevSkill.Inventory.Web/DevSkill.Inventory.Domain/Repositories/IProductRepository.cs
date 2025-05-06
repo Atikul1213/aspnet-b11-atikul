@@ -5,5 +5,6 @@ namespace DevSkill.Inventory.Domain.Repositories
 {
     public interface IProductRepository : IRepository<Product, Guid>
     {
+        Task<(IList<Product> data, int total, int totalDisplay)> GetPagedProductAsync(int pageIndex, int pageSize, string? order, DataTablesSearch search);
     }
 }

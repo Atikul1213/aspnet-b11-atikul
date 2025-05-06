@@ -1,8 +1,10 @@
-﻿using DevSkill.Inventory.Domain.Entities;
+﻿using DevSkill.Inventory.Domain;
+using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Web;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 {
@@ -12,11 +14,13 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         #region Fields
         private readonly IProductService _productService;
         private readonly IMediator _mediator;
+        private readonly ILogger<ProductsController> _logger;
         #endregion
 
         #region Ctor
         public ProductsController(IProductService productService,
-            IMediator mediator)
+            IMediator mediator,
+            ILogger<ProductsController> logger)
         {
             _productService = productService;
             _mediator = mediator;
@@ -58,10 +62,36 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         [HttpPost]
-        public IActionResult GetProductJsonData([FromBody] ProductListModel model)
+        public async Task<IActionResult> GetProductJsonData([FromBody] ProductListModel model)
         {
+            try
+            {
+                var result = await _productService.GetAllProductsAsync(model.PageIndex, model.PageSize, model.FormatSortExpression("Name", "Id"), model.Search);
 
-            return Json(true);
+                var products = new
+                {
+                    recordsTotal = result.total,
+                    recordsFiltered = result.totalDisplay,
+                    data = (from record in result.data
+                            select new string[]
+                            {
+                                HttpUtility.HtmlEncode(record.Name),
+                                record.Price.ToString("C"),
+                                record.Quantity.ToString(),
+                                record.IsAvailable ? "True" : "False",
+                                record.CreateOnUtc.ToString("dd/MM/yyyy"),
+                                record.Id.ToString()
+                            }).ToArray()
+                };
+
+                return Json(products);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "There was an error while getting product data");
+
+                return Json(DataTables.EmptyResult);
+            }
         }
         #endregion
     }

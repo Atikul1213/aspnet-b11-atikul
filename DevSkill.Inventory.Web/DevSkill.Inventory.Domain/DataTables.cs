@@ -2,7 +2,7 @@
 
 namespace DevSkill.Inventory.Domain
 {
-    public abstract class DataTable : IDataTable
+    public abstract class DataTables : IDataTable
     {
         public int Start { get; set; }
         public int Length { get; set; }

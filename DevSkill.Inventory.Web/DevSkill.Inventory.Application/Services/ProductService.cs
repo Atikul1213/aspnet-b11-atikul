@@ -16,5 +16,10 @@ namespace DevSkill.Inventory.Application.Services
             await _applicationUnitOfWork.ProductRepository.AddAsync(product);
             await _applicationUnitOfWork.SaveAsync();
         }
+
+        public async Task<(IList<Product> data, int total, int totalDisplay)> GetAllProductsAsync(int pageIndex, int pageSize, string? order, DataTablesSearch search)
+        {
+            return await _applicationUnitOfWork.ProductRepository.GetPagedProductAsync(pageIndex, pageSize, order, search);
+        }
     }
 }
