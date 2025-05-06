@@ -41,40 +41,26 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
                                     <th>Age</th>
-                                    <th>Start date</th>
-                                    <th>Salary</th>
+                                    <th>IsAvailable</th>
+                                    <th>CreateOnUtc</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Tiger Nixon</td>
-                                    <td>System Architect</td>
-                                    <td>Edinburgh</td>
-                                    <td>61</td>
-                                    <td>2011-04-25</td>
-                                    <td>$320,800</td>
-                                </tr>
-                                <tr>
-                                    <td>Garrett Winters</td>
-                                    <td>Accountant</td>
-                                    <td>Tokyo</td>
-                                    <td>63</td>
-                                    <td>2011-07-25</td>
-                                    <td>$170,750</td>
-                                </tr>
                                 
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
                                     <th>Age</th>
-                                    <th>Start date</th>
-                                    <th>Salary</th>
+                                    <th>IsAvailable</th>
+                                    <th>CreateOnUtc</th>
+                                    <th>Actions</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -96,7 +82,56 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
 
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+
     <script>
-       let table = new DataTable("#product-table");
+       $(function(){
+            $("#product-table").DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: false,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ],
+                dom: `Bfrtip`,
+                buttons: [
+                     'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
+
+                ajax: {
+                     url: '@Url.Action("GetProductJsonData", "Products")',
+                     type: 'POST',
+                     contentType: "application/json",
+                     datatype: 'json',
+                     data: function (d) {
+                         d.SearchItem = {
+
+                         };
+                         return JSON.stringify(d);
+                     }
+                },
+                columnDefs: [
+                    {
+                        orderable: false,
+                        targets: 6,
+                        render: function(data, type, row){
+                               return `<button type="submit" class="btn btn-info btn-sm" onclick="window.location.href='/admin/Products/edit/${data}'" value='${data}'>
+                                                 <i class="fas fa-pencil-alt"> </i>  Edit </button>
+
+                                     <button type="submit" class="btn btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
+                                         <i class="fas fa-trash"></i> Delete </button>`;
+                        }
+                    }
+                ],
+            });
+       });
     </script>
 }

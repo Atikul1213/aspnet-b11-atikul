@@ -55,6 +55,13 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
+
+        [HttpPost]
+        public IActionResult GetProductJsonData()
+        {
+            return Json(true);
+        }
         #endregion
     }
 }
