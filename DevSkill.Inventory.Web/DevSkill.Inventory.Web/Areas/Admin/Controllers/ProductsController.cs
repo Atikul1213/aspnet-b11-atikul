@@ -1,6 +1,7 @@
 ﻿using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
 using DevSkill.Inventory.Web.Areas.Admin.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
@@ -10,12 +11,15 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
     {
         #region Fields
         private readonly IProductService _productService;
+        private readonly IMediator _mediator;
         #endregion
 
         #region Ctor
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductService productService,
+            IMediator mediator)
         {
             _productService = productService;
+            _mediator = mediator;
         }
         #endregion
 
