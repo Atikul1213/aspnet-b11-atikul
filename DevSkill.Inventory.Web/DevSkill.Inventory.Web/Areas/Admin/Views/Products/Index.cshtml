@@ -41,6 +41,7 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>Sku</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
                                     <th>IsAvailable</th>
@@ -54,6 +55,7 @@
                             <tfoot>
                                 <tr>
                                     <th>Name</th>
+                                    <th>Sku</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
                                     <th>IsAvailable</th>
@@ -119,7 +121,7 @@
                 columnDefs: [
                     {
                         orderable: false,
-                        targets: 5,
+                        targets: 6,
                         render: function(data, type, row){
                                return `<button type="submit" class="btn btn-info btn-sm" onclick="window.location.href='/admin/Products/edit/${data}'" value='${data}'>
                                                  <i class="fas fa-pencil-alt"> </i>  Edit </button>

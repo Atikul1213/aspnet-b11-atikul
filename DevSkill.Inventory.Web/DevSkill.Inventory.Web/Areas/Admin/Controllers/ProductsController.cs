@@ -92,6 +92,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                             select new string[]
                             {
                                 HttpUtility.HtmlEncode(record.Name),
+                                HttpUtility.HtmlEncode(record.Sku),
                                 record.Price.ToString("C"),
                                 record.Quantity.ToString(),
                                 record.IsAvailable ? "True" : "False",
