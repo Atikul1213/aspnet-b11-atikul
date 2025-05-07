@@ -50,10 +50,21 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var product = _mapper.Map<Product>(model);
-                product.CreateOnUtc = DateTime.UtcNow;
+                try
+                {
+                    var product = _mapper.Map<Product>(model);
+                    product.CreateOnUtc = DateTime.UtcNow;
 
-                await _productService.AddProductAsync(product);
+                    await _productService.AddProductAsync(product);
+
+                    TempData["success"] = "Product created successfully";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    TempData["error"] = "Failed to create product";
+                    _logger.LogError(ex, "There was an error while creating product");
+                }
             }
 
             return View(model);

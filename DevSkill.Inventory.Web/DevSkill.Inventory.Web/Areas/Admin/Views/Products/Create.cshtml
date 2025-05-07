@@ -1,5 +1,8 @@
-﻿@using DevSkill.Inventory.Web.Areas.Admin.Models.Products
-@model AddProductModel
+﻿@model AddProductModel
+
+@{
+    ViewData["Title"] = "Add Product";
+}
 
 <!--begin::App Content Header-->
 <div class="app-content-header">
@@ -77,3 +80,9 @@
     <!--end::Container-->
 </div>
 <!--end::App Content-->
+
+@section Scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}
