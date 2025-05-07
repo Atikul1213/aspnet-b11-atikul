@@ -18,5 +18,15 @@ namespace DevSkill.Inventory.Infrastructure.Repositories
             else
                 return await GetDynamicAsync(x => x.Name.Contains(search.Value), order, null, pageIndex, pageSize, true);
         }
+
+        public async Task<bool> CheckSkuDuplicateAsync(string sku, Guid? id = null)
+        {
+            if (id.HasValue)
+            {
+                return await GetCountAsync(x => x.Id != id && x.Sku == sku) > 0;
+            }
+
+            return await GetCountAsync(x => x.Sku == sku) > 0;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DevSkill.Inventory.Application.Exceptions;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
@@ -59,6 +60,11 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                     TempData["success"] = "Product created successfully";
                     return RedirectToAction("Index");
+                }
+                catch (DuplicateProductSkuException dex)
+                {
+                    _logger.LogError(dex, "Product SKU already exists");
+                    TempData["error"] = dex.Message;
                 }
                 catch (Exception ex)
                 {

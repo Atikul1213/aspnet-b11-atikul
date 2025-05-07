@@ -1,4 +1,5 @@
-﻿using DevSkill.Inventory.Domain;
+﻿using DevSkill.Inventory.Application.Exceptions;
+using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
 
@@ -13,8 +14,15 @@ namespace DevSkill.Inventory.Application.Services
         }
         public async Task AddProductAsync(Product product)
         {
-            await _applicationUnitOfWork.ProductRepository.AddAsync(product);
-            await _applicationUnitOfWork.SaveAsync();
+            if (!await _applicationUnitOfWork.ProductRepository.CheckSkuDuplicateAsync(product.Sku))
+            {
+                await _applicationUnitOfWork.ProductRepository.AddAsync(product);
+                await _applicationUnitOfWork.SaveAsync();
+            }
+            else
+            {
+                throw new DuplicateProductSkuException();
+            }
         }
 
         public async Task<(IList<Product> data, int total, int totalDisplay)> GetAllProductsAsync(int pageIndex, int pageSize, string? order, DataTablesSearch search)
