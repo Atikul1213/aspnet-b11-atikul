@@ -1,4 +1,5 @@
-﻿using DevSkill.Inventory.Domain;
+﻿using AutoMapper;
+using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
@@ -15,15 +16,19 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         private readonly IProductService _productService;
         private readonly IMediator _mediator;
         private readonly ILogger<ProductsController> _logger;
+        private readonly IMapper _mapper;
         #endregion
 
         #region Ctor
         public ProductsController(IProductService productService,
             IMediator mediator,
-            ILogger<ProductsController> logger)
+            ILogger<ProductsController> logger,
+            IMapper mapper)
         {
             _productService = productService;
             _mediator = mediator;
+            _logger = logger;
+            _mapper = mapper;
         }
         #endregion
 
@@ -45,14 +50,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var product = new Product()
-                {
-                    Name = model.Name,
-                    Price = model.Price,
-                    Quantity = model.Quantity,
-                    IsAvailable = model.IsAvailable,
-                    CreateOnUtc = DateTime.UtcNow
-                };
+                var product = _mapper.Map<Product>(model);
+                product.CreateOnUtc = DateTime.UtcNow;
 
                 await _productService.AddProductAsync(product);
             }
