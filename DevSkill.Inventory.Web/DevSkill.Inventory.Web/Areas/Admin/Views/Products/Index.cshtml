@@ -133,6 +133,21 @@
                     }
                 ],
             });
+
+        $("#product-table").on('click', '.show-bs-modal', function(){
+              let id = $(this).data("id");
+              let deleteModel = $("#modal-delete");
+
+              deleteModel.find('.modal-body p').text('Are you sure you want to delete the product');
+              $("#delete-id").val(id);
+              $("#delete-form").attr('action', '/admin/products/delete');
+              deleteModel.modal('show');
+        });
+
+         $("#delete-button").click(function(){
+              $("#delete-form").submit();
+         });
+
        });
     </script>
 }

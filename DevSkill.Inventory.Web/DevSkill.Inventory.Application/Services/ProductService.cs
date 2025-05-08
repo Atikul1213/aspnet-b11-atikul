@@ -34,5 +34,11 @@ namespace DevSkill.Inventory.Application.Services
         {
             return await _applicationUnitOfWork.ProductRepository.GetByIdAsync(id);
         }
+
+        public async Task DeleteProductAsync(Guid id)
+        {
+            await _applicationUnitOfWork.ProductRepository.RemoveAsync(id);
+            await _applicationUnitOfWork.SaveAsync();
+        }
     }
 }

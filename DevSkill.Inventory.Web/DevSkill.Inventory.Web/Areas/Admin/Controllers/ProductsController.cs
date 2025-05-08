@@ -113,6 +113,22 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                await _productService.DeleteProductAsync(id);
+                ViewData["success"] = "Product deleted successfully";
+            }
+            catch (Exception ex)
+            {
+                ViewData["error"] = "Failed to delete product";
+                _logger.LogError(ex, "There was an error while deleting product");
+            }
+
+            return RedirectToAction("Index");
+        }
 
         [HttpPost]
         public async Task<IActionResult> GetProductJsonData([FromBody] ProductListModel model)
