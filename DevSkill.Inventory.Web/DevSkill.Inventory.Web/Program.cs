@@ -2,6 +2,10 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DevSkill.Inventory.Infrastructure;
 using DevSkill.Inventory.Web;
+using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
+using DevSkill.Inventory.Web.Areas.Admin.Validator;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -64,6 +68,15 @@ try
     builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
         .AddEntityFrameworkStores<ApplicationDbContext>();
     builder.Services.AddControllersWithViews();
+
+    #region Fluent Validation
+
+    builder.Services.AddFluentValidationAutoValidation();
+    builder.Services.AddFluentValidationClientsideAdapters();
+    builder.Services.AddTransient<IValidator<AddProductModel>, AddProductModelValidator>();
+    builder.Services.AddTransient<IValidator<UpdateProductModel>, UpdateProductModelValidator>();
+
+    #endregion
 
     var app = builder.Build();
 

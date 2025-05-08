@@ -18,11 +18,10 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Validator
 
 
             RuleFor(p => p.Price)
-                .GreaterThan(0).WithMessage("Product price must be greater than 0.")
-                .LessThan(1000000).WithMessage("Product price must be less than 1,000,000.");
+                .LessThan(5000).WithMessage("Product price must be less than 5000.");
 
             RuleFor(p => p.Quantity)
-                .LessThan(1000).WithMessage("Product quantity must be less than 1000.");
+                .LessThan(100).WithMessage("Product quantity must be less than 100.");
 
         }
     }
