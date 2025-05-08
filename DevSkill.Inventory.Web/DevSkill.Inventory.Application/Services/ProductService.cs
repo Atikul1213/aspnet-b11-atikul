@@ -29,5 +29,10 @@ namespace DevSkill.Inventory.Application.Services
         {
             return await _applicationUnitOfWork.ProductRepository.GetPagedProductAsync(pageIndex, pageSize, order, search);
         }
+
+        public async Task<Product> GetProductByIdAsync(Guid id)
+        {
+            return await _applicationUnitOfWork.ProductRepository.GetByIdAsync(id);
+        }
     }
 }

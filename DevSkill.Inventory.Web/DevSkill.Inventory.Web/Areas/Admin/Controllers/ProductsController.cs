@@ -77,6 +77,43 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var product = await _productService.GetProductByIdAsync(id);
+
+            if (product == null)
+            {
+                TempData["error"] = "Product deos not with the specified id";
+
+            }
+
+            var model = _mapper.Map<UpdateProductModel>(product);
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(UpdateProductModel model)
+        {
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+
+            return View(model);
+        }
+
+
+
         [HttpPost]
         public async Task<IActionResult> GetProductJsonData([FromBody] ProductListModel model)
         {
