@@ -14,10 +14,12 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
     public class ProductsController : Controller
     {
         #region Fields
+
         private readonly IProductService _productService;
         private readonly IMediator _mediator;
         private readonly ILogger<ProductsController> _logger;
         private readonly IMapper _mapper;
+
         #endregion
 
         #region Ctor
