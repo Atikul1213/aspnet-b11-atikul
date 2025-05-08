@@ -33,7 +33,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
         #endregion
 
-        #region Methods
+        #region Index Create Edit Delete GetProductJsonData
         public IActionResult Index()
         {
             return View();
@@ -85,6 +85,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 TempData["error"] = "Product deos not with the specified id";
 
+                return RedirectToAction("Index");
             }
 
             var model = _mapper.Map<UpdateProductModel>(product);
@@ -101,11 +102,23 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 try
                 {
+                    var product = _mapper.Map<Product>(model);
+                    product.CreateOnUtc = DateTime.UtcNow;
 
+                    await _productService.UpdateProductAsync(product);
+                    TempData["success"] = "Product updated successfully";
+
+                    return RedirectToAction("Index");
+                }
+                catch (DuplicateProductSkuException dex)
+                {
+                    _logger.LogError(dex, "Product SKU already exists");
+                    TempData["error"] = dex.Message;
                 }
                 catch (Exception ex)
                 {
-
+                    TempData["error"] = "Failed to update product";
+                    _logger.LogError(ex, "There was an error while updating product");
                 }
             }
 

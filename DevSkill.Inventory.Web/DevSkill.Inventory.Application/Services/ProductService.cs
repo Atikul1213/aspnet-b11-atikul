@@ -25,14 +25,15 @@ namespace DevSkill.Inventory.Application.Services
             }
         }
 
-        public async Task<(IList<Product> data, int total, int totalDisplay)> GetAllProductsAsync(int pageIndex, int pageSize, string? order, DataTablesSearch search)
+        public async Task UpdateProductAsync(Product product)
         {
-            return await _applicationUnitOfWork.ProductRepository.GetPagedProductAsync(pageIndex, pageSize, order, search);
-        }
-
-        public async Task<Product> GetProductByIdAsync(Guid id)
-        {
-            return await _applicationUnitOfWork.ProductRepository.GetByIdAsync(id);
+            if (!await _applicationUnitOfWork.ProductRepository.CheckSkuDuplicateAsync(product.Sku, product.Id))
+            {
+                await _applicationUnitOfWork.ProductRepository.UpdateAsync(product);
+                await _applicationUnitOfWork.SaveAsync();
+            }
+            else
+                throw new DuplicateProductSkuException();
         }
 
         public async Task DeleteProductAsync(Guid id)
@@ -40,5 +41,16 @@ namespace DevSkill.Inventory.Application.Services
             await _applicationUnitOfWork.ProductRepository.RemoveAsync(id);
             await _applicationUnitOfWork.SaveAsync();
         }
+
+        public async Task<Product> GetProductByIdAsync(Guid id)
+        {
+            return await _applicationUnitOfWork.ProductRepository.GetByIdAsync(id);
+        }
+
+        public async Task<(IList<Product> data, int total, int totalDisplay)> GetAllProductsAsync(int pageIndex, int pageSize, string? order, DataTablesSearch search)
+        {
+            return await _applicationUnitOfWork.ProductRepository.GetPagedProductAsync(pageIndex, pageSize, order, search);
+        }
+
     }
 }

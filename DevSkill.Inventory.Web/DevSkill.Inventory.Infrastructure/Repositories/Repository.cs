@@ -61,6 +61,13 @@ namespace DevSkill.Inventory.Infrastructure.Repositories
         {
             _dbSet.Update(entity);
         }
+        public virtual async Task UpdateAsync(TEntity entity)
+        {
+            await Task.Run(() =>
+            {
+                _dbSet.Update(entity);
+            });
+        }
 
         public virtual async Task<TEntity> GetByIdAsync(TKey id)
         {
