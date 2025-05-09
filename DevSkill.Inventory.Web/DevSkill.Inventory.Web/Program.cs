@@ -74,6 +74,10 @@ try
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
     builder.Services.AddControllersWithViews();
 
+    #region Razor pages
+    builder.Services.AddRazorPages();
+    #endregion
+
     #region Fluent Validation
 
     builder.Services.AddFluentValidationAutoValidation();
