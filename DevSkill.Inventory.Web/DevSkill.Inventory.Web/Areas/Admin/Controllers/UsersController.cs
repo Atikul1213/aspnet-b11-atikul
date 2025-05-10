@@ -42,8 +42,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         #region AddUser AddUserRole
         public IActionResult AddUser()
         {
+            var model = new AddUserModel();
 
-            return View();
+            return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]

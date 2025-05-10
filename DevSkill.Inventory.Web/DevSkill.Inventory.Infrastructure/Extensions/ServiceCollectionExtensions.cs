@@ -38,6 +38,16 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
             });
         }
 
-
+        public static void AddPolicy(this IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("CustomAccess", policy =>
+                {
+                    policy.RequireRole("Admin");
+                    policy.RequireRole("Registred");
+                });
+            });
+        }
     }
 }

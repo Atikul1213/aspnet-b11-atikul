@@ -70,6 +70,10 @@ try
 
     #endregion
 
+    #region Add Policy Authorization
+    builder.Services.AddPolicy();
+    #endregion
+
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly)));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -111,6 +115,7 @@ try
 
     app.UseRouting();
 
+    app.UseAuthentication();
     app.UseAuthorization();
 
     #region Area Configuration

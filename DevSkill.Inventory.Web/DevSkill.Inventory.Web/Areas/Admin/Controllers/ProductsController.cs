@@ -131,6 +131,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         [HttpPost, ValidateAntiForgeryToken]
+        //[Authorize(Policy = "CustomAccess")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try
