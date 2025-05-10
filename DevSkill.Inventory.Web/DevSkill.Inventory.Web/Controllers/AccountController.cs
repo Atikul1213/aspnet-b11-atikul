@@ -13,12 +13,14 @@ namespace DevSkill.Inventory.Web.Controllers
     public class AccountController : Controller
     {
         #region Fields
+
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         //private readonly IEmailSender _emailSender;
+
         #endregion
 
         #region Ctor
@@ -46,6 +48,7 @@ namespace DevSkill.Inventory.Web.Controllers
             var model = new RegisterModel();
             model.ReturnUrl = returnUrl;
             model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            model.DateOfBirth = DateTime.UtcNow.AddYears(-18);
 
             return View(model);
         }
@@ -74,10 +77,10 @@ namespace DevSkill.Inventory.Web.Controllers
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = model.ReturnUrl },
+                    var callbackUrl = Url.Action(
+                        "ConfirmEmail",
+                        "Account",
+                        values: new { area = "", userId = userId, code = code, returnUrl = model.ReturnUrl },
                         protocol: Request.Scheme);
 
                     //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
@@ -102,6 +105,7 @@ namespace DevSkill.Inventory.Web.Controllers
             return View(model);
         }
 
+
         [AllowAnonymous]
         public async Task<IActionResult> LoginAsync(string returnUrl = null)
         {
@@ -123,6 +127,7 @@ namespace DevSkill.Inventory.Web.Controllers
 
             return View(model);
         }
+
 
         [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> LoginAsync(LoginModel model)
@@ -158,10 +163,16 @@ namespace DevSkill.Inventory.Web.Controllers
             return View(model);
         }
 
+
         [Authorize]
-        public IActionResult Logout()
+        public async Task<IActionResult> LogoutAsync(string returnUrl = null)
         {
-            return RedirectToAction("Index", "Home");
+            await _signInManager.SignOutAsync();
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+            returnUrl ??= Url.Content("~/");
+
+            return LocalRedirect(returnUrl);
         }
 
         #endregion
