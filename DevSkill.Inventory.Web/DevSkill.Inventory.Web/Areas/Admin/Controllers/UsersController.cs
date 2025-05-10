@@ -109,6 +109,15 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                         return View(model);
                     }
 
+                    if (await _userManager.IsInRoleAsync(user, role.Name))
+                    {
+                        ModelState.AddModelError(string.Empty, "User is already assigned to this role.");
+                        TempData["error"] = "User already has this role.";
+                        model = await PrepareAddUserRoleModelAsync(model);
+
+                        return View(model);
+                    }
+
                     var result = await _userManager.AddToRoleAsync(user, role.Name);
                     if (result.Succeeded)
                     {
