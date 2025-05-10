@@ -1,4 +1,5 @@
-﻿using DevSkill.Inventory.Infrastructure.Identity;
+﻿using DevSkill.Inventory.Domain.Utilities;
+using DevSkill.Inventory.Infrastructure.Identity;
 using DevSkill.Inventory.Infrastructure.Utilities;
 using DevSkill.Inventory.Web.Models.IdentityModel;
 using Microsoft.AspNetCore.Authentication;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
+using System.Text.Encodings.Web;
 
 namespace DevSkill.Inventory.Web.Controllers
 {
@@ -19,7 +21,7 @@ namespace DevSkill.Inventory.Web.Controllers
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
-        //private readonly IEmailSender _emailSender;
+        private readonly IEmailUtility _emailUtility;
 
         #endregion
 
@@ -27,8 +29,8 @@ namespace DevSkill.Inventory.Web.Controllers
         public AccountController(UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<RegisterModel> logger
-            //IEmailSender emailSender
+            ILogger<RegisterModel> logger,
+            IEmailUtility emailUtility
             )
         {
             _userManager = userManager;
@@ -36,7 +38,7 @@ namespace DevSkill.Inventory.Web.Controllers
             _emailStore = IdentityHelper.GetEmailStore(userManager, userStore);
             _signInManager = signInManager;
             _logger = logger;
-            //_emailSender = emailSender;
+            _emailUtility = emailUtility;
         }
         #endregion
 
@@ -70,7 +72,7 @@ namespace DevSkill.Inventory.Web.Controllers
                 user.DateOfBirth = model.DateOfBirth;
 
                 var result = await _userManager.CreateAsync(user, model.Password);
-                await _userManager.AddToRoleAsync(user, "Registered");
+                await _userManager.AddToRoleAsync(user, "Registred");
 
                 if (result.Succeeded)
                 {
@@ -83,6 +85,9 @@ namespace DevSkill.Inventory.Web.Controllers
                         "Account",
                         values: new { area = "", userId = userId, code = code, returnUrl = model.ReturnUrl },
                         protocol: Request.Scheme);
+
+                    _emailUtility.SendEmail(model.Email, $"{model.FirstName} {model.LastName}",
+                        "Confirm your email", $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                     //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
@@ -174,6 +179,12 @@ namespace DevSkill.Inventory.Web.Controllers
             returnUrl ??= Url.Content("~/");
 
             return LocalRedirect(returnUrl);
+        }
+
+        public IActionResult AccessDenied()
+        {
+
+            return View();
         }
 
         #endregion

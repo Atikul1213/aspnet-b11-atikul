@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Infrastructure;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web;
@@ -85,6 +86,10 @@ try
     builder.Services.AddTransient<IValidator<AddProductModel>, AddProductModelValidator>();
     builder.Services.AddTransient<IValidator<UpdateProductModel>, UpdateProductModelValidator>();
 
+    #endregion
+
+    #region Email Configuration
+    builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
     #endregion
 
     var app = builder.Build();

@@ -3,8 +3,10 @@ using DevSkill.Inventory.Application.Services;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Repositories;
 using DevSkill.Inventory.Domain.Services;
+using DevSkill.Inventory.Domain.Utilities;
 using DevSkill.Inventory.Infrastructure;
 using DevSkill.Inventory.Infrastructure.Repositories;
+using DevSkill.Inventory.Infrastructure.Utilities;
 
 namespace DevSkill.Inventory.Web
 {
@@ -33,6 +35,8 @@ namespace DevSkill.Inventory.Web
             builder.RegisterType<ProductService>().As<IProductService>()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<EmailUtility>().As<IEmailUtility>()
+                .InstancePerLifetimeScope();
             base.Load(builder);
         }
     }
