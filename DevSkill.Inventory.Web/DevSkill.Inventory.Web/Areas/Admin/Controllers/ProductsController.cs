@@ -13,7 +13,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin, SuperAdmin")]
-    [Authorize(Policy = "ProductAddPermission")]
+    //[Authorize(Policy = "ProductAddPermission")]
 
     public class ProductsController : Controller
     {
@@ -133,7 +133,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         [HttpPost, ValidateAntiForgeryToken]
-        [Authorize(Policy = "CustomAccess")]
+        // [Authorize(Policy = "CustomAccess")]
+        // [Authorize(Policy = "AgeRestriction")]  
         public async Task<IActionResult> Delete(Guid id)
         {
             try

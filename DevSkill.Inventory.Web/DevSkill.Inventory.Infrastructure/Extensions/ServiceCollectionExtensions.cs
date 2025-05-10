@@ -1,5 +1,7 @@
 ﻿
 using DevSkill.Inventory.Infrastructure.Identity;
+using DevSkill.Inventory.Infrastructure.Identity.Requirement;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -52,7 +54,14 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
                 {
                     policy.RequireClaim("create_product", "allowed");
                 });
+
+                options.AddPolicy("AgeRestriction", policy =>
+                {
+                    policy.Requirements.Add(new AgeRequirement());
+                });
             });
+
+            services.AddSingleton<IAuthorizationHandler, AgeRequirementHandler>();
         }
     }
 }

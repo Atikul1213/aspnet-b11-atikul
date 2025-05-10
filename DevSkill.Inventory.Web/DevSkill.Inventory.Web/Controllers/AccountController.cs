@@ -73,7 +73,11 @@ namespace DevSkill.Inventory.Web.Controllers
 
                 var result = await _userManager.CreateAsync(user, model.Password);
                 await _userManager.AddToRoleAsync(user, "Registered");
+
+                var age = DateTime.UtcNow.Subtract(model.DateOfBirth).TotalDays / 365;
+
                 //await _userManager.AddClaimAsync(user, new Claim("create_product", "allowed"));
+                // await _userManager.AddClaimAsync(user, new Claim("age", age.ToString()));
 
                 if (result.Succeeded)
                 {
