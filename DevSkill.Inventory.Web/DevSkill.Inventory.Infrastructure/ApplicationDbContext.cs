@@ -1,5 +1,6 @@
 ﻿using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Infrastructure.Identity;
+using DevSkill.Inventory.Infrastructure.Seeds;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,12 @@ namespace DevSkill.Inventory.Infrastructure
             }
 
             base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<ApplicationRole>().HasData(RoleSeed.GetRoles());
+            base.OnModelCreating(builder);
         }
     }
 }

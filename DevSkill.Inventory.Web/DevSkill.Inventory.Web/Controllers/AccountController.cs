@@ -70,6 +70,7 @@ namespace DevSkill.Inventory.Web.Controllers
                 user.DateOfBirth = model.DateOfBirth;
 
                 var result = await _userManager.CreateAsync(user, model.Password);
+                await _userManager.AddToRoleAsync(user, "Registered");
 
                 if (result.Succeeded)
                 {
