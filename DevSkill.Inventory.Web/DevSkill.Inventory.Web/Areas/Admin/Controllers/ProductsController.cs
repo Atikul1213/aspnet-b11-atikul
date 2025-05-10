@@ -12,7 +12,9 @@ using System.Web;
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin, HR")]
+    [Authorize(Roles = "Admin, SuperAdmin")]
+    [Authorize(Policy = "ProductAddPermission")]
+
     public class ProductsController : Controller
     {
         #region Fields
@@ -131,7 +133,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         [HttpPost, ValidateAntiForgeryToken]
-        //[Authorize(Policy = "CustomAccess")]
+        [Authorize(Policy = "CustomAccess")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try

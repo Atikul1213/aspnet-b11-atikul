@@ -72,7 +72,8 @@ namespace DevSkill.Inventory.Web.Controllers
                 user.DateOfBirth = model.DateOfBirth;
 
                 var result = await _userManager.CreateAsync(user, model.Password);
-                await _userManager.AddToRoleAsync(user, "Registred");
+                await _userManager.AddToRoleAsync(user, "Registered");
+                //await _userManager.AddClaimAsync(user, new Claim("create_product", "allowed"));
 
                 if (result.Succeeded)
                 {

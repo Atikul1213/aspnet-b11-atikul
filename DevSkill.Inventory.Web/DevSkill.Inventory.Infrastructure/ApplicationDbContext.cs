@@ -33,6 +33,8 @@ namespace DevSkill.Inventory.Infrastructure
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<ApplicationRole>().HasData(RoleSeed.GetRoles());
+            builder.Entity<ApplicationUserClaim>().HasData(ClaimSeed.GetClaims());
+
             base.OnModelCreating(builder);
         }
     }

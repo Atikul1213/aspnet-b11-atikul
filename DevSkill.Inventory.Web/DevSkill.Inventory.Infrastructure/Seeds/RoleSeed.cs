@@ -18,8 +18,8 @@ namespace DevSkill.Inventory.Infrastructure.Seeds
                  new ApplicationRole()
                  {
                      Id = new Guid("3953C591-39C4-43A4-82F6-54E4C94AA376"),
-                     Name = "Registred",
-                     NormalizedName = "REGISTRED",
+                     Name = "Registered",
+                     NormalizedName = "REGISTERED",
                      ConcurrencyStamp = new DateTime(2025, 5, 19, 1, 1, 2).ToString(),
                  },
                   new ApplicationRole()

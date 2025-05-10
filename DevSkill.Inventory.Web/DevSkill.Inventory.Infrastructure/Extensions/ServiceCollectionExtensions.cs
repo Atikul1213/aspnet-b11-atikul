@@ -45,7 +45,12 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
                 options.AddPolicy("CustomAccess", policy =>
                 {
                     policy.RequireRole("Admin");
-                    policy.RequireRole("Registred");
+                    policy.RequireRole("Registered");
+                });
+
+                options.AddPolicy("ProductAddPermission", policy =>
+                {
+                    policy.RequireClaim("create_product", "allowed");
                 });
             });
         }
