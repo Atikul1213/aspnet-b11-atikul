@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DevSkill.Inventory.Application.Exceptions;
 using DevSkill.Inventory.Domain;
+using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
@@ -196,7 +197,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             try
             {
-                var result = await _productService.GetAllProductsAsync(model.PageIndex, model.PageSize, model.FormatSortExpression("Name", "Id"), model.Search);
+                var productSearchDto = _mapper.Map<ProductSearchDto>(model.SearchItem);
+
+                var result = await _productService.GetAllSPProductsAsync(model.PageIndex, model.PageSize, model.FormatSortExpression("Name", "Sku", "Price", "Id"), productSearchDto);
 
                 var products = new
                 {

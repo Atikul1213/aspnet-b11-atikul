@@ -1,5 +1,6 @@
 ﻿using DevSkill.Inventory.Application.Exceptions;
 using DevSkill.Inventory.Domain;
+using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
 
@@ -52,5 +53,9 @@ namespace DevSkill.Inventory.Application.Services
             return await _applicationUnitOfWork.ProductRepository.GetPagedProductAsync(pageIndex, pageSize, order, search);
         }
 
+        public async Task<(IList<Product> data, int total, int totalDisplay)> GetAllSPProductsAsync(int pageIndex, int pageSize, string? order, ProductSearchDto search)
+        {
+            return await _applicationUnitOfWork.GetProductSPAsync(pageIndex, pageSize, order, search);
+        }
     }
 }

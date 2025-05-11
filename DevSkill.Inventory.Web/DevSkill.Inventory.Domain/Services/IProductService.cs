@@ -1,4 +1,5 @@
-﻿using DevSkill.Inventory.Domain.Entities;
+﻿using DevSkill.Inventory.Domain.Dtos;
+using DevSkill.Inventory.Domain.Entities;
 
 namespace DevSkill.Inventory.Domain.Services
 {
@@ -9,5 +10,6 @@ namespace DevSkill.Inventory.Domain.Services
         Task DeleteProductAsync(Guid id);
         Task<Product> GetProductByIdAsync(Guid id);
         Task<(IList<Product> data, int total, int totalDisplay)> GetAllProductsAsync(int pageIndex, int pageSize, string? order, DataTablesSearch search);
+        Task<(IList<Product> data, int total, int totalDisplay)> GetAllSPProductsAsync(int pageIndex, int pageSize, string? order, ProductSearchDto search);
     }
 }
