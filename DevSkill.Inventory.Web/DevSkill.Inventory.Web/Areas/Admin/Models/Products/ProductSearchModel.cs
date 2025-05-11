@@ -3,7 +3,8 @@
     public class ProductSearchModel
     {
         public string? Name { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? PriceFrom { get; set; }
+        public decimal? PriceTo { get; set; }
         public string? Sku { get; set; }
     }
 }

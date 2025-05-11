@@ -44,6 +44,12 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             return View();
         }
+        public IActionResult IndexSP()
+        {
+            var model = new ProductListModel();
+
+            return View(model);
+        }
 
         public IActionResult Create()
         {
@@ -184,6 +190,41 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 return Json(DataTables.EmptyResult);
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetProductSPJsonData([FromBody] ProductListModel model)
+        {
+            try
+            {
+                var result = await _productService.GetAllProductsAsync(model.PageIndex, model.PageSize, model.FormatSortExpression("Name", "Id"), model.Search);
+
+                var products = new
+                {
+                    recordsTotal = result.total,
+                    recordsFiltered = result.totalDisplay,
+                    data = (from record in result.data
+                            select new string[]
+                            {
+                                HttpUtility.HtmlEncode(record.Name),
+                                HttpUtility.HtmlEncode(record.Sku),
+                                record.Price.ToString("C"),
+                                record.Quantity.ToString(),
+                                record.IsAvailable ? "True" : "False",
+                                record.CreateOnUtc.ToString("dd/MM/yyyy"),
+                                record.Id.ToString()
+                            }).ToArray()
+                };
+
+                return Json(products);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "There was an error while getting product data");
+
+                return Json(DataTables.EmptyResult);
+            }
+        }
+
         #endregion
     }
 }
