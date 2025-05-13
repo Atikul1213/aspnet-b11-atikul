@@ -1,19 +1,19 @@
 ﻿using AutoMapper;
 using DevSkill.Inventory.Application.Exceptions;
+using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Web;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin, SuperAdmin")]
+    //[Authorize(Roles = "Admin, SuperAdmin")]
     //[Authorize(Policy = "ProductAddPermission")]
 
     public class ProductsController : Controller
@@ -45,6 +45,28 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             return View();
         }
+
+
+        public IActionResult AddProduct()
+        {
+            var model = new ProductAddCommand();
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddProduct(ProductAddCommand productAddCommand)
+        {
+            if (ModelState.IsValid)
+            {
+                await _mediator.Send(productAddCommand);
+                TempData["success"] = "Product created successfully";
+            }
+
+            return View(productAddCommand);
+        }
+
+
         public IActionResult IndexSP()
         {
             var model = new ProductListModel();

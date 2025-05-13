@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Infrastructure;
 using DevSkill.Inventory.Infrastructure.Extensions;
@@ -54,7 +55,8 @@ try
     #region MediatR Configuration
     builder.Services.AddMediatR(cfg =>
     {
-        cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+        cfg.RegisterServicesFromAssembly(migrationAssembly);
+        cfg.RegisterServicesFromAssembly(typeof(ProductAddCommand).Assembly);
     });
     #endregion
 

@@ -20,6 +20,7 @@ namespace DevSkill.Inventory.Application.Features.Products.Commands
                 Price = request.Price,
                 Quantity = request.Quantity,
                 IsAvailable = request.IsAvailable,
+                Sku = request.Sku,
                 CreateOnUtc = DateTime.UtcNow
             };
 

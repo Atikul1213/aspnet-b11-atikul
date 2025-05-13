@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Application.Services;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Repositories;
@@ -37,6 +38,10 @@ namespace DevSkill.Inventory.Web
 
             builder.RegisterType<EmailUtility>().As<IEmailUtility>()
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<ProductAddCommand>().AsSelf();
+
+
             base.Load(builder);
         }
     }
