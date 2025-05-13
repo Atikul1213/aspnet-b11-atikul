@@ -4,11 +4,15 @@
 }
 
 @* <h1>@ViewData["Title"]</h1> *@
+@section Styles {
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://resources/demos/style.css">
+}
 
 <div class="row">
-    <div class="col-md-4">
-        <form id="registerForm" asp-asp-area="" asp-asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
+    <div class="col-md-8">
+        <form id="registerForm" class="p-3 bg-info text-black w-60" asp-asp-area="" asp-asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h2 class="text-center">Create a new account.</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
@@ -28,7 +32,7 @@
             </div>
 
             <div class="form-floating mb-3">
-                <input asp-for="DateOfBirth" class="form-control" autocomplete="dateofbirth" aria-required="true" placeholder="Enter your date of birth" />
+                <input asp-for="DateOfBirth" type="datetime" class="form-control" autocomplete="dateofbirth" aria-required="true" placeholder="Enter your date of birth" />
                 <label asp-for="DateOfBirth">Date Of Birth</label>
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
@@ -44,10 +48,10 @@
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
 
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <button id="registerSubmit" type="submit" class="btn btn-lg btn-primary text-center">Register</button>
         </form>
     </div>
-    <div class="col-md-6 col-md-offset-2">
+    <div class="col-md-4 col-md-offset-2">
         <section>
             <h3>Use another service to register.</h3>
             <hr />
@@ -83,4 +87,27 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script asp-location="Footer">
+        $( function() {
+             $("#DateOfBirth").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: "mm/dd/yy" // Optional: format the selected date
+        });
+          // $("#DateOfBirth").datepicker({
+          //     changeMonth: true,
+          //     changeYear: true,
+          //     showButtonPanel: true
+          // });
+
+          // $("#DateOfBirth").on("change", function() {
+          //     console.log("value: ", $(this).val());
+          //   $("#datepicker").datepicker( "option", "showAnim", $(this).val());
+          // });
+
+        });
+    </script>
 }
