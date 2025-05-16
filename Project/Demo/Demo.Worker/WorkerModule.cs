@@ -1,0 +1,15 @@
+﻿using Autofac;
+
+namespace Demo.Worker
+{
+    public class WorkerModule : Module
+    {
+        private readonly string _connectionString;
+        private readonly string _migrationAssembly;
+        public WorkerModule(string connectionString, string migrationAssembly)
+        {
+            _connectionString = connectionString;
+            _migrationAssembly = migrationAssembly;
+        }
+    }
+}

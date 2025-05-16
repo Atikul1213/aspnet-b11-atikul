@@ -1,4 +1,4 @@
-﻿namespace Demo.Web.Areas.Admin.Models
+﻿namespace Demo.Web.Areas.Admin.Models.BookModel
 {
     public class AddBookModel
     {
