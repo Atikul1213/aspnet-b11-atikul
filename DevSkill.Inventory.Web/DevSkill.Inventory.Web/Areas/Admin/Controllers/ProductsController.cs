@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DevSkill.Inventory.Application.Exceptions;
 using DevSkill.Inventory.Application.Features.Products.Commands;
+using DevSkill.Inventory.Application.Features.Products.Queries;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
@@ -40,9 +41,11 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
         #endregion
 
-        #region Index Create Edit Delete GetProductJsonData
-        public IActionResult Index()
+        #region Product Add Edit Delete Index 
+
+        public IActionResult ProductIndex()
         {
+
             return View();
         }
 
@@ -57,23 +60,139 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProduct(ProductAddCommand productAddCommand)
         {
-            if (ModelState.IsValid)
+            try
             {
-                await _mediator.Send(productAddCommand);
-                TempData["success"] = "Product created successfully";
+                if (ModelState.IsValid)
+                {
+                    await _mediator.Send(productAddCommand);
+                    TempData["success"] = "Product created successfully";
+                    return RedirectToAction("ProductIndex");
+                }
+            }
+            catch (DuplicateProductSkuException dex)
+            {
+                _logger.LogError(dex, "Product SKU already exists");
+                TempData["error"] = dex.Message;
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "Failed to create product.";
+                _logger.LogError(ex, "There was an error while creating product");
             }
 
             return View(productAddCommand);
         }
 
-
-        public IActionResult EditProduct()
+        public async Task<IActionResult> EditProduct(Guid id)
         {
+            var productByIdQuery = new GetProductByIdQuery(id);
 
-            return View();
+            var productUpdateCommand = new ProductUpdateCommand();
+
+            try
+            {
+                var product = await _mediator.Send(productByIdQuery);
+
+                if (product is null)
+                    return RedirectToAction("ProductIndex");
+
+                productUpdateCommand = _mapper.Map<ProductUpdateCommand>(product);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "No product found with the Id";
+                _logger.LogError(ex, "No product found with the Id");
+            }
+
+            return View(productUpdateCommand);
         }
 
 
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProduct(ProductUpdateCommand productUpdateCommand)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    await _mediator.Send(productUpdateCommand);
+                    TempData["success"] = "Product updated successfully";
+                    return RedirectToAction("ProductIndex");
+                }
+            }
+            catch (DuplicateProductSkuException dex)
+            {
+                _logger.LogError(dex, "Product SKU already exists");
+                TempData["error"] = dex.Message;
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "Failed to edit product.";
+                _logger.LogError(ex, "There was an error while updating product");
+            }
+
+            return View(productUpdateCommand);
+        }
+
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteProduct(Guid id)
+        {
+            try
+            {
+                var productDeleteCommand = new ProductDeleteCommand(id);
+
+                await _mediator.Send(productDeleteCommand);
+                ViewData["success"] = "Product deleted successfully";
+            }
+            catch (Exception ex)
+            {
+                ViewData["error"] = "Failed to delete product";
+                _logger.LogError(ex, "There was an error while deleting product");
+            }
+
+            return RedirectToAction("ProductIndex");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetCQRSProductSPJsonData([FromBody] GetProductQuery model)
+        {
+            try
+            {
+                //var productSearchDto = _mapper.Map<ProductSearchDto>(model.SearchItem);
+
+                //var result = await _productService.GetAllSPProductsAsync(model.PageIndex, model.PageSize, model.FormatSortExpression("Name", "Sku", "Price", "Id"), productSearchDto);
+                var (data, total, totalDisplay) = await _mediator.Send(model);
+
+                var products = new
+                {
+                    recordsTotal = total,
+                    recordsFiltered = totalDisplay,
+                    data = (from record in data
+                            select new string[]
+                            {
+                                HttpUtility.HtmlEncode(record.Name),
+                                HttpUtility.HtmlEncode(record.Sku),
+                                record.Price.ToString("C"),
+                                record.Quantity.ToString(),
+                                record.IsAvailable ? "True" : "False",
+                                record.CreateOnUtc.ToString("dd/MM/yyyy"),
+                                record.Id.ToString()
+                            }).ToArray()
+                };
+
+                return Json(products);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "There was an error while getting product data");
+
+                return Json(DataTables.EmptyResult);
+            }
+        }
+
+
+        #endregion
 
 
 
@@ -85,8 +204,11 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
 
-
-
+        #region Index Create Edit Delete GetProductJsonData
+        public IActionResult Index()
+        {
+            return View();
+        }
 
         public IActionResult IndexSP()
         {

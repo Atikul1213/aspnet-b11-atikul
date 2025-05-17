@@ -57,6 +57,9 @@ try
     {
         cfg.RegisterServicesFromAssembly(migrationAssembly);
         cfg.RegisterServicesFromAssembly(typeof(ProductAddCommand).Assembly);
+        cfg.RegisterServicesFromAssembly(typeof(ProductUpdateCommand).Assembly);
+        cfg.RegisterServicesFromAssembly(typeof(ProductDeleteCommand).Assembly);
+
     });
     #endregion
 
