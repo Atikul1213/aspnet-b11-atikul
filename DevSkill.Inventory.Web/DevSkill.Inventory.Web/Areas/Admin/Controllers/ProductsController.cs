@@ -49,7 +49,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return View();
         }
 
-
         public IActionResult AddProduct()
         {
             var model = new ProductAddCommand();
@@ -193,16 +192,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         #endregion
-
-
-
-
-
-
-
-
-
-
 
         #region Index Create Edit Delete GetProductJsonData
         public IActionResult Index()
