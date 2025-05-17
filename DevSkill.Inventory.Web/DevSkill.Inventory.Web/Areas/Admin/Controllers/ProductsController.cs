@@ -67,6 +67,27 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        public IActionResult EditProduct()
+        {
+
+            return View();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public IActionResult IndexSP()
         {
             var model = new ProductListModel();
