@@ -41,12 +41,13 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
         #endregion
 
-        #region Product Add Edit Delete Index 
+        #region Product Add Edit Delete Index using CQRS
 
         public IActionResult ProductIndex()
         {
+            var productQuery = new GetProductQuery();
 
-            return View();
+            return View(productQuery);
         }
 
         public IActionResult AddProduct()
@@ -158,9 +159,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             try
             {
-                //var productSearchDto = _mapper.Map<ProductSearchDto>(model.SearchItem);
-
-                //var result = await _productService.GetAllSPProductsAsync(model.PageIndex, model.PageSize, model.FormatSortExpression("Name", "Sku", "Price", "Id"), productSearchDto);
                 var (data, total, totalDisplay) = await _mediator.Send(model);
 
                 var products = new
@@ -193,7 +191,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Index Create Edit Delete GetProductJsonData
+        #region Index Create Edit Delete GetProductJsonData   without CQRS
         public IActionResult Index()
         {
             return View();
