@@ -1,7 +1,4 @@
-﻿using Assignment_2.Model;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Assignment_2.Models
+﻿namespace Assignment_2.Models
 {
     public class Instructor : TEntity<Guid>
     {
@@ -11,9 +8,5 @@ namespace Assignment_2.Models
         public Address PresentAddress { get; set; }
         public Address PermanentAddress { get; set; }
         public List<Phone> PhoneNumbers { get; set; }
-        [ForeignKey("CourseId")]
-        public int CourseId { get; set; }
-        public Course Course { get; set; }
-
     }
 }

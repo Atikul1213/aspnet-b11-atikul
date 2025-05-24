@@ -1,10 +1,19 @@
-﻿namespace Assignment_2
+﻿using Assignment_2.Models;
+using Microsoft.Data.SqlClient;
+
+namespace Assignment_2
 {
-    public class MyORM<G, T>
+    public class MyORM<G, T> where T : class, TEntity<G>, new()
     {
+        private string cs = "Data Source=BS-01344;Initial Catalog=AspnetB11;User ID=developer; Password=123456;TrustServerCertificate=True;";
+        SqlConnection con = null;
         public void Insert(T entity)
         {
 
+            using (con = new SqlConnection(cs))
+            {
+
+            }
         }
 
         public void Update(T entity)
@@ -21,11 +30,11 @@
         {
 
         }
-        public T GetById(G id)
-        {
+        //public T GetById(G id)
+        //{
 
-            return null;
-        }
+        //    return null;
+        //}
         public List<T> GetAll()
         {
 

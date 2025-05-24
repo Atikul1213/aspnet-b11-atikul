@@ -5,6 +5,5 @@
         public Guid Id { get; set; }
         public int DurationInHour { get; set; }
         public string LearningObjective { get; set; }
-
     }
 }
