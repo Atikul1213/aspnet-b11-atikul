@@ -1,4 +1,4 @@
-FROM debian:stretch-slim AS build0
+FROM debian:bullseye-slim AS build0
 WORKDIR /root
 
 RUN apt-get update && apt-get install -y binutils gcc
