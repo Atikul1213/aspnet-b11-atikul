@@ -1,14 +1,20 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using DevSkill.Inventory.Application.Features.Products.Commands;
+using DevSkill.Inventory.Domain;
+using DevSkill.Inventory.Infrastructure;
+using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web;
-using DevSkill.Inventory.Web.Data;
-using Microsoft.AspNetCore.Identity;
+using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
+using DevSkill.Inventory.Web.Areas.Admin.Validator;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
+using System.Reflection;
 
 #region BootStrap Logger
-
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
@@ -17,7 +23,6 @@ var configuration = new ConfigurationBuilder()
 Log.Logger = new LoggerConfiguration()
              .ReadFrom.Configuration(configuration)
              .CreateBootstrapLogger();
-
 #endregion
 
 try
@@ -28,17 +33,15 @@ try
 
     // Add services to the container.
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+    var migrationAssembly = Assembly.GetExecutingAssembly();
 
     #region Autofac Configuration
-
     builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
     builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     {
-        containerBuilder.RegisterModule(new WebModule());
+        containerBuilder.RegisterModule(new WebModule(connectionString, migrationAssembly?.FullName));
     });
-
     #endregion
-
 
     #region Serilog configure
     builder.Host.UseSerilog((context, lc) => lc
@@ -48,13 +51,55 @@ try
           .ReadFrom.Configuration(builder.Configuration)
       );
     #endregion
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(connectionString));
-    builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-    builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-        .AddEntityFrameworkStores<ApplicationDbContext>();
+    #region MediatR Configuration
+    builder.Services.AddMediatR(cfg =>
+    {
+        cfg.RegisterServicesFromAssembly(migrationAssembly);
+        cfg.RegisterServicesFromAssembly(typeof(ProductAddCommand).Assembly);
+        cfg.RegisterServicesFromAssembly(typeof(ProductUpdateCommand).Assembly);
+        cfg.RegisterServicesFromAssembly(typeof(ProductDeleteCommand).Assembly);
+
+    });
+    #endregion
+
+    #region AutoMapper Configuration
+    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+    #endregion
+
+    #region Identity Configuration
+
+    builder.Services.AddIdentity();
+    //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    //    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+    #endregion
+
+    #region Add Policy Authorization
+    builder.Services.AddPolicy();
+    #endregion
+
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly)));
+    builder.Services.AddDatabaseDeveloperPageExceptionFilter();
     builder.Services.AddControllersWithViews();
+
+    #region Razor pages
+    builder.Services.AddRazorPages();
+    #endregion
+
+    #region Fluent Validation
+
+    builder.Services.AddFluentValidationAutoValidation();
+    builder.Services.AddFluentValidationClientsideAdapters();
+    builder.Services.AddTransient<IValidator<AddProductModel>, AddProductModelValidator>();
+    builder.Services.AddTransient<IValidator<UpdateProductModel>, UpdateProductModelValidator>();
+
+    #endregion
+
+    #region Email Configuration
+    builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+    #endregion
 
     var app = builder.Build();
 
@@ -75,6 +120,7 @@ try
 
     app.UseRouting();
 
+    app.UseAuthentication();
     app.UseAuthorization();
 
     #region Area Configuration
