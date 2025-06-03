@@ -232,15 +232,6 @@ namespace DevSkill.Inventory.Web.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserClaims", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ClaimType = "create_product",
-                            ClaimValue = "allowed",
-                            UserId = new Guid("16fed63d-5437-43a5-4c8b-08dd8f741869")
-                        });
                 });
 
             modelBuilder.Entity("DevSkill.Inventory.Infrastructure.Identity.ApplicationUserLogin", b =>

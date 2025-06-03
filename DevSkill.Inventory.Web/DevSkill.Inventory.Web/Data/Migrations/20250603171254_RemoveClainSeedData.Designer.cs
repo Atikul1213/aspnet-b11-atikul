@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevSkill.Inventory.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250510170627_AddClaimSeedData")]
-    partial class AddClaimSeedData
+    [Migration("20250603171254_RemoveClainSeedData")]
+    partial class RemoveClainSeedData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -235,15 +235,6 @@ namespace DevSkill.Inventory.Web.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserClaims", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ClaimType = "create_product",
-                            ClaimValue = "allowed",
-                            UserId = new Guid("16fed63d-5437-43a5-4c8b-08dd8f741869")
-                        });
                 });
 
             modelBuilder.Entity("DevSkill.Inventory.Infrastructure.Identity.ApplicationUserLogin", b =>
