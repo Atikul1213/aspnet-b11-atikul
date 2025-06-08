@@ -80,7 +80,7 @@ try
     #endregion
 
     #region Docker_Configuration
-    builder.WebHost.UseUrls("http://*:80");
+    //builder.WebHost.UseUrls("http://*:80");
     #endregion
 
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
