@@ -79,6 +79,10 @@ try
     builder.Services.AddPolicy();
     #endregion
 
+    #region Docker_Configuration
+    builder.WebHost.UseUrls("http://*:80");
+    #endregion
+
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly)));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
