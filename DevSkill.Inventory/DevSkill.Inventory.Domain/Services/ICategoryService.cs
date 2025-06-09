@@ -7,6 +7,6 @@ namespace DevSkill.Inventory.Domain.Services
         Task InsertCategoryAsync(Category category);
         Task UpdateCategoryAsync(Category category);
         Task DeleteCategoryAsync(Category category);
-        Task<Category> GetCategoryByIdAsync(int id);
+        Task<Category> GetCategoryByIdAsync(Guid id);
     }
 }

@@ -7,6 +7,7 @@ namespace DevSkill.Inventory.Domain
     public interface IApplicationUnitOfWork : IUnitOfWork
     {
         public IProductRepository ProductRepository { get; }
+        public ICategoryRepository CategoryRepository { get; }
         Task<(IList<Product> data, int total, int totalDisplay)> GetProductSPAsync(int pageIndex, int pageSize, string? order, ProductSearchDto search);
     }
 }

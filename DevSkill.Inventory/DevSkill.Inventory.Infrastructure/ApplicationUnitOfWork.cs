@@ -8,12 +8,15 @@ namespace DevSkill.Inventory.Infrastructure
     public class ApplicationUnitOfWork : UnitOfWork, IApplicationUnitOfWork
     {
         public ApplicationUnitOfWork(ApplicationDbContext context,
-            IProductRepository productRepository) : base(context)
+            IProductRepository productRepository,
+            ICategoryRepository categoryRepository) : base(context)
         {
             ProductRepository = productRepository;
+            CategoryRepository = categoryRepository;
         }
 
         public IProductRepository ProductRepository { get; private set; }
+        public ICategoryRepository CategoryRepository { get; private set; }
 
         public async Task<(IList<Product> data, int total, int totalDisplay)> GetProductSPAsync(int pageIndex, int pageSize, string? order, ProductSearchDto search)
         {

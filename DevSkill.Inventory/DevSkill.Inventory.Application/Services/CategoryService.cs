@@ -1,4 +1,5 @@
-﻿using DevSkill.Inventory.Domain.Entities;
+﻿using DevSkill.Inventory.Domain;
+using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
 
 namespace DevSkill.Inventory.Application.Services
@@ -7,35 +8,42 @@ namespace DevSkill.Inventory.Application.Services
     {
         #region Fields
 
-        private readonly ICategoryService _categoryService;
+        private readonly IApplicationUnitOfWork _applicationUnitOfWork;
 
         #endregion
 
         #region Ctor
 
-        public CategoryService(ICategoryService categoryService)
+        public CategoryService(IApplicationUnitOfWork applicationUnitOfWork)
         {
-            _categoryService = categoryService;
+            _applicationUnitOfWork = applicationUnitOfWork;
         }
         #endregion
-        public Task DeleteCategoryAsync(Category category)
+
+        #region Methods
+        public async Task DeleteCategoryAsync(Category category)
         {
-            throw new NotImplementedException();
+            await _applicationUnitOfWork.CategoryRepository.RemoveAsync(category);
+            await _applicationUnitOfWork.SaveAsync();
         }
 
-        public Task<Category> GetCategoryByIdAsync(int id)
+        public async Task<Category> GetCategoryByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _applicationUnitOfWork.CategoryRepository.GetByIdAsync(id);
         }
 
-        public Task InsertCategoryAsync(Category category)
+        public async Task InsertCategoryAsync(Category category)
         {
-            throw new NotImplementedException();
+            await _applicationUnitOfWork.CategoryRepository.AddAsync(category);
+            await _applicationUnitOfWork.SaveAsync();
         }
 
-        public Task UpdateCategoryAsync(Category category)
+        public async Task UpdateCategoryAsync(Category category)
         {
-            throw new NotImplementedException();
+            await _applicationUnitOfWork.CategoryRepository.UpdateAsync(category);
+            await _applicationUnitOfWork.SaveAsync();
         }
+
+        #endregion
     }
 }
