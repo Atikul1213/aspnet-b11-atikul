@@ -62,6 +62,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     var category = _mapper.Map<Category>(model);
                     await _categoryService.InsertCategoryAsync(category);
                     TempData["success'"] = "Category created successfully.";
+
+                    return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
@@ -81,12 +83,12 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 var category = await _categoryService.GetCategoryByIdAsync(id);
                 model = _mapper.Map<UpdateCategoryModel>(category);
-
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to load category for update");
                 TempData["error"] = "Failed to load category for update.";
+
                 return RedirectToAction("Index");
             }
 
@@ -106,6 +108,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     var category = _mapper.Map<Category>(model);
                     await _categoryService.UpdateCategoryAsync(category);
                     TempData["success'"] = "Category updated successfully.";
+
+                    return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
@@ -118,14 +122,13 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
-        [HttpPost]
         public async Task<IActionResult> RemoveCategory(Guid id)
         {
             try
             {
                 var category = await _categoryService.GetCategoryByIdAsync(id);
-
                 await _categoryService.DeleteCategoryAsync(category);
+                TempData["success'"] = "Category deleted successfully.";
             }
             catch (Exception ex)
             {
