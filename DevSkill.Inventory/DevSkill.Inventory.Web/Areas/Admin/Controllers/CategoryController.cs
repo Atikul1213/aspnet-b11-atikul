@@ -33,6 +33,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             var categories = await _categoryService.GetAllCategoriesAsync();
 
             var model = new CategoryListModel();
+            model.AddCategoryModel.StatusId = (int)Status.Active;
+            model.AddCategoryModel.Status = EnumHelper.PrepareSelectList<Status>();
+
             model.UpdateCategoryModel.Status = EnumHelper.PrepareSelectList<Status>();
 
             foreach (var category in categories)
@@ -47,14 +50,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public IActionResult AddCategory()
-        {
-            var model = new AddCategoryModel();
-
-            model.Status = EnumHelper.PrepareSelectList<Status>();
-
-            return View(model);
-        }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddCategory(AddCategoryModel model)
@@ -63,6 +58,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 try
                 {
+                    model.CreateOnUtc = DateTime.UtcNow;
                     var category = _mapper.Map<Category>(model);
                     await _categoryService.InsertCategoryAsync(category);
                     TempData["success'"] = "Category created successfully.";
@@ -106,6 +102,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 try
                 {
+                    model.CreateOnUtc = DateTime.UtcNow;
                     var category = _mapper.Map<Category>(model);
                     await _categoryService.UpdateCategoryAsync(category);
                     TempData["success'"] = "Category updated successfully.";
