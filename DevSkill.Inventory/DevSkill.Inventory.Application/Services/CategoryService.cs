@@ -27,6 +27,12 @@ namespace DevSkill.Inventory.Application.Services
             await _applicationUnitOfWork.SaveAsync();
         }
 
+        public async Task<IList<Category>> GetAllCategoriesAsync()
+        {
+            var categories = await _applicationUnitOfWork.CategoryRepository.GetAllAsync();
+            return categories;
+        }
+
         public async Task<Category> GetCategoryByIdAsync(Guid id)
         {
             return await _applicationUnitOfWork.CategoryRepository.GetByIdAsync(id);

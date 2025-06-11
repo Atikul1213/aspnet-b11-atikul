@@ -1,4 +1,4 @@
-﻿using DevSkill.Inventory.Domain.Entities;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Models.Category
 {
@@ -6,11 +6,11 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Models.Category
     {
         public AddCategoryModel()
         {
-            Status = new List<Status>();
+            Status = new List<SelectListItem>();
         }
         public string Name { get; set; }
         public int StatusId { get; set; }
         public DateTime CreateOnUtc { get; set; }
-        public IEnumerable<Status> Status { get; set; }
+        public IEnumerable<SelectListItem> Status { get; set; }
     }
 }

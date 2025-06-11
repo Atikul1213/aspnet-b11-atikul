@@ -19,6 +19,7 @@ namespace DevSkill.Inventory.Infrastructure
             _migrationAssembly = migrationAssembly;
         }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

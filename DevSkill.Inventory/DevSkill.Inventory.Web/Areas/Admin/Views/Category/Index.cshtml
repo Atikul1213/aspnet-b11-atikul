@@ -1,1 +1,140 @@
-﻿
+﻿@model CategoryListModel
+
+@{
+    ViewData["Title"] = "Category";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.min.css">
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Category</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Category</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title">Category List</h3></div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <partial name="_ModalPartial" />
+                        <table id="category-table" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#SN.</th>
+                                    <th>Category Name</th>
+                                    <th>Status</th>
+                                    <th>Created Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Check if there are any category to display -->
+                                @if (Model.Categories.Any())
+                                {
+                                    <!-- Loop through each category in the model's category list -->
+                                    var idx = 0;
+                                    @foreach (var category in Model.Categories)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@idx</td>
+                                            <td class="text-center">@category.Name</td>
+                                            <td class="text-center">@category.Status</td>
+                                            <td class="text-center">@category.CreateOnUtc</td>
+                                            <td class="text-center">
+                                                <button type="submit" class="btn btn-info btn-sm" asp-area="Admin" asp-controller="Category" asp-action="UpdateCategory" data-id="@category.Id" value='@category.Id'>
+                                                    <i class="fas fa-pencil-alt"> </i>  Edit
+                                                </button>
+
+                                                <button type="submit" class="btn btn-danger btn-sm show-bs-modal" asp-area="Admin" asp-controller="Category" asp-action="RemoveCategory" value='@category.Id' data-id='@category.Id' value='@category.Id'>
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        idx++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">😞 No category found.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>#SN.</th>
+                                    <th>Category Name</th>
+                                    <th>Status</th>
+                                    <th>Created Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+
+    <script>
+        $(function(){
+             
+
+         $("#category-table").on('click', '.show-bs-modal', function(){
+               let id = $(this).data("id");
+               let deleteModel = $("#modal-delete");
+
+               deleteModel.find('.modal-body p').text('Are you sure you want to delete the product');
+               $("#delete-id").val(id);
+               $("#delete-form").attr('action', '/admin/products/delete');
+               deleteModel.modal('show');
+         });
+
+          $("#delete-button").click(function(){
+               $("#delete-form").submit();
+          });
+
+        });
+    </script>
+}
