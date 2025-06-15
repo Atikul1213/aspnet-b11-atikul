@@ -32,9 +32,9 @@
             <div class="col-8">
                 <div class="card">
                     <div class="card-header"><h3 class="card-title">Category List</h3></div>
+                    @Html.Partial("_CategoryInfo", Model.AddCategoryModel)
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <partial name="_ModalPartial" />
                         <table id="category-table" class="table table-bordered">
                             <thead>
                                 <tr>
@@ -60,13 +60,15 @@
                                             <td class="text-center">@category.CreateOnUtc</td>
                                             <td class="text-center">
                                                 <div class="w-75 btn-group" role="group">
-                                                    <a asp-area="Admin" asp-controller="Category" asp-action="UpdateCategory" asp-route-id="@category.Id" class="btn btn-primary"><i class="bi bi-pencil-fill"></i></a>
+                                                    <a data-id="@category.Id" data-name="@category.Name" data-statusid="@category.StatusId"
+                                                    data-toggle="modal" data-target="#update-category" class="btn btn-primary"><i class="bi bi-pencil-fill"></i></a>
 
                                                     <a asp-area="Admin" asp-controller="Category" asp-action="RemoveCategory" asp-route-id="@category.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
                                                 </div>
                                             </td>
                                         </tr>
                                         idx++;
+                                        @Html.Partial("_UpdateCategoryInfo", Model.UpdateCategoryModel)
                                     }
                                 }
                                 else
@@ -96,35 +98,32 @@
                 <div class="card-header"><h3 class="card-title">Category Information</h3></div>
                 
                 <div class="card-body">
-                    @Html.Partial("_CategoryInfo", Model.AddCategoryModel)
                 </div>
             </div>
             <!-- /.col -->
         </div>
+                  
         <!--end::Row-->
     </div>
     <!--end::Container-->
 </div>
 <!--end::App Content-->
 @section Scripts {
+
     <script>
-        $(function(){
-             
+        $(document).ready(function () {
+            // Handle Edit Category button click
+            $(".btn-edit-category").on("click", function () {
+                const id = $(this).data("id");
+                const name = $(this).data("name");
+                const statusId = $(this).data("statusid");
 
-         // $("#category-table").on('click', '.show-bs-modal', function(){
-         //       let id = $(this).data("id");
-         //       let deleteModel = $("#modal-delete");
+                $("#editCategoryId").val(id);
+                $("#editCategoryName").val(name);
+                $("#editStatusId").val(statusId);
 
-         //       deleteModel.find('.modal-body p').text('Are you sure you want to delete the product');
-         //       $("#delete-id").val(id);
-         //       $("#delete-form").attr('action', '/admin/products/delete');
-         //       deleteModel.modal('show');
-         // });
-
-          $("#delete-button").click(function(){
-               $("#delete-form").submit();
-          });
-
+                $("#update-category").modal("show");
+            });
         });
     </script>
 }
