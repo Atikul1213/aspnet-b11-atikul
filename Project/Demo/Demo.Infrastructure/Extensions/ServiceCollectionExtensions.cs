@@ -1,8 +1,12 @@
 ﻿using Demo.Infrastructure.Identity;
 using Demo.Infrastructure.Identity.Requirement;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Demo.Infrastructure.Extensions
 {
@@ -63,5 +67,55 @@ namespace Demo.Infrastructure.Extensions
 
             services.AddSingleton<IAuthorizationHandler, AgeRequirementHandler>();
         }
+
+        public static void AddJwtAuthentication(this IServiceCollection services, string key, string issuer, string audience)
+        {
+            services.AddAuthentication()
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidIssuer = issuer,
+                        ValidAudience = audience
+                    };
+                });
+
+
+        }
+
+        public static void AddJwtAuthorization(this IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ValidLogin", policy =>
+                {
+                    policy.AuthenticationSchemes.Clear();
+                    policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+                    policy.RequireAuthenticatedUser();
+                });
+            });
+        }
+
+
+        public static void AddCookieAuthentication(this IServiceCollection services)
+        {
+            services.AddAuthentication()
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                {
+                    options.LoginPath = "/Account/Login";
+                    options.LogoutPath = "/Account/Logout";
+                    options.AccessDeniedPath = "/Account/AccessDenied";
+                    options.Cookie.Name = "Demo.Identity";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                    options.SlidingExpiration = true;
+                });
+        }
+
     }
 }

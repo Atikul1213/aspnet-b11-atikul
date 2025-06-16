@@ -1,5 +1,7 @@
 ﻿using Autofac;
+using Demo.Domain;
 using Demo.Infrastructure;
+using Demo.Infrastructure.Identity;
 
 namespace Demo.Api
 {
@@ -19,6 +21,12 @@ namespace Demo.Api
                 .WithParameter("connectionString", _connectionString)
                 .WithParameter("migrationAssembly", _migrationAssembly)
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<ApplicationUnitOfWork>().As<IApplicationUnitOfWork>()
+              .InstancePerLifetimeScope();
+
+            builder.RegisterType<TokenService>().As<ITokenService>().InstancePerLifetimeScope();
+
 
             base.Load(builder);
         }

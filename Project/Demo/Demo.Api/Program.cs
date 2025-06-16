@@ -4,6 +4,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Demo.Api;
+using Demo.Infrastructure.Extensions;
 using Serilog;
 using Serilog.Events;
 using System.Reflection;
@@ -44,6 +45,22 @@ try
             .Enrich.FromLogContext()
             .ReadFrom.Configuration(builder.Configuration)
             );
+    #endregion
+    #region Identity Configuration
+    builder.Services.AddIdentity();
+
+    builder.Services.AddJwtAuthentication(
+         builder.Configuration["Jwt:Key"],
+         builder.Configuration["Jwt:Issuer"],
+         builder.Configuration["Jwt:Audience"]
+     );
+
+    builder.Services.AddJwtAuthorization();
+    #endregion
+
+
+    #region AutoMapper Configuration
+    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     #endregion
 
     builder.Services.AddControllers();
