@@ -32,7 +32,7 @@
             <div class="col-8">
                 <div class="card">
                     <div class="card-header"><h3 class="card-title">Category List</h3></div>
-                    @Html.Partial("_CategoryInfo", Model.AddCategoryModel)
+                  
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table id="category-table" class="table table-bordered">
@@ -61,15 +61,15 @@
                                             <td class="text-center">
                                                 <div class="w-75 btn-group" role="group">
                                                     <a data-id="@category.Id" data-name="@category.Name" data-statusid="@category.StatusId"
-                                                    data-toggle="modal" data-target="#update-category" class="btn btn-primary"><i class="bi bi-pencil-fill"></i></a>
+                                                       data-toggle="modal" data-target="#update-category" class="btn btn-primary btn-edit-category"><i class="bi bi-pencil-fill"></i></a>
 
                                                     <a asp-area="Admin" asp-controller="Category" asp-action="RemoveCategory" asp-route-id="@category.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
                                                 </div>
                                             </td>
                                         </tr>
                                         idx++;
-                                        @Html.Partial("_UpdateCategoryInfo", Model.UpdateCategoryModel)
                                     }
+                                   @Html.Partial("_UpdateCategoryInfo", Model.UpdateCategoryModel)
                                 }
                                 else
                                 {
@@ -96,7 +96,7 @@
             </div>
             <div class="col-4  card">
                 <div class="card-header"><h3 class="card-title">Category Information</h3></div>
-                
+                    @Html.Partial("_CategoryInfo", Model.AddCategoryModel)
                 <div class="card-body">
                 </div>
             </div>
@@ -109,6 +109,8 @@
 </div>
 <!--end::App Content-->
 @section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -117,6 +119,9 @@
                 const id = $(this).data("id");
                 const name = $(this).data("name");
                 const statusId = $(this).data("statusid");
+                console.log("id: ",id);
+                console.log("name: ", name);
+                console.log("statusId", statusId);
 
                 $("#editCategoryId").val(id);
                 $("#editCategoryName").val(name);
