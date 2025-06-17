@@ -10,7 +10,7 @@
     <div class="container-fluid">
         <!--begin::Row-->
         <div class="row">
-            <div class="col-sm-6"><h3 class="mb-0">Category</h3></div>
+            <div class="col-sm-6"><h3 class="mb-0 fw-bold">Category</h3></div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                     <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
@@ -95,7 +95,7 @@
                 <!-- /.card -->
             </div>
             <div class="col-4  card">
-                <div class="card-header"><h3 class="card-title">Category Information</h3></div>
+                <div class="card-header"><h3 class="card-title fw-bold">Category Information</h3></div>
                     @Html.Partial("_CategoryInfo", Model.AddCategoryModel)
                 <div class="card-body">
                 </div>
@@ -119,16 +119,15 @@
                 const id = $(this).data("id");
                 const name = $(this).data("name");
                 const statusId = $(this).data("statusid");
-                console.log("id: ",id);
-                console.log("name: ", name);
-                console.log("statusId", statusId);
-
-                $("#editCategoryId").val(id);
-                $("#editCategoryName").val(name);
-                $("#editStatusId").val(statusId);
+                
+                $("#Id").val(id);
+                $("#Name").val(name);
+                $("#statusId").val(statusId);
 
                 $("#update-category").modal("show");
             });
         });
     </script>
+
+    <partial name="_ValidationScriptsPartial" />
 }

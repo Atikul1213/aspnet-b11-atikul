@@ -83,27 +83,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
-        //public async Task<IActionResult> UpdateCategory(Guid id)
-        //{
-        //    var model = new UpdateCategoryModel();
-        //    try
-        //    {
-        //        var category = await _categoryService.GetCategoryByIdAsync(id);
-        //        model = _mapper.Map<UpdateCategoryModel>(category);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Failed to load category for update");
-        //        TempData["error"] = "Failed to load category for update.";
-
-        //        return RedirectToAction("Index");
-        //    }
-
-        //    model.Status = EnumHelper.PrepareSelectList<Status>();
-
-        //    return View(model);
-        //}
-
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCategory(UpdateCategoryModel model)
         {

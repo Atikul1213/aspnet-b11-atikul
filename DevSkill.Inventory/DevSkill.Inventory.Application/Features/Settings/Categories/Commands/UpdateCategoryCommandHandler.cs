@@ -23,17 +23,12 @@ namespace DevSkill.Inventory.Application.Features.Settings.Categories.Commands
         #region Methods
         public async Task Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
-            var category = await _applicationUnitOfWork.CategoryRepository.GetByIdAsync(request.Id);
 
-            if (category != null)
-            {
-                _mapper.Map(request, category);
-                category = _mapper.Map<Category>(request);
-                category.CreateOnUtc = DateTime.UtcNow;
+            var category = _mapper.Map<Category>(request);
+            category.CreateOnUtc = DateTime.UtcNow;
 
-                await _applicationUnitOfWork.CategoryRepository.UpdateAsync(category);
-                await _applicationUnitOfWork.SaveAsync();
-            }
+            await _applicationUnitOfWork.CategoryRepository.UpdateAsync(category);
+            await _applicationUnitOfWork.SaveAsync();
         }
 
         #endregion
