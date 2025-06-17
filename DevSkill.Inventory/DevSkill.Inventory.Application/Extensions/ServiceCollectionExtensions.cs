@@ -1,5 +1,6 @@
 ﻿using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
+using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -18,6 +19,8 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(CategoryAddCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(UpdateCategoryCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(CategoryDeleteCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetCategoryListQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetCategoryByIdQuery).Assembly);
 
             });
 

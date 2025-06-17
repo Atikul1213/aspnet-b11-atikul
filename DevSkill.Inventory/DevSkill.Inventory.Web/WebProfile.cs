@@ -23,6 +23,9 @@ namespace DevSkill.Inventory.Web
             CreateMap<UpdateCategoryCommand, UpdateCategoryModel>().ReverseMap();
             CreateMap<Category, CategoryAddCommand>().ReverseMap();
             CreateMap<Category, UpdateCategoryCommand>().ReverseMap();
+            CreateMap<Category, AddCategoryModel>().ReverseMap();
+            CreateMap<Category, UpdateCategoryModel>().ReverseMap();
+            CreateMap<Category, CategoryModel>().ReverseMap();
         }
     }
 }

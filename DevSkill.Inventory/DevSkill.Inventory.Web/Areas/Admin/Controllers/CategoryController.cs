@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
+using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
@@ -14,23 +17,27 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
         private readonly ILogger<Category> _logger;
+        private readonly IMediator _mediator;
         #endregion
 
         #region Ctor
         public CategoryController(ICategoryService categoryService,
             IMapper mapper,
-            ILogger<Category> logger)
+            ILogger<Category> logger,
+            IMediator mediator)
         {
             _categoryService = categoryService;
             _mapper = mapper;
             _logger = logger;
+            _mediator = mediator;
         }
         #endregion
 
         #region Index AddCategory UpdateCategory
         public async Task<IActionResult> Index()
         {
-            var categories = await _categoryService.GetAllCategoriesAsync();
+            var getCategoryListQuery = new GetCategoryListQuery();
+            var categories = await _mediator.Send(getCategoryListQuery);
 
             var model = new CategoryListModel();
             model.AddCategoryModel.StatusId = (int)Status.Active;
@@ -58,9 +65,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    model.CreateOnUtc = DateTime.UtcNow;
-                    var category = _mapper.Map<Category>(model);
-                    await _categoryService.InsertCategoryAsync(category);
+                    var category = _mapper.Map<CategoryAddCommand>(model);
+                    await _mediator.Send(category);
+
                     TempData["success'"] = "Category created successfully.";
 
                     return RedirectToAction("Index");
@@ -104,9 +111,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    model.CreateOnUtc = DateTime.UtcNow;
-                    var category = _mapper.Map<Category>(model);
-                    await _categoryService.UpdateCategoryAsync(category);
+                    var category = _mapper.Map<UpdateCategoryCommand>(model);
+                    await _mediator.Send(category);
                     TempData["success'"] = "Category updated successfully.";
 
                     return RedirectToAction("Index");
@@ -126,8 +132,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             try
             {
-                var category = await _categoryService.GetCategoryByIdAsync(id);
-                await _categoryService.DeleteCategoryAsync(category);
+                var category = new CategoryDeleteCommand(id);
+                await _mediator.Send(category);
+
                 TempData["success'"] = "Category deleted successfully.";
             }
             catch (Exception ex)

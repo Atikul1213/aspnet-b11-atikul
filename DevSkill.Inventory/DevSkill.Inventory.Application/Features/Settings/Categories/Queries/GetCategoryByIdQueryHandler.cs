@@ -4,23 +4,24 @@ using MediatR;
 
 namespace DevSkill.Inventory.Application.Features.Settings.Categories.Queries
 {
-    public class CategoryListQueryHandler : IRequestHandler<GetCategoryListQuery, IList<Category>>
+    public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, Category>
     {
         #region Fields
         private readonly IApplicationUnitOfWork _applicationUnitOfWork;
         #endregion
 
         #region Ctor
-        public CategoryListQueryHandler(IApplicationUnitOfWork applicationUnitOfWork)
+        public GetCategoryByIdQueryHandler(IApplicationUnitOfWork applicationUnitOfWork)
         {
             _applicationUnitOfWork = applicationUnitOfWork;
         }
         #endregion
 
         #region Methods
-        public async Task<IList<Category>> Handle(GetCategoryListQuery request, CancellationToken cancellationToken)
+        public async Task<Category> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
-            return await _applicationUnitOfWork.CategoryRepository.GetAllAsync();
+            var category = await _applicationUnitOfWork.CategoryRepository.GetByIdAsync(request.Id);
+            return category;
         }
         #endregion
     }
