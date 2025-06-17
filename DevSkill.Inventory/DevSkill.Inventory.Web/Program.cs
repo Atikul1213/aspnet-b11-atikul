@@ -1,6 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using DevSkill.Inventory.Application.Features.Products.Commands;
+using DevSkill.Inventory.Application.Extensions;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Infrastructure;
 using DevSkill.Inventory.Infrastructure.Extensions;
@@ -53,14 +53,7 @@ try
     #endregion
 
     #region MediatR Configuration
-    builder.Services.AddMediatR(cfg =>
-    {
-        cfg.RegisterServicesFromAssembly(migrationAssembly);
-        cfg.RegisterServicesFromAssembly(typeof(ProductAddCommand).Assembly);
-        cfg.RegisterServicesFromAssembly(typeof(ProductUpdateCommand).Assembly);
-        cfg.RegisterServicesFromAssembly(typeof(ProductDeleteCommand).Assembly);
-
-    });
+    builder.Services.AddCustomMediator(migrationAssembly);
     #endregion
 
     #region AutoMapper Configuration
