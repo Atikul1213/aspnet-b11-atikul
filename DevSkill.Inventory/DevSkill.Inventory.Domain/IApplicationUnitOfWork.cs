@@ -8,6 +8,7 @@ namespace DevSkill.Inventory.Domain
     {
         public IProductRepository ProductRepository { get; }
         public ICategoryRepository CategoryRepository { get; }
+        public IProductUnitRepository ProductUnitRepository { get; }
         Task<(IList<Product> data, int total, int totalDisplay)> GetProductSPAsync(int pageIndex, int pageSize, string? order, ProductSearchDto search);
     }
 }

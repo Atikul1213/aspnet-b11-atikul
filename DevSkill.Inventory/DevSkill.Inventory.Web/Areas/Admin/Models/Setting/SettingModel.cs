@@ -3,5 +3,6 @@
     public class SettingModel
     {
         public int CategoryCount { get; set; }
+        public int UnitCount { get; set; }
     }
 }

@@ -16,14 +16,14 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         #region Fields
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
-        private readonly ILogger<Category> _logger;
+        private readonly ILogger<CategoryController> _logger;
         private readonly IMediator _mediator;
         #endregion
 
         #region Ctor
         public CategoryController(ICategoryService categoryService,
             IMapper mapper,
-            ILogger<Category> logger,
+            ILogger<CategoryController> logger,
             IMediator mediator)
         {
             _categoryService = categoryService;
@@ -33,7 +33,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
         #endregion
 
-        #region Index AddCategory UpdateCategory
+        #region Index AddCategory UpdateCategory RemoveCategory
         public async Task<IActionResult> Index()
         {
             var getCategoryListQuery = new GetCategoryListQuery();

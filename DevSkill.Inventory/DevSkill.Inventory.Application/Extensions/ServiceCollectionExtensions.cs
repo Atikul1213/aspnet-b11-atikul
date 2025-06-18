@@ -1,6 +1,8 @@
 ﻿using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
+using DevSkill.Inventory.Application.Features.Settings.Units.Commands;
+using DevSkill.Inventory.Application.Features.Settings.Units.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -16,11 +18,21 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(ProductAddCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(ProductUpdateCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(ProductDeleteCommand).Assembly);
+
                 cfg.RegisterServicesFromAssembly(typeof(CategoryAddCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(UpdateCategoryCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(CategoryDeleteCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetCategoryListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetCategoryByIdQuery).Assembly);
+
+
+                cfg.RegisterServicesFromAssembly(typeof(UnitAddCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(UnitDeleteCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(UpdateUnitCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetUnitByIdQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetUnitListQuery).Assembly);
+
+
 
             });
 

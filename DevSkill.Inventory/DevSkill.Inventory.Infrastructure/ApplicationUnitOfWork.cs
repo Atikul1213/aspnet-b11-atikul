@@ -7,17 +7,28 @@ namespace DevSkill.Inventory.Infrastructure
 {
     public class ApplicationUnitOfWork : UnitOfWork, IApplicationUnitOfWork
     {
+        #region Ctor
         public ApplicationUnitOfWork(ApplicationDbContext context,
             IProductRepository productRepository,
-            ICategoryRepository categoryRepository) : base(context)
+            ICategoryRepository categoryRepository,
+            IProductUnitRepository productUnitRepository) : base(context)
         {
             ProductRepository = productRepository;
             CategoryRepository = categoryRepository;
+            ProductUnitRepository = productUnitRepository;
         }
+
+        #endregion
+
+        #region Fields
 
         public IProductRepository ProductRepository { get; private set; }
         public ICategoryRepository CategoryRepository { get; private set; }
+        public IProductUnitRepository ProductUnitRepository { get; private set; }
 
+        #endregion
+
+        #region Methods
         public async Task<(IList<Product> data, int total, int totalDisplay)> GetProductSPAsync(int pageIndex, int pageSize, string? order, ProductSearchDto search)
         {
             var procedureName = "GetProducts";
@@ -41,5 +52,7 @@ namespace DevSkill.Inventory.Infrastructure
 
             return (result.result, (int)result.outValues["Total"], (int)result.outValues["TotalDisplay"]);
         }
+
+        #endregion
     }
 }

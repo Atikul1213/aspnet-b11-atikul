@@ -1,8 +1,9 @@
-﻿namespace DevSkill.Inventory.Domain.Entities
+﻿using MediatR;
+
+namespace DevSkill.Inventory.Application.Features.Settings.Units.Commands
 {
-    public class ProductUnit : IEntity<Guid>
+    public class UnitAddCommand : IRequest
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public int StatusId { get; set; }
         public DateTime CreateOnUtc { get; set; }

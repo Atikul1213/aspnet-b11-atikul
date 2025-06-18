@@ -1,4 +1,5 @@
 ﻿using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
+using DevSkill.Inventory.Application.Features.Settings.Units.Queries;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Setting;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -24,9 +25,13 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             var model = new SettingModel();
 
-            var command = new GetCategoryListQuery();
-            var categories = await _mediator.Send(command);
+            var categoryQuery = new GetCategoryListQuery();
+            var categories = await _mediator.Send(categoryQuery);
             model.CategoryCount = categories.Count;
+
+            var unitQuery = new GetUnitListQuery();
+            var units = await _mediator.Send(unitQuery);
+            model.UnitCount = units.Count;
 
             return View(model);
         }

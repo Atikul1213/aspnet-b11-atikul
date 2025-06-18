@@ -43,9 +43,12 @@ namespace DevSkill.Inventory.Web
 
             builder.RegisterType<CategoryService>().As<ICategoryService>()
                 .InstancePerLifetimeScope();
+
             builder.RegisterType<CategoryRepository>().As<ICategoryRepository>()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<ProductUnitRepository>().As<IProductUnitRepository>()
+                .InstancePerLifetimeScope();
 
 
             base.Load(builder);
