@@ -1,0 +1,100 @@
+﻿@model SettingModel
+@{
+    ViewData["Title"] = "Settings";
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Setting</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Setting</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title">Setting</h3></div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                      <div class="row">
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <a asp-area="Admin" asp-controller="Category" asp-action="Index">
+                                    <div class="info-box" style="background-color:#c2a5d6;color:black;">
+                                        <span class="info-box-icon"><i class="bi bi-list-task"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Category</span>
+                                            <span class="info-box-number">@Model.CategoryCount</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <a href="https://sunshine-it.com/demo/inventory/Category">
+                                    <div class="info-box" style="background-color:#c2a5d6;color:black;">
+                                        <span class="info-box-icon"><i class="bi bi-list-task"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Category</span>
+                                            <span class="info-box-number">22</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <a href="https://sunshine-it.com/demo/inventory/Category">
+                                    <div class="info-box" style="background-color:#c2a5d6;color:black;">
+                                        <span class="info-box-icon"><i class="bi bi-list-task"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Category</span>
+                                            <span class="info-box-number">22</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-12">
+                                <a href="https://sunshine-it.com/demo/inventory/Category">
+                                    <div class="info-box" style="background-color:#c2a5d6;color:black;">
+                                        <span class="info-box-icon"><i class="bi bi-list-task"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Category</span>
+                                            <span class="info-box-number">22</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                      </div>
+                    <!-- /.card-body -->
+
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+}
