@@ -5,10 +5,7 @@ using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Infrastructure;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web;
-using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
-using DevSkill.Inventory.Web.Areas.Admin.Validator;
-using FluentValidation;
-using FluentValidation.AspNetCore;
+using DevSkill.Inventory.Web.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -86,12 +83,7 @@ try
     #endregion
 
     #region Fluent Validation
-
-    builder.Services.AddFluentValidationAutoValidation();
-    builder.Services.AddFluentValidationClientsideAdapters();
-    builder.Services.AddTransient<IValidator<AddProductModel>, AddProductModelValidator>();
-    builder.Services.AddTransient<IValidator<UpdateProductModel>, UpdateProductModelValidator>();
-
+    builder.Services.AddFluentValidationConfiguration();
     #endregion
 
     #region Email Configuration

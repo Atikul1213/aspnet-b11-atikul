@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel.DataAnnotations;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Models.Unit
 {
@@ -10,7 +9,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Models.Unit
             Status = new List<SelectListItem>();
         }
         public Guid Id { get; set; }
-        [Required]
         public string Name { get; set; }
         public int StatusId { get; set; }
         public DateTime CreateOnUtc { get; set; }

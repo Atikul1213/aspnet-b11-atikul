@@ -107,14 +107,14 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             try
             {
-                var category = new UnitDeleteCommand(id);
-                await _mediator.Send(category);
+                var unit = new UnitDeleteCommand(id);
+                await _mediator.Send(unit);
 
                 TempData["success'"] = "Unit deleted successfully.";
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to delete category");
+                _logger.LogError(ex, "Failed to delete unit");
             }
 
             return RedirectToAction("Index");
