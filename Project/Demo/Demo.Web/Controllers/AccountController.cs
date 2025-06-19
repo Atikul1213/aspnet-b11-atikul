@@ -21,6 +21,8 @@ namespace Demo.Web.Controllers
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailUtility _emailUtility;
+        private readonly ITokenService _tokenService;
+        private readonly IConfiguration _configuration;
         #endregion
 
         #region Ctor
@@ -28,7 +30,9 @@ namespace Demo.Web.Controllers
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailUtility emailUtility)
+            IEmailUtility emailUtility,
+            ITokenService tokenService,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -36,6 +40,8 @@ namespace Demo.Web.Controllers
             _signInManager = signInManager;
             _logger = logger;
             _emailUtility = emailUtility;
+            _tokenService = tokenService;
+            _configuration = configuration;
         }
         #endregion
 
@@ -155,6 +161,16 @@ namespace Demo.Web.Controllers
 
                 if (result.Succeeded)
                 {
+                    var user = await _userManager.FindByEmailAsync(model.Email);
+                    var claims = (await _userManager.GetClaimsAsync(user)).ToArray();
+                    var token = await _tokenService.GetJwtToken(claims,
+                          _configuration["Jwt:Key"],
+                          _configuration["Jwt:Issuer"],
+                          _configuration["Jwt:Audience"]
+                      );
+
+                    HttpContext.Session.SetString("token", token);
+
                     return LocalRedirect(model.ReturnUrl);
                 }
                 if (result.RequiresTwoFactor)

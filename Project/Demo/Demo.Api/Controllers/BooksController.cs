@@ -1,80 +1,42 @@
 ﻿using AutoMapper;
-using Demo.Application.Features.Books.Commands;
 using Demo.Application.Features.Books.Queries;
 using Demo.Domain;
-using Demo.Domain.Services;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Web;
 
-namespace Demo.Web.Areas.Admin.Controllers
+namespace Demo.Api.Controllers
 {
-    [Area("Admin")]
-    public class BooksController : Controller
+    [Route("api/v1/[controller]")]
+    [ApiController]
+    [EnableCors("AllowedSites")]
+    public class BooksController : ControllerBase
     {
         #region Fields
-        private readonly IBookService _bookService;
         private readonly IMediator _mediator;
         private readonly ILogger<BooksController> _logger;
         private readonly IMapper _mapper;
         #endregion
-
-        #region Ctor
-        public BooksController(IBookService bookService,
-            IMediator mediator,
+        public BooksController(IMediator mediator,
             ILogger<BooksController> logger,
             IMapper mapper)
         {
-            _bookService = bookService;
             _mediator = mediator;
             _logger = logger;
             _mapper = mapper;
         }
-        #endregion
 
-        #region Methods
-
-        public IActionResult IndexApi()
-        {
-            var model = new BookAddCommand();
-
-            return View(model);
-        }
-
-        public IActionResult Index()
-        {
-            var model = new BookAddCommand();
-
-            return View(model);
-        }
-
-        public IActionResult AddBook()
-        {
-            var model = new BookAddCommand();
-
-            return View(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddBook(BookAddCommand bookAddCommand)
-        {
-            if (ModelState.IsValid)
-            {
-                await _mediator.Send(bookAddCommand);
-            }
-
-            return View(bookAddCommand);
-        }
-
-
-        [HttpPost]
-        public async Task<JsonResult> GetBooksJsonDataAsync([FromBody] GetBooksQuery bookQuery)
+        [Authorize(Policy = "ValidLogin")]
+        [HttpPost(Name = "GetBooks")]
+        public async Task<object> POST([FromBody] GetBooksQuery bookQuery)
         {
             try
             {
                 var (data, total, totalDisplay) = await _mediator.Send(bookQuery);
 
-                var books = new
+                var result = new
                 {
                     recordsTotal = total,
                     recordsFiltered = totalDisplay,
@@ -90,14 +52,14 @@ namespace Demo.Web.Areas.Admin.Controllers
                             }).ToArray()
                 };
 
-                return Json(books);
+                return result;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "There was a problem in getting books");
-                return Json(DataTables.EmptyResult);
+                return DataTables.EmptyResult;
             }
         }
-        #endregion
+
     }
 }

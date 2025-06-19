@@ -73,6 +73,15 @@ try
     builder.Services.AddPolicy();
     #endregion
 
+    #region Session Configuration
+    builder.Services.AddSession(options =>
+    {
+        options.IdleTimeout = TimeSpan.FromMinutes(30);
+        options.Cookie.HttpOnly = true;
+        options.Cookie.IsEssential = true;
+    });
+    #endregion
+
     #region DbContext
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly?.FullName)));
@@ -111,6 +120,10 @@ try
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();
+
+    #region Session Configuration
+    app.UseSession();
+    #endregion
 
     #region Area Route Configure
     app.MapControllerRoute(

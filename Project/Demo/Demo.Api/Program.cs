@@ -4,6 +4,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Demo.Api;
+using Demo.Application.Features.Books.Commands;
 using Demo.Infrastructure;
 using Demo.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -53,6 +54,16 @@ try
         options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly?.FullName)));
     #endregion
 
+    #region CORS configuration
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowedSites",
+            builder =>
+            {
+                builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            });
+    });
+    #endregion
     #region Identity Configuration
     builder.Services.AddIdentity();
 
@@ -64,7 +75,13 @@ try
 
     builder.Services.AddJwtAuthorization();
     #endregion
-
+    #region MediatR Configuration
+    builder.Services.AddMediatR(cfg =>
+    {
+        cfg.RegisterServicesFromAssembly(migrationAssembly);
+        cfg.RegisterServicesFromAssembly(typeof(BookAddCommand).Assembly);
+    });
+    #endregion
 
     #region AutoMapper Configuration
     builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -81,6 +98,9 @@ try
     {
         app.MapOpenApi();
     }
+    #region CORS Configuration
+    app.UseCors();
+    #endregion
 
     app.UseHttpsRedirection();
 

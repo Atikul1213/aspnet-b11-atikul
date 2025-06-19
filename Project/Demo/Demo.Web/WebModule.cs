@@ -6,6 +6,7 @@ using Demo.Domain.Repositories;
 using Demo.Domain.Services;
 using Demo.Domain.Utilities;
 using Demo.Infrastructure;
+using Demo.Infrastructure.Identity;
 using Demo.Infrastructure.Repositories;
 using Demo.Infrastructure.Services;
 using Demo.Infrastructure.Utilities;
@@ -47,6 +48,9 @@ namespace Demo.Web
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<BookAddCommand>().AsSelf();
+
+            builder.RegisterType<TokenService>().As<ITokenService>()
+                .InstancePerLifetimeScope();
 
             base.Load(builder);
         }
