@@ -21,6 +21,7 @@ namespace DevSkill.Inventory.Application.Features.Settings.Categories.Commands
         public async Task Handle(CategoryDeleteCommand request, CancellationToken cancellationToken)
         {
             var category = await _applicationUnitOfWork.CategoryRepository.GetByIdAsync(request.Id);
+
             if (category != null)
             {
                 await _applicationUnitOfWork.CategoryRepository.RemoveAsync(category);

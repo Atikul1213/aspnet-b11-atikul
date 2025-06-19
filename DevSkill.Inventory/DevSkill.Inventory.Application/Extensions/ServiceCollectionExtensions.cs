@@ -1,6 +1,8 @@
 ﻿using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
+using DevSkill.Inventory.Application.Features.Settings.Departments.Commands;
+using DevSkill.Inventory.Application.Features.Settings.Departments.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Units.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Units.Queries;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +33,13 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(UpdateUnitCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetUnitByIdQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetUnitListQuery).Assembly);
+
+
+                cfg.RegisterServicesFromAssembly(typeof(DepartmentAddCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(UpdateDepartmentCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(DepartmentDeleteCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetDepartmentListQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetDepartmentByIdQuery).Assembly);
 
 
 

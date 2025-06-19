@@ -21,6 +21,7 @@ namespace DevSkill.Inventory.Infrastructure
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<ProductUnit> ProductUnits { get; set; }
+        public DbSet<Department> Departments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

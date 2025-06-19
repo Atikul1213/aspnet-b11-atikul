@@ -2,10 +2,12 @@
 using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Application.Features.Products.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
+using DevSkill.Inventory.Application.Features.Settings.Departments.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Units.Commands;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
+using DevSkill.Inventory.Web.Areas.Admin.Models.Department;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Unit;
 
@@ -36,7 +38,6 @@ namespace DevSkill.Inventory.Web
 
             #endregion
 
-
             #region Unit
 
             CreateMap<UnitAddCommand, AddUnitModel>().ReverseMap();
@@ -49,7 +50,17 @@ namespace DevSkill.Inventory.Web
 
             #endregion
 
+            #region Department
 
+            CreateMap<DepartmentAddCommand, AddDepartmentModel>().ReverseMap();
+            CreateMap<UpdateDepartmentCommand, UpdateDepartmentModel>().ReverseMap();
+            CreateMap<Department, DepartmentAddCommand>().ReverseMap();
+            CreateMap<Department, UpdateDepartmentCommand>().ReverseMap();
+            CreateMap<Department, AddDepartmentModel>().ReverseMap();
+            CreateMap<Department, UpdateDepartmentModel>().ReverseMap();
+            CreateMap<Department, DepartmentModel>().ReverseMap();
+
+            #endregion
         }
     }
 }

@@ -11,11 +11,13 @@ namespace DevSkill.Inventory.Infrastructure
         public ApplicationUnitOfWork(ApplicationDbContext context,
             IProductRepository productRepository,
             ICategoryRepository categoryRepository,
-            IProductUnitRepository productUnitRepository) : base(context)
+            IProductUnitRepository productUnitRepository,
+            IDepartmentRepository departmentRepository) : base(context)
         {
             ProductRepository = productRepository;
             CategoryRepository = categoryRepository;
             ProductUnitRepository = productUnitRepository;
+            DepartmentRepository = departmentRepository;
         }
 
         #endregion
@@ -25,6 +27,7 @@ namespace DevSkill.Inventory.Infrastructure
         public IProductRepository ProductRepository { get; private set; }
         public ICategoryRepository CategoryRepository { get; private set; }
         public IProductUnitRepository ProductUnitRepository { get; private set; }
+        public IDepartmentRepository DepartmentRepository { get; set; }
 
         #endregion
 

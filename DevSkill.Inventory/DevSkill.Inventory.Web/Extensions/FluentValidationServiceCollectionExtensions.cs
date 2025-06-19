@@ -1,8 +1,10 @@
 ﻿using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
+using DevSkill.Inventory.Web.Areas.Admin.Models.Department;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Unit;
 using DevSkill.Inventory.Web.Areas.Admin.Validator;
 using DevSkill.Inventory.Web.Areas.Admin.Validator.Settings.Categories;
+using DevSkill.Inventory.Web.Areas.Admin.Validator.Settings.Department;
 using DevSkill.Inventory.Web.Areas.Admin.Validator.Settings.Units;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -24,6 +26,9 @@ namespace DevSkill.Inventory.Web.Extensions
 
             services.AddTransient<IValidator<AddUnitModel>, AddUnitModelValidator>();
             services.AddTransient<IValidator<UpdateUnitModel>, UpdateUnitModelValidator>();
+
+            services.AddTransient<IValidator<AddDepartmentModel>, AddDepartmentModelValidator>();
+            services.AddTransient<IValidator<UpdateDepartmentModel>, UpdateDepartmentModelValidator>();
 
             return services;
         }

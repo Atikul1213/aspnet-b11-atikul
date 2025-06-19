@@ -1,4 +1,5 @@
 ﻿using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
+using DevSkill.Inventory.Application.Features.Settings.Departments.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Units.Queries;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Setting;
 using MediatR;
@@ -32,6 +33,10 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             var unitQuery = new GetUnitListQuery();
             var units = await _mediator.Send(unitQuery);
             model.UnitCount = units.Count;
+
+            var departmentQuery = new GetDepartmentListQuery();
+            var departments = await _mediator.Send(departmentQuery);
+            model.DepartmentCount = departments.Count;
 
             return View(model);
         }

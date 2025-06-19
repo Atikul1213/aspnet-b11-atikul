@@ -2,7 +2,6 @@
 using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
 using DevSkill.Inventory.Domain.Entities;
-using DevSkill.Inventory.Domain.Services;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
 using MediatR;
@@ -14,19 +13,16 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
     public class CategoryController : Controller
     {
         #region Fields
-        private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
         private readonly ILogger<CategoryController> _logger;
         private readonly IMediator _mediator;
         #endregion
 
         #region Ctor
-        public CategoryController(ICategoryService categoryService,
-            IMapper mapper,
+        public CategoryController(IMapper mapper,
             ILogger<CategoryController> logger,
             IMediator mediator)
         {
-            _categoryService = categoryService;
             _mapper = mapper;
             _logger = logger;
             _mediator = mediator;
