@@ -85,8 +85,6 @@ namespace Demo.Infrastructure.Extensions
                         ValidAudience = audience
                     };
                 });
-
-
         }
 
         public static void AddJwtAuthorization(this IServiceCollection services)
@@ -102,7 +100,6 @@ namespace Demo.Infrastructure.Extensions
             });
         }
 
-
         public static void AddCookieAuthentication(this IServiceCollection services)
         {
             services.AddAuthentication()
@@ -116,6 +113,5 @@ namespace Demo.Infrastructure.Extensions
                     options.SlidingExpiration = true;
                 });
         }
-
     }
 }

@@ -72,8 +72,11 @@ try
     #region Authorization Configuration
     builder.Services.AddPolicy();
     #endregion
+
+    #region DbContext
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly?.FullName)));
+    #endregion
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
     //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)

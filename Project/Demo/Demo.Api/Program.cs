@@ -4,7 +4,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Demo.Api;
+using Demo.Infrastructure;
 using Demo.Infrastructure.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
 using System.Reflection;
@@ -46,6 +48,11 @@ try
             .ReadFrom.Configuration(builder.Configuration)
             );
     #endregion
+    #region DbContext
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly?.FullName)));
+    #endregion
+
     #region Identity Configuration
     builder.Services.AddIdentity();
 
