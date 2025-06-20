@@ -1,6 +1,7 @@
 ﻿using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Departments.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Units.Queries;
+using DevSkill.Inventory.Application.Features.Settings.UserRoles.Queries;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Setting;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,10 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             var departmentQuery = new GetDepartmentListQuery();
             var departments = await _mediator.Send(departmentQuery);
             model.DepartmentCount = departments.Count;
+
+            var userRoleQuery = new GetUserRoleListQuery();
+            var userRoles = await _mediator.Send(userRoleQuery);
+            model.UserRoleCount = userRoles.Count;
 
             return View(model);
         }

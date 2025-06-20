@@ -4,12 +4,14 @@ using DevSkill.Inventory.Application.Features.Products.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Departments.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Units.Commands;
+using DevSkill.Inventory.Application.Features.Settings.UserRoles.Commands;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Department;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Unit;
+using DevSkill.Inventory.Web.Areas.Admin.Models.UserRole;
 
 namespace DevSkill.Inventory.Web
 {
@@ -59,6 +61,18 @@ namespace DevSkill.Inventory.Web
             CreateMap<Department, AddDepartmentModel>().ReverseMap();
             CreateMap<Department, UpdateDepartmentModel>().ReverseMap();
             CreateMap<Department, DepartmentModel>().ReverseMap();
+
+            #endregion
+
+            #region UserRole
+
+            CreateMap<UserRoleAddCommand, AddUserRoleModel>().ReverseMap();
+            CreateMap<UpdateUserRoleCommand, UpdateUserRoleModel>().ReverseMap();
+            CreateMap<UserRole, UserRoleAddCommand>().ReverseMap();
+            CreateMap<UserRole, UpdateUserRoleCommand>().ReverseMap();
+            CreateMap<UserRole, AddUserRoleModel>().ReverseMap();
+            CreateMap<UserRole, UpdateUserRoleModel>().ReverseMap();
+            CreateMap<UserRole, UserRoleModel>().ReverseMap();
 
             #endregion
         }

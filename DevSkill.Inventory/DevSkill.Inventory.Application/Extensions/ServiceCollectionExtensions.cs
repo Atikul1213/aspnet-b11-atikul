@@ -5,6 +5,8 @@ using DevSkill.Inventory.Application.Features.Settings.Departments.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Departments.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Units.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Units.Queries;
+using DevSkill.Inventory.Application.Features.Settings.UserRoles.Commands;
+using DevSkill.Inventory.Application.Features.Settings.UserRoles.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -40,6 +42,13 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(DepartmentDeleteCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetDepartmentListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetDepartmentByIdQuery).Assembly);
+
+
+                cfg.RegisterServicesFromAssembly(typeof(UserRoleAddCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(UpdateUserRoleCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(UserRoleDeleteCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetUserRoleListQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetUserRoleByIdQuery).Assembly);
 
 
 

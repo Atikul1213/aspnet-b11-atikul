@@ -9,6 +9,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Models.UserModel
             Users = new List<SelectListItem>();
             Roles = new List<SelectListItem>();
         }
+        public string Name { get; set; }
         public Guid UserId { get; set; }
         public Guid RoleId { get; set; }
         public IEnumerable<SelectListItem> Users { get; set; }

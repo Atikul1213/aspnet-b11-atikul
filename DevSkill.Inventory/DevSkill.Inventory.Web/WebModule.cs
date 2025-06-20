@@ -53,6 +53,8 @@ namespace DevSkill.Inventory.Web
             builder.RegisterType<DepartmentRepository>().As<IDepartmentRepository>()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<UserRoleRepository>().As<IUserRoleRepository>()
+                .InstancePerLifetimeScope();
 
             base.Load(builder);
         }

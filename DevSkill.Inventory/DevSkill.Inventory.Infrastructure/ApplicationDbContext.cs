@@ -11,17 +11,33 @@ namespace DevSkill.Inventory.Infrastructure
         ApplicationUserRole, ApplicationUserLogin,
         ApplicationRoleClaim, ApplicationUserToken>
     {
+        #region Fields
+
         private readonly string _connectionString;
         private readonly string _migrationAssembly;
+
+        #endregion
+
+        #region Ctor
         public ApplicationDbContext(string connectionString, string migrationAssembly)
         {
             _connectionString = connectionString;
             _migrationAssembly = migrationAssembly;
         }
+
+        #endregion
+
+        #region Properties
+
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<ProductUnit> ProductUnits { get; set; }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        #endregion
+
+
+        #region Methods
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -40,5 +56,6 @@ namespace DevSkill.Inventory.Infrastructure
 
             base.OnModelCreating(builder);
         }
+        #endregion
     }
 }

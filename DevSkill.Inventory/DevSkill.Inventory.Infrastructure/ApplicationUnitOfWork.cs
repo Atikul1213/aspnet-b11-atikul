@@ -12,12 +12,14 @@ namespace DevSkill.Inventory.Infrastructure
             IProductRepository productRepository,
             ICategoryRepository categoryRepository,
             IProductUnitRepository productUnitRepository,
-            IDepartmentRepository departmentRepository) : base(context)
+            IDepartmentRepository departmentRepository,
+            IUserRoleRepository userRoleRepository) : base(context)
         {
             ProductRepository = productRepository;
             CategoryRepository = categoryRepository;
             ProductUnitRepository = productUnitRepository;
             DepartmentRepository = departmentRepository;
+            UserRoleRepository = userRoleRepository;
         }
 
         #endregion
@@ -27,7 +29,8 @@ namespace DevSkill.Inventory.Infrastructure
         public IProductRepository ProductRepository { get; private set; }
         public ICategoryRepository CategoryRepository { get; private set; }
         public IProductUnitRepository ProductUnitRepository { get; private set; }
-        public IDepartmentRepository DepartmentRepository { get; set; }
+        public IDepartmentRepository DepartmentRepository { get; private set; }
+        public IUserRoleRepository UserRoleRepository { get; private set; }
 
         #endregion
 

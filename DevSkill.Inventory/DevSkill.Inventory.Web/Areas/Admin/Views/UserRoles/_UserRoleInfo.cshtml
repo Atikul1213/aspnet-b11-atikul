@@ -1,0 +1,28 @@
+﻿@model DevSkill.Inventory.Web.Areas.Admin.Models.UserRole.AddUserRoleModel
+
+<!--begin::Form-->
+<form asp-area="Admin" asp-controller="UserRoles" asp-action="AddUserRole" asp-antiforgery="true" method="post">
+    <!--begin::Body-->
+    <div class="card-body">
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label fw-bold">User Role Name</label>
+            <input type="text" class="form-control" asp-for="Name" id="Name" placeholder="Role Name" aria-describedby="titleHelp" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+            <div id="titleHelp" class="form-text"> </div>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="CompanyId" class="form-label fw-bold">Select Company</label>
+            <select class="form-select" asp-for="CompanyId" asp-items="Model.Companies" id="companyId" required>
+            </select>
+            <span asp-validation-for="CompanyId" class="text-danger"></span>
+        </div>
+        <input asp-for="StatusId" type="hidden" />
+    </div>
+    <!--end::Body-->
+    <!--begin::Footer-->
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+    <!--end::Footer-->
+</form>
+<!--end::Form-->
