@@ -39,7 +39,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region AddUser AddUserRole
+        #region AddUser AddUserRole  UserCategory
         public IActionResult AddUser()
         {
             var model = new AddUserModel();
@@ -168,6 +168,12 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return model;
         }
 
+        public async Task<IActionResult> UserCategory()
+        {
+            var model = new UserCategoryModel();
+
+            return View(model);
+        }
 
         #endregion
     }
