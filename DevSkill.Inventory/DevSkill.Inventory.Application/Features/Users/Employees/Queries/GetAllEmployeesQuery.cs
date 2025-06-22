@@ -3,7 +3,7 @@ using MediatR;
 
 namespace DevSkill.Inventory.Application.Features.Users.Employees.Queries
 {
-    public class GetEmployeeCountQuery : IRequest<IList<Employee>>
+    public class GetAllEmployeesQuery : IRequest<IList<Employee>>
     {
     }
 }

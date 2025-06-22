@@ -178,12 +178,12 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             var model = new UserCategoryModel();
 
-            var getSupplierQuery = new GetSupplierCountQuery();
+            var getSupplierQuery = new GetAllSuppliersQuery();
             var suppliers = await _mediator.Send(getSupplierQuery);
 
             model.SupplierCount = suppliers.Count;
 
-            var getEmployeeQuery = new GetEmployeeCountQuery();
+            var getEmployeeQuery = new GetAllEmployeesQuery();
             var employees = await _mediator.Send(getEmployeeQuery);
 
             model.EmployeeCount = employees.Count;

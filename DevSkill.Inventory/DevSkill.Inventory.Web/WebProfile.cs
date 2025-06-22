@@ -6,12 +6,14 @@ using DevSkill.Inventory.Application.Features.Settings.Departments.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Units.Commands;
 using DevSkill.Inventory.Application.Features.Settings.UserRoles.Commands;
 using DevSkill.Inventory.Application.Features.Users.Employees.Commands;
+using DevSkill.Inventory.Application.Features.Users.InventoryUsers.Commands;
 using DevSkill.Inventory.Application.Features.Users.Suppliers.Commands;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Department;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Employees;
+using DevSkill.Inventory.Web.Areas.Admin.Models.InventoryUsers;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Supplier;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Unit;
@@ -98,6 +100,15 @@ namespace DevSkill.Inventory.Web
             CreateMap<Employee, AddEmployeeModel>().ReverseMap();
             CreateMap<Employee, UpdateEmployeeModel>().ReverseMap();
             CreateMap<Employee, EmployeeModel>().ReverseMap();
+            #endregion
+            #region InventoryUser
+            CreateMap<InventoryUserAddCommand, AddInventoryUserModel>().ReverseMap();
+            CreateMap<InventoryUserUpdateCommand, UpdateInventoryUserModel>().ReverseMap();
+            CreateMap<InventoryUser, InventoryUserAddCommand>().ReverseMap();
+            CreateMap<InventoryUser, InventoryUserUpdateCommand>().ReverseMap();
+            CreateMap<InventoryUser, AddInventoryUserModel>().ReverseMap();
+            CreateMap<InventoryUser, UpdateInventoryUserModel>().ReverseMap();
+            CreateMap<InventoryUser, InventoryUserModel>().ReverseMap();
             #endregion
         }
     }

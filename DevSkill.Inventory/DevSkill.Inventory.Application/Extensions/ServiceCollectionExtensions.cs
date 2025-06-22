@@ -9,6 +9,8 @@ using DevSkill.Inventory.Application.Features.Settings.UserRoles.Commands;
 using DevSkill.Inventory.Application.Features.Settings.UserRoles.Queries;
 using DevSkill.Inventory.Application.Features.Users.Employees.Commands;
 using DevSkill.Inventory.Application.Features.Users.Employees.Queries;
+using DevSkill.Inventory.Application.Features.Users.InventoryUsers.Commands;
+using DevSkill.Inventory.Application.Features.Users.InventoryUsers.Queries;
 using DevSkill.Inventory.Application.Features.Users.Suppliers.Commands;
 using DevSkill.Inventory.Application.Features.Users.Suppliers.Queries;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,14 +61,21 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(SupplierDeleteCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetSupplierListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetSupplierByIdQuery).Assembly);
-                cfg.RegisterServicesFromAssembly(typeof(GetSupplierCountQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetAllSuppliersQuery).Assembly);
 
                 cfg.RegisterServicesFromAssembly(typeof(EmployeeAddCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(EmployeeUpdateCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(EmployeeDeleteCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetEmployeeListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetEmployeeByIdQuery).Assembly);
-                cfg.RegisterServicesFromAssembly(typeof(GetEmployeeCountQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetAllEmployeesQuery).Assembly);
+
+                cfg.RegisterServicesFromAssembly(typeof(InventoryUserAddCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(InventoryUserUpdateCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(InventoryUserDeleteCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetInventoryUserListQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetInventoryUserByIdQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetAllInventoryUsersQuery).Assembly);
 
 
             });
