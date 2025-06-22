@@ -34,8 +34,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         #region Index AddSupplier UpdateSupplier RemoveSupplier
         public async Task<IActionResult> Index()
         {
-            var getSupplierListQuery = new GetSupplierListQuery();
-            var suppliers = await _mediator.Send(getSupplierListQuery);
+            //var getSupplierListQuery = new GetSupplierListQuery();
+            //var suppliers = await _mediator.Send(getSupplierListQuery);
 
             var model = new SupplierListModel();
             model.AddSupplierModel.StatusId = (int)Status.Active;

@@ -20,7 +20,7 @@ namespace DevSkill.Inventory.Application.Features.Users.Suppliers.Queries
         #region Methods
         public async Task<(IList<Supplier> data, int total, int totalDisplay)> Handle(GetSupplierListQuery request, CancellationToken cancellationToken)
         {
-            return await _applicationUnitOfWork.SupplierRepository.GetPagedSupplierAsync(request.PageIndex, request.PageSize, request.FormatSortExpression("Name", "Id"), request.Search);
+            return await _applicationUnitOfWork.SupplierRepository.GetPagedSupplierAsync(request.PageIndex, request.PageSize, request?.FormatSortExpression("Name", "Id"), request.Search);
         }
         #endregion
     }
