@@ -101,6 +101,7 @@ namespace DevSkill.Inventory.Web
             CreateMap<Employee, UpdateEmployeeModel>().ReverseMap();
             CreateMap<Employee, EmployeeModel>().ReverseMap();
             #endregion
+
             #region InventoryUser
             CreateMap<InventoryUserAddCommand, AddInventoryUserModel>().ReverseMap();
             CreateMap<InventoryUserUpdateCommand, UpdateInventoryUserModel>().ReverseMap();

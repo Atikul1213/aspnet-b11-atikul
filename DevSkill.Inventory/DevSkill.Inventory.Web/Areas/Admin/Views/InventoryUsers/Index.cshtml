@@ -138,7 +138,7 @@
                  columnDefs: [
                      {
                          orderable: false,
-                         targets: 5,
+                         targets: 6,
                          render: function(data, type, row){
                                 return ` <a data-id="${data}"
                                                 data-toggle="modal" data-target="#update-inventoryUser-modal" class="btn btn-primary btn-edit-inventoryUser"><i class="bi bi-pencil-fill"></i></a>
@@ -176,16 +176,14 @@
                      dataType: 'json',
                      data: postData,
                      success: function(data){
-                         // console.log("data: ",data);
+                          console.log("data: ",data);
                          // console.log("test: ",data.id);
                         $("#update-inventoryUser-modal #Id").val(data.id);
-                        $("#update-inventoryUser-modal #Name").val(data.name);
-                        $("#update-inventoryUser-modal #Company").val(data.company);
-                        $("#update-inventoryUser-modal #MobileNumber").val(data.mobileNumber);
-                        $("#update-inventoryUser-modal #Address").val(data.address);
+                        $("#update-inventoryUser-modal #EmployeeName").val(data.employeeName);
+                        $("#update-inventoryUser-modal #EmployeeId").val(data.employeeId);
+                        $("#update-inventoryUser-modal #UserRoleId").val(data.userRoleId);
+                        $("#update-inventoryUser-modal #Password").val(data.password);
                         $("#update-inventoryUser-modal #statusId").val(data.statusId);
-                        $("#update-inventoryUser-modal #OpeningBalance").val(data.openingBalance);
-                        $("#update-inventoryUser-modal #Email").val(data.email);
                      },
                      error: function (xhr, status, error) {
                         console.error("AJAX Error:", error);

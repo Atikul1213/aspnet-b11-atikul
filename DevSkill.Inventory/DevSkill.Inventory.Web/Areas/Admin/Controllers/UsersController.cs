@@ -1,4 +1,5 @@
 ﻿using DevSkill.Inventory.Application.Features.Users.Employees.Queries;
+using DevSkill.Inventory.Application.Features.Users.InventoryUsers.Queries;
 using DevSkill.Inventory.Application.Features.Users.Suppliers.Queries;
 using DevSkill.Inventory.Infrastructure.Identity;
 using DevSkill.Inventory.Infrastructure.Utilities;
@@ -178,15 +179,14 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             var model = new UserCategoryModel();
 
-            var getSupplierQuery = new GetAllSuppliersQuery();
-            var suppliers = await _mediator.Send(getSupplierQuery);
-
+            var suppliers = await _mediator.Send(new GetAllSuppliersQuery());
             model.SupplierCount = suppliers.Count;
 
-            var getEmployeeQuery = new GetAllEmployeesQuery();
-            var employees = await _mediator.Send(getEmployeeQuery);
-
+            var employees = await _mediator.Send(new GetAllEmployeesQuery());
             model.EmployeeCount = employees.Count;
+
+            var inventoryUsers = await _mediator.Send(new GetAllInventoryUsersQuery());
+            model.UserCount = inventoryUsers.Count;
 
             return View(model);
         }

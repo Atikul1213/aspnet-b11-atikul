@@ -26,7 +26,7 @@
                                 <span asp-validation-for="Name" class="text-danger"></span>
                                 <div id="titleHelp" class="form-text"> </div>
                             </div>
-                            <div class="col-md-6 col-6">
+                            <div class="mb-3 col-6">
                                 <label asp-for="DepartmentId" class="form-label fw-bold">Department</label>
                                 <select class="form-select" asp-for="DepartmentId" asp-items="Model.Departments" id="DepartmentId" required>
                                 </select>
@@ -80,7 +80,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 col-6">
+                            <div class="mb-3 col-6">
                                 <label asp-for="StatusId" class="form-label fw-bold">Status</label>
                                 <select class="form-select" asp-for="StatusId" asp-items="Model.Status" id="StatusId" required>
                                 </select>

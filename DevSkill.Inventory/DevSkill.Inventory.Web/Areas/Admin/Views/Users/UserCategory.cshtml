@@ -71,12 +71,12 @@
                             </div>
 
                             <div class="col-md-3 col-sm-6 col-12">
-                                <a asp-area="Admin" asp-controller="UserRoles" asp-action="Index">
+                                <a asp-area="Admin" asp-controller="InventoryUsers" asp-action="Index">
                                     <div class="info-box" style="background-color:#c2a5d6;color:black;">
                                         <span class="info-box-icon"><i class="bi bi-list-task"></i></span>
                                         <div class="info-box-content">
                                             <span class="info-box-text">User</span>
-                                            <span class="info-box-number">1</span>
+                                            <span class="info-box-number">@Model.UserCount</span>
                                         </div>
                                     </div>
                                 </a>

@@ -15,60 +15,38 @@
                 <form asp-area="Admin" asp-controller="InventoryUsers" asp-action="UpdateInventoryUser" asp-antiforgery="true" method="post">
                     <!--begin::Body-->
                     <div class="card-body">
-                        <input type="hidden" asp-for="Id" />
-                        <div class="row">
-                            <div class="mb-3 col-6">
-                                <label asp-for="Name" class="form-label fw-bold">InventoryUser Name </label>
-                                <input type="text" class="form-control" asp-for="Name" id="Name" placeholder="InventoryUser Name" aria-describedby="titleHelp" />
-                                <span asp-validation-for="Name" class="text-danger"></span>
-                                <div id="titleHelp" class="form-text"> </div>
-                            </div>
-
-                            <div class="mb-3 col-6">
-                                <label asp-for="MobileNumber" class="form-label fw-bold">Contact Number</label>
-                                <input type="text" class="form-control" asp-for="MobileNumber" id="MobileNumber" placeholder="Mobile Number" aria-describedby="titleHelp" />
-                                <span asp-validation-for="MobileNumber" class="text-danger"></span>
-                                <div id="titleHelp" class="form-text"> </div>
-                            </div>
+                        <input asp-for="Id" hidden/>
+                        <div class="mb-3">
+                            <label asp-for="EmployeeName" class="form-label fw-bold">Employee Name</label>
+                            <input type="text" class="form-control" asp-for="EmployeeName" id="EmployeeName" placeholder="EmployeeName" readonly  aria-describedby="titleHelp" />
+                            <span asp-validation-for="EmployeeName" class="text-danger"></span>
+                            <div id="titleHelp" class="form-text"> </div>
                         </div>
-                        <div class="row">
-                            <div class="mb-3 col-6">
-                                <label asp-for="Company" class="form-label fw-bold">InventoryUser Company</label>
-                                <input type="text" class="form-control" asp-for="Company" id="Company" placeholder="InventoryUser Company" aria-describedby="titleHelp" />
-                                <span asp-validation-for="Company" class="text-danger"></span>
-                                <div id="titleHelp" class="form-text"> </div>
-                            </div>
-
-                            <div class="mb-3 col-6">
-                                <label asp-for="Email" class="form-label fw-bold">Email</label>
-                                <input type="text" class="form-control" asp-for="Email" id="Email" placeholder="example@gmail.com" aria-describedby="titleHelp" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
-                                <div id="titleHelp" class="form-text"> </div>
-                            </div>
+                        <div class="mb-3">
+                            <label asp-for="EmployeeId" class="form-label fw-bold">Select Employee</label>
+                            <select class="form-select" asp-for="EmployeeId" asp-items="Model.Employees" id="EmployeeId" required>
+                            </select>
+                            <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="UserRoleId" class="form-label fw-bold">Select User Role</label>
+                            <select class="form-select" asp-for="UserRoleId" asp-items="Model.UserRoles" id="UserRoleId" required>
+                            </select>
+                            <span asp-validation-for="UserRoleId" class="text-danger"></span>
                         </div>
 
-                        <div class="row">
-                            <div class="mb-3 col-6">
-                                <label asp-for="Address" class="form-label fw-bold">Address</label>
-                                <input type="text" class="form-control" asp-for="Address" id="Address" placeholder="" aria-describedby="titleHelp" />
-                                <span asp-validation-for="Address" class="text-danger"></span>
-                                <div id="titleHelp" class="form-text"> </div>
-                            </div>
-
-                            <div class="mb-3 col-6">
-                                <label asp-for="OpeningBalance" class="form-label fw-bold">Opening Balance</label>
-                                <input type="text" class="form-control" asp-for="OpeningBalance" id="OpeningBalance" placeholder="Opening Balance" aria-describedby="titleHelp" />
-                                <span asp-validation-for="OpeningBalance" class="text-danger"></span>
-                                <div id="titleHelp" class="form-text"> </div>
-                            </div>
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label fw-bold">Password</label>
+                            <input type="text" class="form-control" asp-for="Password" id="Password" placeholder="Password" aria-describedby="titleHelp" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                            <div id="titleHelp" class="form-text"> </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 col-6">
-                                <label asp-for="StatusId" class="form-label fw-bold">Status</label>
-                                <select class="form-select" asp-for="StatusId" asp-items="Model.Status" id="statusId" required>
-                                </select>
-                                <span asp-validation-for="StatusId" class="text-danger"></span>
-                            </div>
+
+                        <div class="mb-3">
+                            <label asp-for="StatusId" class="form-label fw-bold">Status</label>
+                            <select class="form-select" asp-for="StatusId" asp-items="Model.Status" id="statusId" required>
+                            </select>
+                            <span asp-validation-for="StatusId" class="text-danger"></span>
                         </div>
                     </div>
                     <!--end::Body-->

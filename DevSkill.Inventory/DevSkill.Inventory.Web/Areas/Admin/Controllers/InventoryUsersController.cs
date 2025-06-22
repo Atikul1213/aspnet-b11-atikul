@@ -48,7 +48,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             });
 
             var userRoles = await _mediator.Send(new GetUserRoleListQuery());
-            var userRoleSelecttList = EnumHelper.PrepareSelectListFromEntities(employees, d => d.Id, d => d.Name);
+            var userRoleSelecttList = EnumHelper.PrepareSelectListFromEntities(userRoles, d => d.Id, d => d.Name);
             userRoleSelecttList.Insert(0, new SelectListItem
             {
                 Text = "Select type",
@@ -167,10 +167,11 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     data = (from record in result.data
                             select new string[]
                             {
-                                //HttpUtility.HtmlEncode(record.Name),
+                                HttpUtility.HtmlEncode(record.EmployeeName),
                                 HttpUtility.HtmlEncode(record.Company),
+                                HttpUtility.HtmlEncode(record.Email),
                                 HttpUtility.HtmlEncode(record.MobileNumber),
-                                //HttpUtility.HtmlEncode(record.Address),
+                                HttpUtility.HtmlEncode(record.Role),
                                 HttpUtility.HtmlEncode(((Status)record.StatusId).ToString()),
                                 record.Id.ToString()
                             }).ToArray()

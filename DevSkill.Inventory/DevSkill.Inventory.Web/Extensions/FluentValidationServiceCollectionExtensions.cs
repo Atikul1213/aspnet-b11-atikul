@@ -1,6 +1,7 @@
 ﻿using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Department;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Employees;
+using DevSkill.Inventory.Web.Areas.Admin.Models.InventoryUsers;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Supplier;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Unit;
@@ -11,6 +12,7 @@ using DevSkill.Inventory.Web.Areas.Admin.Validator.Settings.Department;
 using DevSkill.Inventory.Web.Areas.Admin.Validator.Settings.Units;
 using DevSkill.Inventory.Web.Areas.Admin.Validator.Settings.UserRoles;
 using DevSkill.Inventory.Web.Areas.Admin.Validator.Users.Employees;
+using DevSkill.Inventory.Web.Areas.Admin.Validator.Users.InventoryUsers;
 using DevSkill.Inventory.Web.Areas.Admin.Validator.Users.Suppilers;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -44,6 +46,9 @@ namespace DevSkill.Inventory.Web.Extensions
 
             services.AddTransient<IValidator<AddEmployeeModel>, AddEmployeeModelValidator>();
             services.AddTransient<IValidator<UpdateEmployeeModel>, UpdateEmployeeModelValidator>();
+
+            services.AddTransient<IValidator<AddInventoryUserModel>, AddInventoryUserModelValidator>();
+            services.AddTransient<IValidator<UpdateInventoryUserModel>, UpdateInventoryUserModelValidator>();
 
             return services;
         }
