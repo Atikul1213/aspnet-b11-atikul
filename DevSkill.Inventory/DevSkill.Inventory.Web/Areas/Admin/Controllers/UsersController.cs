@@ -1,6 +1,8 @@
-﻿using DevSkill.Inventory.Infrastructure.Identity;
+﻿using DevSkill.Inventory.Application.Features.Users.Suppliers.Queries;
+using DevSkill.Inventory.Infrastructure.Identity;
 using DevSkill.Inventory.Infrastructure.Utilities;
 using DevSkill.Inventory.Web.Areas.Admin.Models.UserModel;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +22,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<UsersController> _logger;
         private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -28,13 +31,15 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         public UsersController(UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             ILogger<UsersController> logger,
-            RoleManager<ApplicationRole> roleManager)
+            RoleManager<ApplicationRole> roleManager,
+            IMediator mediator)
         {
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = IdentityHelper.GetEmailStore(userManager, userStore);
             _logger = logger;
             _roleManager = roleManager;
+            _mediator = mediator;
         }
 
         #endregion
@@ -171,6 +176,11 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         public async Task<IActionResult> UserCategory()
         {
             var model = new UserCategoryModel();
+
+            var getSupplierQuery = new GetSupplierCountQuery();
+            var suppliers = await _mediator.Send(getSupplierQuery);
+
+            model.SupplierCount = suppliers.Count;
 
             return View(model);
         }

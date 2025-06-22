@@ -34,21 +34,32 @@
     <div class="container-fluid">
         <!--begin::Row-->
         <div class="row">
-            <div class="col-8">
+            <div class="row">
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title">Supplier List</h3></div>
+                    <div class="card-header">
+                    <div class="row">
+                            <div class="col-md-6"><div>Supplier List</div></div>
+                        <div class="col-md-6 text-end">
+                            <button type="button" class="btn btn-primary btn-add-supplier">
+                                    <i class="bi bi-bookmark-plus-fill"></i> New Supplier
+                            </button>
+                        </div>
+                    </div>
+                        
+                    </div>
+
 
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table id="supplier-table" class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th class="text-center">Name</th>
-                                    <th class="text-center">Company</th>
-                                    <th class="text-center">Mobile</th>
-                                    <th class="text-center">Address</th>
-                                    <th class="text-center">Status</th>
-                                    <th class="text-center">Actions</th>
+                                    <th>Name</th>
+                                    <th>Company</th>
+                                    <th>Mobile</th>
+                                    <th>Address</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -56,12 +67,12 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th class="text-center">Name</th>
-                                    <th class="text-center">Company</th>
-                                    <th class="text-center">Mobile</th>
-                                    <th class="text-center">Address</th>
-                                    <th class="text-center">Status</th>
-                                    <th class="text-center">Actions</th>
+                                    <th>Name</th>
+                                    <th>Company</th>
+                                    <th>Mobile</th>
+                                    <th>Address</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -71,12 +82,9 @@
                 </div>
                 <!-- /.card -->
             </div>
-            <div class="col-4  card">
-                <div class="card-header"><h3 class="card-title fw-bold">Supplier Information</h3></div>
-                @Html.Partial("_SupplierInfo", Model.AddSupplierModel)
-                <div class="card-body">
-                </div>
-            </div>
+            @Html.Partial("_SupplierInfo", Model.AddSupplierModel)
+            @Html.Partial("_UpdateSupplierInfo", Model.UpdateSupplierModel)
+
             <!-- /.col -->
         </div>
 
@@ -129,10 +137,10 @@
                  columnDefs: [
                      {
                          orderable: false,
-                         targets: 6,
+                         targets: 5,
                          render: function(data, type, row){
-                                return `<button type="submit" class="btn btn-info btn-sm" onclick="window.location.href='/admin/Suppliers/edit/${data}'" value='${data}'>
-                                                  <i class="fas fa-pencil-alt"> </i>  Edit </button>
+                                return ` <a data-id="${data}"
+                                                data-toggle="modal" data-target="#update-supplier-modal" class="btn btn-primary btn-edit-supplier"><i class="bi bi-pencil-fill"></i></a>
 
                                       <button type="submit" class="btn btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
                                           <i class="fas fa-trash"></i> Delete </button>`;
@@ -146,18 +154,46 @@
     <script>
         $(document).ready(function () {
             // Handle Edit Supplier button click
-            $(".btn-edit-category").on("click", function () {
-                const id = $(this).data("id");
-                const name = $(this).data("name");
-                const statusId = $(this).data("statusid");
-
-                $("#Id").val(id);
-                $("#Name").val(name);
-                $("#statusId").val(statusId);
-
-                $("#update-category").modal("show");
+            $(".btn-add-supplier").on("click", function () {
+                $("#add-supplier-modal").modal("show");
             });
         });
+    </script>
+
+    <script>
+        // Handle Edit Supplier button click
+        $(document).on("click", ".btn-edit-supplier", function () {
+                let supplierId = $(this).data("id");
+                var postData ={
+                    supplierId: supplierId
+                };
+               $.ajax({
+                    cache: false,
+                     url: '@Url.Action("GetSupplierDataById", "Suppliers")',
+                     type: 'GET',
+                     contentType: "application/json",
+                     dataType: 'json',
+                     data: postData,
+                     success: function(data){
+                         console.log("data: ",data);
+                         console.log("test: ",data.id);
+                        $("#update-supplier-modal #Id").val(data.id);
+                        $("#update-supplier-modal #Name").val(data.name);
+                        $("#update-supplier-modal #Company").val(data.company);
+                        $("#update-supplier-modal #MobileNumber").val(data.mobileNumber);
+                        $("#update-supplier-modal #Address").val(data.address);
+                        $("#update-supplier-modal #statusId").val(data.statusId);
+                        $("#update-supplier-modal #OpeningBalance").val(data.openingBalance);
+                        $("#update-supplier-modal #Email").val(data.email);
+                     },
+                     error: function (xhr, status, error) {
+                        console.error("AJAX Error:", error);
+                    }
+                }),
+
+                $("#update-supplier-modal").modal("show");
+            });
+
     </script>
 
     <partial name="_ValidationScriptsPartial" />

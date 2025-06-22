@@ -57,7 +57,7 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(SupplierDeleteCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetSupplierListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetSupplierByIdQuery).Assembly);
-
+                cfg.RegisterServicesFromAssembly(typeof(GetSupplierCountQuery).Assembly);
 
 
             });

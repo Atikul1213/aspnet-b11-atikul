@@ -34,21 +34,11 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         #region Index AddSupplier UpdateSupplier RemoveSupplier
         public async Task<IActionResult> Index()
         {
-            //var getSupplierListQuery = new GetSupplierListQuery();
-            //var suppliers = await _mediator.Send(getSupplierListQuery);
-
             var model = new SupplierListModel();
+
             model.AddSupplierModel.StatusId = (int)Status.Active;
-
+            model.AddSupplierModel.Status = EnumHelper.PrepareSelectList<Status>();
             model.UpdateSupplierModel.Status = EnumHelper.PrepareSelectList<Status>();
-
-            //foreach (var supplier in suppliers.data)
-            //{
-            //    var supplierModel = _mapper.Map<SupplierModel>(supplier);
-            //    supplierModel.Status = ((Status)supplier.StatusId).ToString();
-
-            //    model.Suppliers.Add(supplierModel);
-            //}
 
             return View(model);
         }
@@ -153,6 +143,14 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetSupplierDataById(string supplierId)
+        {
+            var getSupplierByIdQuery = new GetSupplierByIdQuery(Guid.Parse(supplierId));
+            var supplier = await _mediator.Send(getSupplierByIdQuery);
+
+            return Json(supplier);
+        }
 
         #endregion
     }
