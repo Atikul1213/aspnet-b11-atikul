@@ -7,6 +7,8 @@ using DevSkill.Inventory.Application.Features.Settings.Units.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Units.Queries;
 using DevSkill.Inventory.Application.Features.Settings.UserRoles.Commands;
 using DevSkill.Inventory.Application.Features.Settings.UserRoles.Queries;
+using DevSkill.Inventory.Application.Features.Users.Suppliers.Commands;
+using DevSkill.Inventory.Application.Features.Users.Suppliers.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -49,6 +51,12 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(UserRoleDeleteCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetUserRoleListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetUserRoleByIdQuery).Assembly);
+
+                cfg.RegisterServicesFromAssembly(typeof(SupplierAddCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(SupplierUpdateCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(SupplierDeleteCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetSupplierListQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetSupplierByIdQuery).Assembly);
 
 
 

@@ -1,0 +1,164 @@
+﻿@model SupplierListModel
+
+@{
+    ViewData["Title"] = "Supplier";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.min.css">
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0 fw-bold">Supplier</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Supplier</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-8">
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title">Supplier List</h3></div>
+
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="supplier-table" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Company</th>
+                                    <th class="text-center">Mobile</th>
+                                    <th class="text-center">Address</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                           
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Company</th>
+                                    <th class="text-center">Mobile</th>
+                                    <th class="text-center">Address</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+
+                </div>
+                <!-- /.card -->
+            </div>
+            <div class="col-4  card">
+                <div class="card-header"><h3 class="card-title fw-bold">Supplier Information</h3></div>
+                @Html.Partial("_SupplierInfo", Model.AddSupplierModel)
+                <div class="card-body">
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+
+
+    <script>
+        $(function(){
+             $("#supplier-table").DataTable({
+                 processing: true,
+                 serverSide: true,
+                 responsive: true,
+                 lengthChange: true,
+                 autoWidth: false,
+                 lengthMenu: [
+                     [10, 25, 50, -1],
+                     [10, 25, 50, 'All']
+                 ],
+                 dom: `Bfrtip`,
+                 buttons: [
+                      'copy', 'csv', 'excel', 'pdf', 'print'
+                 ],
+
+                 ajax: {
+                      url: '@Url.Action("GetCQRSSupplierJsonData", "Suppliers")',
+                      type: 'POST',
+                      contentType: "application/json",
+                      datatype: 'json',
+                      data: function (d) {
+                          d.SearchItem = {
+
+                          };
+                          return JSON.stringify(d);
+                      }
+                 },
+                 columnDefs: [
+                     {
+                         orderable: false,
+                         targets: 6,
+                         render: function(data, type, row){
+                                return `<button type="submit" class="btn btn-info btn-sm" onclick="window.location.href='/admin/Suppliers/edit/${data}'" value='${data}'>
+                                                  <i class="fas fa-pencil-alt"> </i>  Edit </button>
+
+                                      <button type="submit" class="btn btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
+                                          <i class="fas fa-trash"></i> Delete </button>`;
+                         }
+                     }
+                 ],
+             });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Handle Edit Supplier button click
+            $(".btn-edit-category").on("click", function () {
+                const id = $(this).data("id");
+                const name = $(this).data("name");
+                const statusId = $(this).data("statusid");
+
+                $("#Id").val(id);
+                $("#Name").val(name);
+                $("#statusId").val(statusId);
+
+                $("#update-category").modal("show");
+            });
+        });
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}
