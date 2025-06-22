@@ -5,11 +5,13 @@ using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Departments.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Units.Commands;
 using DevSkill.Inventory.Application.Features.Settings.UserRoles.Commands;
+using DevSkill.Inventory.Application.Features.Users.Employees.Commands;
 using DevSkill.Inventory.Application.Features.Users.Suppliers.Commands;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Department;
+using DevSkill.Inventory.Web.Areas.Admin.Models.Employees;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Supplier;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Unit;
@@ -79,7 +81,6 @@ namespace DevSkill.Inventory.Web
             #endregion
 
             #region Supplier
-
             CreateMap<SupplierAddCommand, AddSupplierModel>().ReverseMap();
             CreateMap<SupplierUpdateCommand, UpdateSupplierModel>().ReverseMap();
             CreateMap<Supplier, SupplierAddCommand>().ReverseMap();
@@ -87,7 +88,16 @@ namespace DevSkill.Inventory.Web
             CreateMap<Supplier, AddSupplierModel>().ReverseMap();
             CreateMap<Supplier, UpdateSupplierModel>().ReverseMap();
             CreateMap<Supplier, SupplierModel>().ReverseMap();
+            #endregion
 
+            #region Employee
+            CreateMap<EmployeeAddCommand, AddEmployeeModel>().ReverseMap();
+            CreateMap<EmployeeUpdateCommand, UpdateEmployeeModel>().ReverseMap();
+            CreateMap<Employee, EmployeeAddCommand>().ReverseMap();
+            CreateMap<Employee, EmployeeUpdateCommand>().ReverseMap();
+            CreateMap<Employee, AddEmployeeModel>().ReverseMap();
+            CreateMap<Employee, UpdateEmployeeModel>().ReverseMap();
+            CreateMap<Employee, EmployeeModel>().ReverseMap();
             #endregion
         }
     }

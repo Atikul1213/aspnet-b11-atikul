@@ -7,6 +7,8 @@ using DevSkill.Inventory.Application.Features.Settings.Units.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Units.Queries;
 using DevSkill.Inventory.Application.Features.Settings.UserRoles.Commands;
 using DevSkill.Inventory.Application.Features.Settings.UserRoles.Queries;
+using DevSkill.Inventory.Application.Features.Users.Employees.Commands;
+using DevSkill.Inventory.Application.Features.Users.Employees.Queries;
 using DevSkill.Inventory.Application.Features.Users.Suppliers.Commands;
 using DevSkill.Inventory.Application.Features.Users.Suppliers.Queries;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,6 +60,13 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(GetSupplierListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetSupplierByIdQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetSupplierCountQuery).Assembly);
+
+                cfg.RegisterServicesFromAssembly(typeof(EmployeeAddCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(EmployeeUpdateCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(EmployeeDeleteCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetEmployeeListQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetEmployeeByIdQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetEmployeeCountQuery).Assembly);
 
 
             });

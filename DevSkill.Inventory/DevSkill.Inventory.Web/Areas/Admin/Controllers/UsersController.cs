@@ -1,4 +1,5 @@
-﻿using DevSkill.Inventory.Application.Features.Users.Suppliers.Queries;
+﻿using DevSkill.Inventory.Application.Features.Users.Employees.Queries;
+using DevSkill.Inventory.Application.Features.Users.Suppliers.Queries;
 using DevSkill.Inventory.Infrastructure.Identity;
 using DevSkill.Inventory.Infrastructure.Utilities;
 using DevSkill.Inventory.Web.Areas.Admin.Models.UserModel;
@@ -181,6 +182,11 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             var suppliers = await _mediator.Send(getSupplierQuery);
 
             model.SupplierCount = suppliers.Count;
+
+            var getEmployeeQuery = new GetEmployeeCountQuery();
+            var employees = await _mediator.Send(getEmployeeQuery);
+
+            model.EmployeeCount = employees.Count;
 
             return View(model);
         }

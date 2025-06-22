@@ -14,5 +14,16 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
                     Text = e.ToString()
                 }).ToList();
         }
+
+        public static List<SelectListItem> PrepareSelectListFromEntities<TEntity, TKey>(IEnumerable<TEntity> entities,
+        Func<TEntity, TKey> getValue,
+        Func<TEntity, string> getText)
+        {
+            return entities.Select(e => new SelectListItem
+            {
+                Value = getValue(e).ToString(),
+                Text = getText(e)
+            }).ToList();
+        }
     }
 }
