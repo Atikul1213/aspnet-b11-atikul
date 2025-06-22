@@ -14,6 +14,7 @@ namespace DevSkill.Inventory.Domain
         public ISupplierRepository SupplierRepository { get; }
         public IEmployeeRepository EmployeeRepository { get; }
         public IInventoryUserRepository InventoryUserRepository { get; }
+        public ICustomerRepository CustomerRepository { get; }
         Task<(IList<Product> data, int total, int totalDisplay)> GetProductSPAsync(int pageIndex, int pageSize, string? order, ProductSearchDto search);
     }
 }
