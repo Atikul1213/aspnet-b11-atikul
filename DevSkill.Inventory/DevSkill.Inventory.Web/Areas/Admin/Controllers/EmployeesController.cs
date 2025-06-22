@@ -8,10 +8,12 @@ using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Employees;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Web;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class EmployeesController : Controller
     {
         #region Fields
@@ -35,17 +37,22 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var model = new EmployeeListModel();
-
-            model.AddEmployeeModel.StatusId = (int)Status.Active;
-
             var departmentsQuery = new GetDepartmentListQuery();
             var departments = await _mediator.Send(departmentsQuery);
 
             model.AddEmployeeModel.Status = EnumHelper.PrepareSelectList<Status>();
-            model.AddEmployeeModel.Departments = EnumHelper.PrepareSelectListFromEntities(departments, d => d.Id, d => d.Name);
+            var departmenSelecttList = EnumHelper.PrepareSelectListFromEntities(departments, d => d.Id, d => d.Name);
+            departmenSelecttList.Insert(0, new SelectListItem
+            {
+                Text = "Select One",
+                Value = Guid.Empty.ToString()
+            });
+
+            model.AddEmployeeModel.StatusId = (int)Status.Active;
+            model.AddEmployeeModel.Departments = departmenSelecttList;
 
             model.UpdateEmployeeModel.Status = EnumHelper.PrepareSelectList<Status>();
-            model.UpdateEmployeeModel.Departments = EnumHelper.PrepareSelectListFromEntities(departments, d => d.Id, d => d.Name);
+            model.UpdateEmployeeModel.Departments = departmenSelecttList;
 
             return View(model);
         }
@@ -99,7 +106,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-
         public async Task<IActionResult> RemoveEmployee(Guid id)
         {
             try
@@ -132,9 +138,11 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                             select new string[]
                             {
                                 HttpUtility.HtmlEncode(record.Name),
-                                //HttpUtility.HtmlEncode(record.Company),
                                 HttpUtility.HtmlEncode(record.MobileNumber),
+                                HttpUtility.HtmlEncode(record.Email),
                                 HttpUtility.HtmlEncode(record.Address),
+                                HttpUtility.HtmlEncode(record.JoiningDate.ToString("dd-MM-yyyy")),
+                                HttpUtility.HtmlEncode(record.Salary.ToString("N2")),
                                 HttpUtility.HtmlEncode(((Status)record.StatusId).ToString()),
                                 record.Id.ToString()
                             }).ToArray()
