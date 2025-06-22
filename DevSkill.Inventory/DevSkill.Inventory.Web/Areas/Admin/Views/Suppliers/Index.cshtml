@@ -142,8 +142,8 @@
                                 return ` <a data-id="${data}"
                                                 data-toggle="modal" data-target="#update-supplier-modal" class="btn btn-primary btn-edit-supplier"><i class="bi bi-pencil-fill"></i></a>
 
-                                      <button type="submit" class="btn btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
-                                          <i class="fas fa-trash"></i> Delete </button>`;
+                                        <a href="/Admin/Suppliers/RemoveSupplier/${data}"  value='${data}' class="btn btn-danger">
+                                                <i class="bi bi-trash-fill"></i></a>`;
                          }
                      }
                  ],
