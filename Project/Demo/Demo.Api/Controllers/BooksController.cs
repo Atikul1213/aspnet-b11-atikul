@@ -44,7 +44,7 @@ namespace Demo.Api.Controllers
                             select new string[]
                             {
                                 HttpUtility.HtmlEncode(record.Title),
-                                HttpUtility.HtmlEncode(record.Author.Name),
+                                //HttpUtility.HtmlEncode(record.Author.Name),
                                 record.Price.ToString("C"),
                                 record.PublishDate.ToShortDateString(),
                                 record.Id.ToString()

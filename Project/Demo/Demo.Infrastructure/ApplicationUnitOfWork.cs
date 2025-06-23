@@ -21,7 +21,7 @@ namespace Demo.Infrastructure
         {
             var procedureName = "GetAuthors";
 
-            var result = await sqlUtility.QueryWithStoredProcedureAsync<Author>(procedureName,
+            var result = await SqlUtility.QueryWithStoredProcedureAsync<Author>(procedureName,
                 new Dictionary<string, object>
                 {
                     {"PageIndex", pageIndex },

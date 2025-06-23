@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using Demo.Application.Features.Authors.Queries;
 using Demo.Application.Features.Books.Commands;
 using Demo.Application.Features.Books.Queries;
 using Demo.Domain;
 using Demo.Domain.Services;
+using Demo.Web.Areas.Admin.Models.BookModel;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Web;
 
 namespace Demo.Web.Areas.Admin.Controllers
@@ -48,10 +51,13 @@ namespace Demo.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public IActionResult AddBook()
+        public async Task<IActionResult> AddBook()
         {
-            var model = new BookAddCommand();
 
+            var model = new AddBookModel();
+            var query = new GetAuthorsQuery();
+            var authors = await _mediator.Send(query);
+            model.Authors = new SelectList(authors, "Id", "Name");
             return View(model);
         }
 
@@ -82,7 +88,7 @@ namespace Demo.Web.Areas.Admin.Controllers
                             select new string[]
                             {
                                 HttpUtility.HtmlEncode(record.Title),
-                                HttpUtility.HtmlEncode(record.Author.Name),
+                                //HttpUtility.HtmlEncode(record.Author.Name),
                                 record.Price.ToString("C"),
                                 record.PublishDate.ToShortDateString(),
                                 record.Id.ToString()

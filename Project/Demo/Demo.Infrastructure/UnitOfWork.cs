@@ -8,11 +8,12 @@ namespace Demo.Infrastructure
     public abstract class UnitOfWork : IUnitOfWork
     {
         private readonly DbContext _dbContext;
-        protected ISqlUtility sqlUtility { get; private set; }
+        public ISqlUtility SqlUtility { get; private set; }
+
         public UnitOfWork(DbContext dbContext)
         {
             _dbContext = dbContext;
-            sqlUtility = new SqlUtility(_dbContext.Database.GetDbConnection());
+            SqlUtility = new SqlUtility(_dbContext.Database.GetDbConnection());
         }
         public void Save()
         {
