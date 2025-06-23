@@ -32,6 +32,68 @@
 <div class="app-content">
     <!--begin::Container-->
     <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-search mr-1"></i>Search Books</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <!-- /.card-tools -->
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label>Title</label>
+                                    <input type="text" id="SearchItem_Title" name="SearchItem_Title" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label>Author Name</label>
+                                    <input type="text" id="SearchItem_AuthorName" name="SearchItem_AuthorName" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label>Publish Date From</label>
+                                    <input type="text" id="SearchItem_PublishDateFrom" name="SearchItem_PublishDateFrom" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label>Publish Date To</label>
+                                    <input type="text" id="SearchItem_PublishDateTo" name="SearchItem_PublishDateTo" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label>Price From</label>
+                                    <input type="number" id="SearchItem_PriceFrom" name="SearchItem_PriceFrom" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label>Price To</label>
+                                    <input type="number" id="SearchItem_PriceTo" name="SearchItem_PriceTo" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button id="searchButton" type="submit" class="btn btn-primary float-right">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
         <!--begin::Row-->
         <div class="row">
             <div class="col-md-12">
@@ -111,6 +173,12 @@
                     dataType: "json", //better to add, not mandatory
                     data: function (d) {
                         d.SearchItem = {
+                            Title: $("#SearchItem_Title").val(),
+                            AuthorName: $("#SearchItem_AuthorName").val(),
+                            PublishDateFrom: $("#SearchItem_PublishDateFrom").val() === ""? null : new Date($("#SearchItem_PublishDateFrom").val()),
+                            PublishDateTo: $("#SearchItem_PublishDateTo").val() === "" ? null : new Date($("#SearchItem_PublishDateTo").val()),
+                            PriceFrom: $("#SearchItem_PriceFrom").val() === ""? null : $("#SearchItem_PriceFrom").val(),
+                            PriceTo: $("#SearchItem_PriceTo").val() === "" ? null : $("#SearchItem_PriceTo").val()
                         };
                         return JSON.stringify(d);
                     },

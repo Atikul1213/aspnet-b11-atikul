@@ -51,7 +51,7 @@ namespace Demo.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> AddBook()
+        public async Task<IActionResult> Add()
         {
 
             var model = new AddBookModel();
@@ -88,7 +88,7 @@ namespace Demo.Web.Areas.Admin.Controllers
                             select new string[]
                             {
                                 HttpUtility.HtmlEncode(record.Title),
-                                //HttpUtility.HtmlEncode(record.Author.Name),
+                                HttpUtility.HtmlEncode(record.AuthorName),
                                 record.Price.ToString("C"),
                                 record.PublishDate.ToShortDateString(),
                                 record.Id.ToString()
