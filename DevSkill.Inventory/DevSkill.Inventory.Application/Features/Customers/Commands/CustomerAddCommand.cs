@@ -1,8 +1,9 @@
-﻿namespace DevSkill.Inventory.Domain.Entities
+﻿using MediatR;
+
+namespace DevSkill.Inventory.Application.Features.Customers.Commands
 {
-    public class Customer : IEntity<Guid>
+    public class CustomerAddCommand : IRequest
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public string CompanyName { get; set; }
         public string MobileNumber { get; set; }
