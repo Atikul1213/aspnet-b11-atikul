@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevSkill.Inventory.Infrastr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevSkill.Inventory.Web", "DevSkill.Inventory.Web\DevSkill.Inventory.Web.csproj", "{C2BD4484-1C5B-DDAD-4D95-B9CFFDFF030C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevSkill.Inventory.Worker", "DevSkill.Inventory.Worker\DevSkill.Inventory.Worker.csproj", "{F3BD0E1F-BF1F-4518-A766-D24F52760F12}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C2BD4484-1C5B-DDAD-4D95-B9CFFDFF030C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2BD4484-1C5B-DDAD-4D95-B9CFFDFF030C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2BD4484-1C5B-DDAD-4D95-B9CFFDFF030C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3BD0E1F-BF1F-4518-A766-D24F52760F12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3BD0E1F-BF1F-4518-A766-D24F52760F12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3BD0E1F-BF1F-4518-A766-D24F52760F12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3BD0E1F-BF1F-4518-A766-D24F52760F12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
