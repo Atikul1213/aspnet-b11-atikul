@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DevSkill.Inventory.Application.Features.Customers.Commands;
 using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Application.Features.Products.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
@@ -11,6 +12,7 @@ using DevSkill.Inventory.Application.Features.Users.Suppliers.Commands;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
+using DevSkill.Inventory.Web.Areas.Admin.Models.Customers;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Department;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Employees;
 using DevSkill.Inventory.Web.Areas.Admin.Models.InventoryUsers;
@@ -110,6 +112,16 @@ namespace DevSkill.Inventory.Web
             CreateMap<InventoryUser, AddInventoryUserModel>().ReverseMap();
             CreateMap<InventoryUser, UpdateInventoryUserModel>().ReverseMap();
             CreateMap<InventoryUser, InventoryUserModel>().ReverseMap();
+            #endregion
+
+            #region Customer
+            CreateMap<CustomerAddCommand, AddCustomerModel>().ReverseMap();
+            CreateMap<CustomerUpdateCommand, UpdateCustomerModel>().ReverseMap();
+            CreateMap<Customer, CustomerAddCommand>().ReverseMap();
+            CreateMap<Customer, CustomerUpdateCommand>().ReverseMap();
+            CreateMap<Customer, AddCustomerModel>().ReverseMap();
+            CreateMap<Customer, UpdateCustomerModel>().ReverseMap();
+            CreateMap<Customer, CustomerModel>().ReverseMap();
             #endregion
         }
     }

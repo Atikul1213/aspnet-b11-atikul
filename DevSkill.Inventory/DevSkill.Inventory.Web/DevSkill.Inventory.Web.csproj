@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\images\customers\" />
     <Folder Include="wwwroot\scss\" />
   </ItemGroup>
 

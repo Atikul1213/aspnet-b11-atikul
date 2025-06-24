@@ -35,12 +35,12 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3 col-sm-6 col-12">
-                                <a asp-area="Admin" asp-controller="Category" asp-action="Index">
+                                <a asp-area="Admin" asp-controller="Customers" asp-action="Index">
                                     <div class="info-box" style="background-color:#c2a5d6;color:black;">
                                         <span class="info-box-icon"><i class="bi bi-list-task"></i></span>
                                         <div class="info-box-content">
                                             <span class="info-box-text">Customer</span>
-                                            <span class="info-box-number">1</span>
+                                            <span class="info-box-number">@Model.CustomerCount</span>
                                         </div>
                                     </div>
                                 </a>

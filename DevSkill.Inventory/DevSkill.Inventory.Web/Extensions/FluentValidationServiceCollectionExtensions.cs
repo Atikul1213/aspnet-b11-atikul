@@ -1,4 +1,5 @@
 ﻿using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
+using DevSkill.Inventory.Web.Areas.Admin.Models.Customers;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Department;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Employees;
 using DevSkill.Inventory.Web.Areas.Admin.Models.InventoryUsers;
@@ -7,6 +8,7 @@ using DevSkill.Inventory.Web.Areas.Admin.Models.Supplier;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Unit;
 using DevSkill.Inventory.Web.Areas.Admin.Models.UserRole;
 using DevSkill.Inventory.Web.Areas.Admin.Validator;
+using DevSkill.Inventory.Web.Areas.Admin.Validator.Customers;
 using DevSkill.Inventory.Web.Areas.Admin.Validator.Settings.Categories;
 using DevSkill.Inventory.Web.Areas.Admin.Validator.Settings.Department;
 using DevSkill.Inventory.Web.Areas.Admin.Validator.Settings.Units;
@@ -49,6 +51,10 @@ namespace DevSkill.Inventory.Web.Extensions
 
             services.AddTransient<IValidator<AddInventoryUserModel>, AddInventoryUserModelValidator>();
             services.AddTransient<IValidator<UpdateInventoryUserModel>, UpdateInventoryUserModelValidator>();
+
+
+            services.AddTransient<IValidator<AddCustomerModel>, AddCustomerModelValidator>();
+            services.AddTransient<IValidator<UpdateCustomerModel>, UpdateCustomerModelValidator>();
 
             return services;
         }

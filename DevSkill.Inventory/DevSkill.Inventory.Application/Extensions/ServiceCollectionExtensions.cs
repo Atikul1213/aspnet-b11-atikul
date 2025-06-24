@@ -1,4 +1,6 @@
-﻿using DevSkill.Inventory.Application.Features.Products.Commands;
+﻿using DevSkill.Inventory.Application.Features.Customers.Commands;
+using DevSkill.Inventory.Application.Features.Customers.Queries;
+using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Departments.Commands;
@@ -76,6 +78,14 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(GetInventoryUserListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetInventoryUserByIdQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetAllInventoryUsersQuery).Assembly);
+
+
+                cfg.RegisterServicesFromAssembly(typeof(CustomerAddCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(CustomerUpdateCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(CustomerDeleteCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetCustomerListQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetCustomerByIdQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetAllCustomersQuery).Assembly);
 
 
             });
