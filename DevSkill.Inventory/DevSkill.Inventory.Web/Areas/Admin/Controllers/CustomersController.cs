@@ -155,9 +155,10 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                             select new string[]
                             {
                                 HttpUtility.HtmlEncode(record.Name),
-                                //HttpUtility.HtmlEncode(record.Company),
                                 HttpUtility.HtmlEncode(record.MobileNumber),
                                 HttpUtility.HtmlEncode(record.Address),
+                                HttpUtility.HtmlEncode(record.Email),
+                                HttpUtility.HtmlEncode(record.OpeningBalance),
                                 HttpUtility.HtmlEncode(((Status)record.StatusId).ToString()),
                                 record.Id.ToString()
                             }).ToArray()

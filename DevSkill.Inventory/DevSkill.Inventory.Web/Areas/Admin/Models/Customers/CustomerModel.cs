@@ -9,6 +9,7 @@
         public string Address { get; set; }
         public string Email { get; set; }
         public decimal OpeningBalance { get; set; }
+        public decimal CurrentBalance { get; set; }
         public string ImageUrl { get; set; }
         public int StatusId { get; set; }
     }

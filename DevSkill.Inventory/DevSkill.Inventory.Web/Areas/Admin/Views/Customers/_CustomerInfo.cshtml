@@ -6,7 +6,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title fw-bold" id="exampleModalLabel">Customer Information</h5>
+                <h5 class="modal-title fw-bold" id="exampleModalLabel">New Customer Information</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -25,7 +25,7 @@
                             </div>
 
                             <div class="mb-3 col-6">
-                                <label asp-for="CompanyName" class="form-label fw-bold">Contact Number</label>
+                                <label asp-for="CompanyName" class="form-label fw-bold">Company Name</label>
                                 <input type="text" class="form-control" asp-for="CompanyName" id="CompanyName" placeholder="Company Name" aria-describedby="titleHelp" />
                                 <span asp-validation-for="CompanyName" class="text-danger"></span>
                                 <div id="titleHelp" class="form-text"> </div>
@@ -33,7 +33,7 @@
                         </div>
                         <div class="row">
                             <div class="mb-3 col-6">
-                                <label asp-for="MobileNumber" class="form-label fw-bold">Contact Number</label>
+                                <label asp-for="MobileNumber" class="form-label fw-bold">Mobile Number</label>
                                 <input type="text" class="form-control" asp-for="MobileNumber" id="MobileNumber" placeholder="Mobile Number" aria-describedby="titleHelp" />
                                 <span asp-validation-for="MobileNumber" class="text-danger"></span>
                                 <div id="titleHelp" class="form-text"> </div>
@@ -72,8 +72,7 @@
 
                             <div class="mb-3 col-6">
                                 <label asp-for="ImageUrl" class="form-label fw-bold">Customer Image</label>
-                                <input type="file" class="form-control" asp-for="ImageUrl" id="ImageUrl" aria-describedby="titleHelp" />
-                                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                                <input type="file" class="form-control" name="file" asp-for="ImageUrl" id="ImageUrl" aria-describedby="titleHelp" />
                             </div>
                         </div>
                     </div>

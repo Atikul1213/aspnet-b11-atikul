@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DevSkill.Inventory.Application.Features.Customers.Commands;
+using DevSkill.Inventory.Application.Features.Customers.Queries;
 using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Application.Features.Products.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
@@ -122,6 +123,7 @@ namespace DevSkill.Inventory.Web
             CreateMap<Customer, AddCustomerModel>().ReverseMap();
             CreateMap<Customer, UpdateCustomerModel>().ReverseMap();
             CreateMap<Customer, CustomerModel>().ReverseMap();
+            CreateMap<CustomerSearchDto, GetCustomerListQuery>().ReverseMap();
             #endregion
         }
     }
