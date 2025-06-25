@@ -25,7 +25,6 @@ namespace DevSkill.Inventory.Application.Features.Products.Commands
         public async Task Handle(ProductUpdateCommand request, CancellationToken cancellationToken)
         {
             var product = _mapper.Map<Product>(request);
-            product.CreateOnUtc = DateTime.UtcNow;
 
             bool isDuplicate = await _applicationUnitOfWork.ProductRepository.CheckSkuDuplicateAsync(product.Sku, product.Id);
 

@@ -4,6 +4,11 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Models.Products
 {
     public class ProductListModel : DataTables
     {
+        public ProductListModel()
+        {
+            AddProductModel = new AddProductModel();
+        }
         public ProductSearchModel SearchItem { get; set; }
+        public AddProductModel AddProductModel { get; set; }
     }
 }

@@ -17,11 +17,11 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Validator
                 .Length(3, 15).WithMessage("Product Sku must be between 3 and 15 characters long.");
 
 
-            RuleFor(p => p.Price)
-                .LessThan(5000).WithMessage("Product price must be less than 5000.");
+            //RuleFor(p => p.Price)
+            //    .LessThan(5000).WithMessage("Product price must be less than 5000.");
 
-            RuleFor(p => p.Quantity)
-                .LessThan(100).WithMessage("Product quantity must be less than 100.");
+            //RuleFor(p => p.Quantity)
+            //    .LessThan(100).WithMessage("Product quantity must be less than 100.");
 
             RuleFor(p => p.Id)
                 .Must(id => id != Guid.Empty).WithMessage("Product Id must be a valid GUID.");

@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\customers\" />
+    <Folder Include="wwwroot\images\products\" />
     <Folder Include="wwwroot\scss\" />
   </ItemGroup>
 

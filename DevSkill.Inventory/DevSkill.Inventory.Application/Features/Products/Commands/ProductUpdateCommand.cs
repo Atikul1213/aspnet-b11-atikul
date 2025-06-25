@@ -7,9 +7,12 @@ namespace DevSkill.Inventory.Application.Features.Products.Commands
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Sku { get; set; }
-        public decimal Price { get; set; }
-        public int Quantity { get; set; }
-        public bool IsAvailable { get; set; }
-        public DateTime CreateOnUtc { get; set; }
+        public int CategoryId { get; set; }
+        public int UnitId { get; set; }
+        public string ImageUrl { get; set; }
+        public decimal PurchasePrice { get; set; }
+        public decimal MRPPrice { get; set; }
+        public decimal WholeSalePrice { get; set; }
+        public int LowStock { get; set; }
     }
 }

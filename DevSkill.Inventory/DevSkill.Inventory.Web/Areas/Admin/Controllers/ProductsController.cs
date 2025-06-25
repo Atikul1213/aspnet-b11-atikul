@@ -2,13 +2,17 @@
 using DevSkill.Inventory.Application.Exceptions;
 using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Application.Features.Products.Queries;
+using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
+using DevSkill.Inventory.Application.Features.Settings.Units.Queries;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
+using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Web;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
@@ -25,6 +29,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         private readonly IMediator _mediator;
         private readonly ILogger<ProductsController> _logger;
         private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         #endregion
 
@@ -32,38 +37,70 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         public ProductsController(IProductService productService,
             IMediator mediator,
             ILogger<ProductsController> logger,
-            IMapper mapper)
+            IMapper mapper,
+            IWebHostEnvironment webHostEnvironment)
         {
             _productService = productService;
             _mediator = mediator;
             _logger = logger;
             _mapper = mapper;
+            _webHostEnvironment = webHostEnvironment;
         }
         #endregion
 
         #region Product Add Edit Delete Index using CQRS
 
-        public IActionResult ProductIndex()
+        public async Task<IActionResult> ProductIndex()
         {
-            var productQuery = new GetProductQuery();
+            var model = new ProductListModel();
 
-            return View(productQuery);
-        }
+            var categories = await _mediator.Send(new GetCategoryListQuery());
+            var units = await _mediator.Send(new GetUnitListQuery());
 
-        public IActionResult AddProduct()
-        {
-            var model = new ProductAddCommand();
+            var categorySelectList = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
+            categorySelectList.Insert(0, new SelectListItem
+            {
+                Text = "Select category",
+                Value = Guid.Empty.ToString()
+            });
+
+            model.AddProductModel.Categories = categorySelectList;
+
+            var unitSelectList = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
+            unitSelectList.Insert(0, new SelectListItem
+            {
+                Text = "Select units",
+                Value = Guid.Empty.ToString()
+            });
+
+            model.AddProductModel.Units = unitSelectList;
 
             return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddProduct(ProductAddCommand productAddCommand)
+        public async Task<IActionResult> AddProduct(AddProductModel model, IFormFile? file)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    string wwwRootPath = _webHostEnvironment.WebRootPath;
+
+                    if (file != null)
+                    {
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        string productImagePath = Path.Combine(wwwRootPath, @"images\products");
+
+                        using (var fileStream = new FileStream(Path.Combine(productImagePath, fileName), FileMode.Create))
+                        {
+                            file.CopyTo(fileStream);
+                        }
+
+                        model.ImageUrl = Path.Combine(@"/images/products", fileName);
+                    }
+                    var productAddCommand = _mapper.Map<ProductAddCommand>(model);
+
                     await _mediator.Send(productAddCommand);
                     TempData["success"] = "Product created successfully";
                     return RedirectToAction("ProductIndex");
@@ -80,23 +117,41 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 _logger.LogError(ex, "There was an error while creating product");
             }
 
-            return View(productAddCommand);
+            return RedirectToAction("ProductIndex");
         }
 
         public async Task<IActionResult> EditProduct(Guid id)
         {
-            var productByIdQuery = new GetProductByIdQuery(id);
-
-            var productUpdateCommand = new ProductUpdateCommand();
-
             try
             {
-                var product = await _mediator.Send(productByIdQuery);
+                var product = await _mediator.Send(new GetProductByIdQuery(id));
 
                 if (product is null)
                     return RedirectToAction("ProductIndex");
 
-                productUpdateCommand = _mapper.Map<ProductUpdateCommand>(product);
+                var model = _mapper.Map<UpdateProductModel>(product);
+                var categories = await _mediator.Send(new GetCategoryListQuery());
+                var units = await _mediator.Send(new GetUnitListQuery());
+
+                var categorySelectList = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
+                categorySelectList.Insert(0, new SelectListItem
+                {
+                    Text = "Select category",
+                    Value = Guid.Empty.ToString()
+                });
+
+                model.Categories = categorySelectList;
+
+                var unitSelectList = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
+                unitSelectList.Insert(0, new SelectListItem
+                {
+                    Text = "Select units",
+                    Value = Guid.Empty.ToString()
+                });
+
+                model.Units = unitSelectList;
+
+                return View(model);
             }
             catch (Exception ex)
             {
@@ -104,19 +159,38 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 _logger.LogError(ex, "No product found with the Id");
             }
 
-            return View(productUpdateCommand);
+            return RedirectToAction("ProductIndex");
         }
 
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProduct(ProductUpdateCommand productUpdateCommand)
+        public async Task<IActionResult> EditProduct(UpdateProductModel model, IFormFile? file)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+
+                    string wwwRootPath = _webHostEnvironment.WebRootPath;
+
+                    if (file != null)
+                    {
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        string productImagePath = Path.Combine(wwwRootPath, @"images\products");
+
+                        using (var fileStream = new FileStream(Path.Combine(productImagePath, fileName), FileMode.Create))
+                        {
+                            file.CopyTo(fileStream);
+                        }
+
+                        model.ImageUrl = Path.Combine(@"/images/products", fileName);
+                    }
+
+                    var productUpdateCommand = _mapper.Map<ProductUpdateCommand>(model);
+
                     await _mediator.Send(productUpdateCommand);
                     TempData["success"] = "Product updated successfully";
+
                     return RedirectToAction("ProductIndex");
                 }
             }
@@ -130,8 +204,29 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 TempData["error"] = "Failed to edit product.";
                 _logger.LogError(ex, "There was an error while updating product");
             }
+            var categories = await _mediator.Send(new GetCategoryListQuery());
+            var units = await _mediator.Send(new GetUnitListQuery());
 
-            return View(productUpdateCommand);
+            var categorySelectList = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
+            categorySelectList.Insert(0, new SelectListItem
+            {
+                Text = "Select category",
+                Value = Guid.Empty.ToString()
+            });
+
+            model.Categories = categorySelectList;
+
+            var unitSelectList = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
+            unitSelectList.Insert(0, new SelectListItem
+            {
+                Text = "Select units",
+                Value = Guid.Empty.ToString()
+            });
+
+            model.Units = unitSelectList;
+
+
+            return View(model);
         }
 
 
@@ -170,10 +265,10 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                             {
                                 HttpUtility.HtmlEncode(record.Name),
                                 HttpUtility.HtmlEncode(record.Sku),
-                                record.Price.ToString("C"),
-                                record.Quantity.ToString(),
-                                record.IsAvailable ? "True" : "False",
-                                record.CreateOnUtc.ToString("dd/MM/yyyy"),
+                                //record.Price.ToString("C"),
+                                //record.Quantity.ToString(),
+                                //record.IsAvailable ? "True" : "False",
+                                //record.CreateOnUtc.ToString("dd/MM/yyyy"),
                                 record.Id.ToString()
                             }).ToArray()
                 };
@@ -219,7 +314,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 try
                 {
                     var product = _mapper.Map<Product>(model);
-                    product.CreateOnUtc = DateTime.UtcNow;
 
                     await _productService.AddProductAsync(product);
 
@@ -268,7 +362,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 try
                 {
                     var product = _mapper.Map<Product>(model);
-                    product.CreateOnUtc = DateTime.UtcNow;
 
                     await _productService.UpdateProductAsync(product);
                     TempData["success"] = "Product updated successfully";
@@ -326,10 +419,10 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                             {
                                 HttpUtility.HtmlEncode(record.Name),
                                 HttpUtility.HtmlEncode(record.Sku),
-                                record.Price.ToString("C"),
-                                record.Quantity.ToString(),
-                                record.IsAvailable ? "True" : "False",
-                                record.CreateOnUtc.ToString("dd/MM/yyyy"),
+                                //record.Price.ToString("C"),
+                                //record.Quantity.ToString(),
+                                //record.IsAvailable ? "True" : "False",
+                                //record.CreateOnUtc.ToString("dd/MM/yyyy"),
                                 record.Id.ToString()
                             }).ToArray()
                 };
@@ -362,10 +455,10 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                             {
                                 HttpUtility.HtmlEncode(record.Name),
                                 HttpUtility.HtmlEncode(record.Sku),
-                                record.Price.ToString("C"),
-                                record.Quantity.ToString(),
-                                record.IsAvailable ? "True" : "False",
-                                record.CreateOnUtc.ToString("dd/MM/yyyy"),
+                                //record.Price.ToString("C"),
+                                //record.Quantity.ToString(),
+                                //record.IsAvailable ? "True" : "False",
+                                //record.CreateOnUtc.ToString("dd/MM/yyyy"),
                                 record.Id.ToString()
                             }).ToArray()
                 };
