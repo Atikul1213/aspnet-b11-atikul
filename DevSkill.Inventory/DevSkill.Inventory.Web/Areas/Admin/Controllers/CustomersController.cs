@@ -123,6 +123,32 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        public async Task<IActionResult> ShowCustomer(Guid id)
+        {
+            try
+            {
+                var customer = await _mediator.Send(new GetCustomerByIdQuery(id));
+
+                if (customer != null)
+                {
+                    var model = _mapper.Map<UpdateCustomerModel>(customer);
+                    model.Status = EnumHelper.PrepareSelectList<Status>();
+
+                    return View(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to show customer");
+                TempData["error"] = "Failed to show customer.";
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
+
+
         public async Task<IActionResult> RemoveCustomer(Guid id)
         {
             try

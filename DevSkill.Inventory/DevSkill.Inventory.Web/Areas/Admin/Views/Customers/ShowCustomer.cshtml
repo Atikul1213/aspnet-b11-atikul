@@ -1,0 +1,156 @@
+﻿@model UpdateCustomerModel
+
+@{
+    ViewData["Title"] = "Customer";
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Customer</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Customer</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row g-4">
+            <!--begin::Col-->
+            <div class="col-md-12">
+                <!--begin::Quick Example-->
+                <div class="card card-primary card-outline mb-4">
+                    <!--begin::Header-->
+                    <div class="card-header"><div class="card-title">Customer View</div></div>
+                    <!--end::Header-->
+                    <!--begin::Form-->
+                    <form asp-area="Admin" asp-controller="Customers" asp-action="UpdateCustomer" asp-antiforgery="true" method="post" enctype="multipart/form-data">
+                        <!--begin::Body-->
+                        <div class="card-body">
+                            <div class="row">
+                                <input type="hidden" asp-for="Id" />
+
+                                <div class="col-6 d-flex flex-column align-items-center justify-content-center">
+                                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                                    {
+                                        <img src="@Url.Content(Model.ImageUrl)" alt="Customer Image"
+                                                class="img-thumbnail"
+                                                style="width: 350px; height: 350px; object-fit: cover; border-radius: 50%;" />
+
+                                        <div class="text-center fw-bold m-3">@Model.Name</div>
+                                    }
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="mb-3 row align-items-center">
+                                        <label asp-for="Name" class="col-sm-6 col-form-label fw-bold">Customer Name</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" asp-for="Name" id="Name" placeholder="Customer Name" readonly />
+                                            <span asp-validation-for="Name" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row align-items-center">
+                                        <label asp-for="Name" class="col-sm-6 col-form-label fw-bold">Customer Name </label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" asp-for="Name" id="Name" placeholder="Customer Name" readonly aria-describedby="titleHelp" />
+                                            <span asp-validation-for="Name" class="text-danger"></span>
+                                            <div id="titleHelp" class="form-text"> </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 row align-items-center">
+                                        <label asp-for="CompanyName" class="col-sm-6 col-form-label fw-bold">Company Name</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" asp-for="CompanyName" id="CompanyName" placeholder="Company Name" readonly aria-describedby="titleHelp" />
+                                            <span asp-validation-for="CompanyName" class="text-danger"></span>
+                                            <div id="titleHelp" class="form-text"> </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row align-items-center">
+                                        <label asp-for="MobileNumber" class="col-sm-6 col-form-label fw-bold">Mobile Number</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" asp-for="MobileNumber" id="MobileNumber" placeholder="Mobile Number" readonly aria-describedby="titleHelp" />
+                                            <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                                            <div id="titleHelp" class="form-text"> </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row align-items-center">
+                                        <label asp-for="Address" class="col-sm-6 col-form-label fw-bold">Address</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" asp-for="Address" id="Address" placeholder="Address" readonly aria-describedby="titleHelp" />
+                                            <span asp-validation-for="Address" class="text-danger"></span>
+                                            <div id="titleHelp" class="form-text"> </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 row align-items-center">
+                                         <label asp-for="Email" class="col-sm-6 col-form-label fw-bold">Email</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" asp-for="Email" id="Email" placeholder="example@gmail.com" readonly aria-describedby="titleHelp" />
+                                            <span asp-validation-for="Email" class="text-danger"></span>
+                                            <div id="titleHelp" class="form-text"> </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 row align-items-center">
+                                        <label asp-for="OpeningBalance" class="col-sm-6 col-form-label fw-bold">Opening Balance</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" asp-for="OpeningBalance" id="OpeningBalance" placeholder="Opening Balance" readonly aria-describedby="titleHelp" />
+                                            <span asp-validation-for="OpeningBalance" class="text-danger"></span>
+                                            <div id="titleHelp" class="form-text"> </div>
+                                        </div>
+                                     </div>
+                                    <div class="mb-3 row align-items-center">
+                                         <label asp-for="StatusId" class="col-sm-6 col-form-label fw-bold">Status</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-select" asp-for="StatusId" asp-items="Model.Status" id="statusId" required>
+                                            </select>
+                                            <span asp-validation-for="StatusId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                              
+                                </div>
+
+                        </div>
+                        <!--end::Body-->
+                        <!--begin::Footer-->
+                        <div class="card-footer">
+                            <div class="text-center col-md-3 col-6">
+                                <a asp-area="Admin" asp-controller="Customers" asp-action="Index" class="btn btn-outline-primary btn-sm border form-control">
+                                    Back
+                                </a>
+                            </div>
+                        </div>
+                        <!--end::Footer-->
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <!--end::Quick Example-->
+
+            </div>
+            <!--end::Col-->
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

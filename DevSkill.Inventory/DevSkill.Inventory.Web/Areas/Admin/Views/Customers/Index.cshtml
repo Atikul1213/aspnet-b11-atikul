@@ -138,12 +138,13 @@
                  columnDefs: [
                      {
                          orderable: false,
-                         targets: 5,
+                         targets: 6,
                          render: function(data, type, row){
-                                return ` <a data-id="${data}"
-                                                data-toggle="modal" data-target="#update-customer-modal" class="btn btn-primary btn-edit-customer"><i class="bi bi-pencil-fill"></i></a>
-
-                                        <a href="/Admin/Customers/RemoveCustomer/${data}"  value='${data}' class="btn btn-danger">
+                                return `<a href="/Admin/Customers/ShowCustomer/${data}"  value='${data}' class="btn btn-danger">
+                                               <i class="bi bi-eye-fill"></i></a>
+                                <a data-id="${data}" data-toggle="modal" data-target="#update-customer-modal" class="btn btn-primary btn-edit-customer">
+                                            <i class="bi bi-pencil-fill"></i></a>
+                                <a href="/Admin/Customers/RemoveCustomer/${data}"  value='${data}' class="btn btn-danger">
                                                 <i class="bi bi-trash-fill"></i></a>`;
                          }
                      }
