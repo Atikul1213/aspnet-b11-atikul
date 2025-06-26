@@ -130,7 +130,6 @@ namespace DevSkill.Inventory.Web
             CreateMap<CustomerSearchDto, GetCustomerListQuery>().ReverseMap();
             #endregion
 
-
             #region CashAccount
 
             CreateMap<CashAccountAddCommand, AddCashAccountModel>().ReverseMap();

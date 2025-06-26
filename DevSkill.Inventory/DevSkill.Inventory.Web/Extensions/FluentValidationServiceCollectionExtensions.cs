@@ -1,4 +1,5 @@
-﻿using DevSkill.Inventory.Web.Areas.Admin.Models.CashAccounts;
+﻿using DevSkill.Inventory.Web.Areas.Admin.Models.BankAccounts;
+using DevSkill.Inventory.Web.Areas.Admin.Models.CashAccounts;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Customers;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Department;
@@ -10,6 +11,7 @@ using DevSkill.Inventory.Web.Areas.Admin.Models.Unit;
 using DevSkill.Inventory.Web.Areas.Admin.Models.UserRole;
 using DevSkill.Inventory.Web.Areas.Admin.Validator;
 using DevSkill.Inventory.Web.Areas.Admin.Validator.Customers;
+using DevSkill.Inventory.Web.Areas.Admin.Validator.Settings.BankAccounts;
 using DevSkill.Inventory.Web.Areas.Admin.Validator.Settings.CashAccounts;
 using DevSkill.Inventory.Web.Areas.Admin.Validator.Settings.Categories;
 using DevSkill.Inventory.Web.Areas.Admin.Validator.Settings.Department;
@@ -60,6 +62,9 @@ namespace DevSkill.Inventory.Web.Extensions
 
             services.AddTransient<IValidator<AddCashAccountModel>, AddCashAccountModelValidator>();
             services.AddTransient<IValidator<UpdateCashAccountModel>, UpdateCashAccountModelValidator>();
+
+            services.AddTransient<IValidator<AddBankAccountModel>, AddBankAccountModelValidator>();
+            services.AddTransient<IValidator<UpdateBankAccountModel>, UpdateBankAccountModelValidator>();
 
             return services;
         }
