@@ -38,6 +38,7 @@ namespace DevSkill.Inventory.Infrastructure
         public DbSet<Employee> Employees { get; set; }
         public DbSet<InventoryUser> InventoryUser { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<CashAccount> CashAccounts { get; set; }
         #endregion
 
 

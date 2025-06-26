@@ -1,6 +1,8 @@
 ﻿using DevSkill.Inventory.Application.Features.Customers.Commands;
 using DevSkill.Inventory.Application.Features.Customers.Queries;
 using DevSkill.Inventory.Application.Features.Products.Commands;
+using DevSkill.Inventory.Application.Features.Settings.CashAccounts.Commands;
+using DevSkill.Inventory.Application.Features.Settings.CashAccounts.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Departments.Commands;
@@ -87,6 +89,13 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(GetCustomerByIdQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetAllCustomersQuery).Assembly);
 
+
+
+                cfg.RegisterServicesFromAssembly(typeof(CashAccountAddCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(UpdateCashAccountCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(CashAccountDeleteCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetCashAccountListQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetCashAccountByIdQuery).Assembly);
 
             });
 

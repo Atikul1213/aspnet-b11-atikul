@@ -3,6 +3,7 @@ using DevSkill.Inventory.Application.Features.Customers.Commands;
 using DevSkill.Inventory.Application.Features.Customers.Queries;
 using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Application.Features.Products.Queries;
+using DevSkill.Inventory.Application.Features.Settings.CashAccounts.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Departments.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Units.Commands;
@@ -12,6 +13,7 @@ using DevSkill.Inventory.Application.Features.Users.InventoryUsers.Commands;
 using DevSkill.Inventory.Application.Features.Users.Suppliers.Commands;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
+using DevSkill.Inventory.Web.Areas.Admin.Models.CashAccounts;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Customers;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Department;
@@ -125,6 +127,20 @@ namespace DevSkill.Inventory.Web
             CreateMap<Customer, CustomerModel>().ReverseMap();
             CreateMap<CustomerSearchDto, GetCustomerListQuery>().ReverseMap();
             #endregion
+
+
+            #region CashAccount
+
+            CreateMap<CashAccountAddCommand, AddCashAccountModel>().ReverseMap();
+            CreateMap<UpdateCashAccountCommand, UpdateCashAccountModel>().ReverseMap();
+            CreateMap<CashAccount, CashAccountAddCommand>().ReverseMap();
+            CreateMap<CashAccount, UpdateCashAccountCommand>().ReverseMap();
+            CreateMap<CashAccount, AddCashAccountModel>().ReverseMap();
+            CreateMap<CashAccount, UpdateCashAccountModel>().ReverseMap();
+            CreateMap<CashAccount, CashAccountModel>().ReverseMap();
+
+            #endregion
+
         }
     }
 }

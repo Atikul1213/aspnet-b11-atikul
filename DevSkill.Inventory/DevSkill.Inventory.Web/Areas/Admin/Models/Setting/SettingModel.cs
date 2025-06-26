@@ -6,5 +6,8 @@
         public int UnitCount { get; set; }
         public int DepartmentCount { get; set; }
         public int UserRoleCount { get; set; }
+        public int CashAccountCount { get; set; }
+        public int BankAccountCount { get; set; }
+        public int MobileAccountCount { get; set; }
     }
 }

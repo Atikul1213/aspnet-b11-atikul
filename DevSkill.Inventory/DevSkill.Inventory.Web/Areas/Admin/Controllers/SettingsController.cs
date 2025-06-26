@@ -1,4 +1,5 @@
-﻿using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
+﻿using DevSkill.Inventory.Application.Features.Settings.CashAccounts.Queries;
+using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Departments.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Units.Queries;
 using DevSkill.Inventory.Application.Features.Settings.UserRoles.Queries;
@@ -27,21 +28,20 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             var model = new SettingModel();
 
-            var categoryQuery = new GetCategoryListQuery();
-            var categories = await _mediator.Send(categoryQuery);
+            var categories = await _mediator.Send(new GetCategoryListQuery());
             model.CategoryCount = categories.Count;
 
-            var unitQuery = new GetUnitListQuery();
-            var units = await _mediator.Send(unitQuery);
+            var units = await _mediator.Send(new GetUnitListQuery());
             model.UnitCount = units.Count;
 
-            var departmentQuery = new GetDepartmentListQuery();
-            var departments = await _mediator.Send(departmentQuery);
+            var departments = await _mediator.Send(new GetDepartmentListQuery());
             model.DepartmentCount = departments.Count;
 
-            var userRoleQuery = new GetUserRoleListQuery();
-            var userRoles = await _mediator.Send(userRoleQuery);
+            var userRoles = await _mediator.Send(new GetUserRoleListQuery());
             model.UserRoleCount = userRoles.Count;
+
+            var cashAccounts = await _mediator.Send(new GetCashAccountListQuery());
+            model.CashAccountCount = cashAccounts.Count;
 
             return View(model);
         }
