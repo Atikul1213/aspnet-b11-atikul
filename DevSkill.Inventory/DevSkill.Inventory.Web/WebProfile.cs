@@ -3,6 +3,7 @@ using DevSkill.Inventory.Application.Features.Customers.Commands;
 using DevSkill.Inventory.Application.Features.Customers.Queries;
 using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Application.Features.Products.Queries;
+using DevSkill.Inventory.Application.Features.Settings.BankAccounts.Commands;
 using DevSkill.Inventory.Application.Features.Settings.CashAccounts.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Departments.Commands;
@@ -13,6 +14,7 @@ using DevSkill.Inventory.Application.Features.Users.InventoryUsers.Commands;
 using DevSkill.Inventory.Application.Features.Users.Suppliers.Commands;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
+using DevSkill.Inventory.Web.Areas.Admin.Models.BankAccounts;
 using DevSkill.Inventory.Web.Areas.Admin.Models.CashAccounts;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Customers;
@@ -138,6 +140,18 @@ namespace DevSkill.Inventory.Web
             CreateMap<CashAccount, AddCashAccountModel>().ReverseMap();
             CreateMap<CashAccount, UpdateCashAccountModel>().ReverseMap();
             CreateMap<CashAccount, CashAccountModel>().ReverseMap();
+
+            #endregion
+
+            #region Bank Account
+
+            CreateMap<BankAccountAddCommand, AddBankAccountModel>().ReverseMap();
+            CreateMap<UpdateBankAccountCommand, UpdateBankAccountModel>().ReverseMap();
+            CreateMap<BankAccount, BankAccountAddCommand>().ReverseMap();
+            CreateMap<BankAccount, UpdateBankAccountCommand>().ReverseMap();
+            CreateMap<BankAccount, AddBankAccountModel>().ReverseMap();
+            CreateMap<BankAccount, UpdateBankAccountModel>().ReverseMap();
+            CreateMap<BankAccount, BankAccountModel>().ReverseMap();
 
             #endregion
 

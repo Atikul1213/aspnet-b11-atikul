@@ -1,4 +1,5 @@
-﻿using DevSkill.Inventory.Application.Features.Settings.CashAccounts.Queries;
+﻿using DevSkill.Inventory.Application.Features.Settings.BankAccounts.Queries;
+using DevSkill.Inventory.Application.Features.Settings.CashAccounts.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Departments.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Units.Queries;
@@ -42,6 +43,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
             var cashAccounts = await _mediator.Send(new GetCashAccountListQuery());
             model.CashAccountCount = cashAccounts.Count;
+
+            var bankAccounts = await _mediator.Send(new GetBankAccountListQuery());
+            model.BankAccountCount = bankAccounts.Count;
 
             return View(model);
         }

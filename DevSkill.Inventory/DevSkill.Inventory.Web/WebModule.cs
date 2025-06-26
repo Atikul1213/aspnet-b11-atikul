@@ -71,6 +71,9 @@ namespace DevSkill.Inventory.Web
             builder.RegisterType<CashAccountRepository>().As<ICashAccountRepository>()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<BankAccountRepository>().As<IBankAccountRepository>()
+                .InstancePerLifetimeScope();
+
             base.Load(builder);
         }
     }
