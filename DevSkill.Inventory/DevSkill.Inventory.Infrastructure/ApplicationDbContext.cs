@@ -40,6 +40,7 @@ namespace DevSkill.Inventory.Infrastructure
         public DbSet<Customer> Customers { get; set; }
         public DbSet<CashAccount> CashAccounts { get; set; }
         public DbSet<BankAccount> BankAccounts { get; set; }
+        public DbSet<MobileAccount> MobileAccounts { get; set; }
         #endregion
 
 

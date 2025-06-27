@@ -7,6 +7,7 @@ using DevSkill.Inventory.Application.Features.Settings.BankAccounts.Commands;
 using DevSkill.Inventory.Application.Features.Settings.CashAccounts.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Departments.Commands;
+using DevSkill.Inventory.Application.Features.Settings.MobileAccounts.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Units.Commands;
 using DevSkill.Inventory.Application.Features.Settings.UserRoles.Commands;
 using DevSkill.Inventory.Application.Features.Users.Employees.Commands;
@@ -21,6 +22,7 @@ using DevSkill.Inventory.Web.Areas.Admin.Models.Customers;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Department;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Employees;
 using DevSkill.Inventory.Web.Areas.Admin.Models.InventoryUsers;
+using DevSkill.Inventory.Web.Areas.Admin.Models.MobileAccount;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Supplier;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Unit;
@@ -151,6 +153,18 @@ namespace DevSkill.Inventory.Web
             CreateMap<BankAccount, AddBankAccountModel>().ReverseMap();
             CreateMap<BankAccount, UpdateBankAccountModel>().ReverseMap();
             CreateMap<BankAccount, BankAccountModel>().ReverseMap();
+
+            #endregion
+
+            #region Mobile Account
+
+            CreateMap<MobileAccountAddCommand, AddMobileAccountModel>().ReverseMap();
+            CreateMap<UpdateMobileAccountCommand, UpdateMobileAccountModel>().ReverseMap();
+            CreateMap<MobileAccount, MobileAccountAddCommand>().ReverseMap();
+            CreateMap<MobileAccount, UpdateMobileAccountCommand>().ReverseMap();
+            CreateMap<MobileAccount, AddMobileAccountModel>().ReverseMap();
+            CreateMap<MobileAccount, UpdateMobileAccountModel>().ReverseMap();
+            CreateMap<MobileAccount, MobileAccountModel>().ReverseMap();
 
             #endregion
 

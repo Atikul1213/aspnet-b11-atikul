@@ -9,6 +9,8 @@ using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Departments.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Departments.Queries;
+using DevSkill.Inventory.Application.Features.Settings.MobileAccounts.Commands;
+using DevSkill.Inventory.Application.Features.Settings.MobileAccounts.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Units.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Units.Queries;
 using DevSkill.Inventory.Application.Features.Settings.UserRoles.Commands;
@@ -104,6 +106,12 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(BankAccountDeleteCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetBankAccountListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetBankAccountByIdQuery).Assembly);
+
+                cfg.RegisterServicesFromAssembly(typeof(MobileAccountAddCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(UpdateMobileAccountCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(MobileAccountDeleteCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetMobileAccountListQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetMobileAccountByIdQuery).Assembly);
 
             });
 

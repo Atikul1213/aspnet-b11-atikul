@@ -1,0 +1,190 @@
+﻿@model MobileAccountListModel
+
+@{
+    ViewData["Title"] = "Bank Account";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.min.css">
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0 fw-bold">Bank Account</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Bank Account</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-6"><div>Bank Account</div></div>
+                            <div class="col-md-6 text-end">
+                                <button type="button" class="btn btn-primary btn-add-mobileAccount">
+                                    <i class="bi bi-bookmark-plus-fill"></i> New Bank Account
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="mobileAccount-table" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#SN.</th>
+                                    <th class="text-center">Account Name</th>
+                                    <th class="text-center">Account No</th>
+                                    <th class="text-center">Account Owner</th>
+                                    <th class="text-center">Opening Balance</th>
+                                    <th class="text-center">Current Balance</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Check if there are any mobileAccount to display -->
+                                @if (Model.MobileAccounts.Any())
+                                {
+                                    <!-- Loop through each mobileAccount in the model's mobileAccount list -->
+                                    var idx = 1;
+                                    @foreach (var mobileAccount in Model.MobileAccounts)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@idx</td>
+                                            <td class="text-center">@mobileAccount.Name</td>
+                                            <td class="text-center">@mobileAccount.AccountNo</td>
+                                            <td class="text-center">@mobileAccount.Owner</td>
+                                            <td class="text-center">@mobileAccount.OpeningBalance</td>
+                                            <td class="text-center">@mobileAccount.CurrentBalance</td>
+                                            <td class="text-center">@mobileAccount.Status</td>
+                                            <td class="text-center">
+                                                <div class="w-75 btn-group" role="group">
+                                                    <a data-id="@mobileAccount.Id" data-toggle="modal" data-target="#update-mobileAccount" class="btn btn-primary btn-edit-mobileAccount">
+                                                        <i class="bi bi-pencil-fill"></i>
+                                                    </a>
+
+                                                    <a asp-area="Admin" asp-controller="MobileAccounts" asp-action="RemoveMobileAccount" asp-route-id="@mobileAccount.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        idx++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">😞 No mobileAccount found.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th class="text-center">#SN.</th>
+                                    <th class="text-center">Account Name</th>
+                                    <th class="text-center">Account No</th>
+                                    <th class="text-center">Account Owner</th>
+                                    <th class="text-center">Opening Balance</th>
+                                    <th class="text-center">Current Balance</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+
+
+                </div>
+                <!-- /.card -->
+            </div>
+            @Html.Partial("_MobileAccountInfo", Model.AddMobileAccountModel)
+            @Html.Partial("_UpdateMobileAccountInfo", Model.UpdateMobileAccountModel)
+
+            <!-- /.col -->
+        </div>
+
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Handle Edit MobileAccount button click
+            $(".btn-add-mobileAccount").on("click", function () {
+                $("#add-mobileAccount-modal").modal("show");
+            });
+        });
+    </script>
+
+    <script>
+        // Handle Edit MobileAccount button click
+        $(document).on("click", ".btn-edit-mobileAccount", function () {
+                let mobileAccountId = $(this).data("id");
+                var postData ={
+                    mobileAccountId: mobileAccountId
+                };
+               $.ajax({
+                    cache: false,
+                     url: '@Url.Action("GetMobileAccountDataById", "MobileAccounts")',
+                     type: 'GET',
+                     contentType: "application/json",
+                     dataType: 'json',
+                     data: postData,
+                     success: function(data){
+                          console.log("data: ",data);
+                         // console.log("test: ",data.id);
+                        $("#update-mobileAccount-modal #Id").val(data.id);
+                        $("#update-mobileAccount-modal #Name").val(data.name);
+                        $("#update-mobileAccount-modal #AccountNo").val(data.accountNo);
+                        $("#update-mobileAccount-modal #BankName").val(data.bankName);
+                        $("#update-mobileAccount-modal #BranchName").val(data.branchName);
+                        $("#update-mobileAccount-modal #statusId").val(data.statusId);
+                        $("#update-mobileAccount-modal #OpeningBalance").val(data.openingBalance);
+                     },
+                     error: function (xhr, status, error) {
+                        console.error("AJAX Error:", error);
+                    }
+                }),
+
+                $("#update-mobileAccount-modal").modal("show");
+            });
+
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

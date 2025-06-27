@@ -1,0 +1,69 @@
+﻿@model AddMobileAccountModel
+
+
+<!-- Modal -->
+<div class="modal fade" id="add-mobileAccount-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="exampleModalLabel">Bank Account Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!--begin::Form-->
+                <form asp-area="Admin" asp-controller="MobileAccounts" asp-action="AddMobileAccount" asp-antiforgery="true" method="post">
+                    <!--begin::Body-->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col-6">
+                                <label asp-for="Name" class="form-label fw-bold">Account Name </label>
+                                <input type="text" class="form-control" asp-for="Name" id="Name" placeholder="Account Name" aria-describedby="titleHelp" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                                <div id="titleHelp" class="form-text"> </div>
+                            </div>
+
+                            <div class="mb-3 col-6">
+                                <label asp-for="AccountNo" class="form-label fw-bold">Account No</label>
+                                <input type="text" class="form-control" asp-for="AccountNo" id="AccountNo" placeholder="Account No" aria-describedby="titleHelp" />
+                                <span asp-validation-for="AccountNo" class="text-danger"></span>
+                                <div id="titleHelp" class="form-text"> </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-6">
+                                <label asp-for="Owner" class="form-label fw-bold">Account Owner</label>
+                                <input type="text" class="form-control" asp-for="Owner" id="Owner" placeholder="Account Owner" aria-describedby="titleHelp" />
+                                <span asp-validation-for="Owner" class="text-danger"></span>
+                                <div id="titleHelp" class="form-text"> </div>
+                            </div>
+
+                            <div class="mb-3 col-6">
+                                <label asp-for="OpeningBalance" class="form-label fw-bold">Account Balance</label>
+                                <input type="text" class="form-control" asp-for="OpeningBalance" id="OpeningBalance" placeholder="Account Balance" aria-describedby="titleHelp" />
+                                <span asp-validation-for="OpeningBalance" class="text-danger"></span>
+                                <div id="titleHelp" class="form-text"> </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="mb-3 col-6">
+                                <label asp-for="StatusId" class="form-label fw-bold">Status</label>
+                                <select class="form-select" asp-for="StatusId" asp-items="Model.Status" id="statusId" required>
+                                </select>
+                                <span asp-validation-for="StatusId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Body-->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+                <!--end::Form-->
+            </div>
+        </div>
+    </div>
+</div>

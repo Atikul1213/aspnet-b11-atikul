@@ -17,6 +17,7 @@ namespace DevSkill.Inventory.Domain
         public ICustomerRepository CustomerRepository { get; }
         public ICashAccountRepository CashAccountRepository { get; }
         public IBankAccountRepository BankAccountRepository { get; }
+        public IMobileAccountRepository MobileAccountRepository { get; }
         Task<(IList<Product> data, int total, int totalDisplay)> GetProductSPAsync(int pageIndex, int pageSize, string? order, ProductSearchDto search);
     }
 }
