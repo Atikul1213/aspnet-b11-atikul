@@ -6,7 +6,7 @@ namespace DevSkill.Inventory.Application.Features.Settings.BankAccounts.Commands
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public int AccountNo { get; set; }
+        public string AccountNo { get; set; }
         public string BankName { get; set; }
         public string BranchName { get; set; }
         public decimal OpeningBalance { get; set; }

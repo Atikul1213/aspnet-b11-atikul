@@ -84,8 +84,8 @@
                                             <td class="text-center">@bankAccount.Status</td>
                                             <td class="text-center">
                                                 <div class="w-75 btn-group" role="group">
-                                                    <a data-id="@bankAccount.Id" data-name="@bankAccount.Name" data-statusid="@bankAccount.StatusId" data-balance="@bankAccount.Balance" data-currentBalance="@bankAccount.CurrentBalance"
-                                                       data-toggle="modal" data-target="#update-bankAccount" class="btn btn-primary btn-edit-bankAccount"><i class="bi bi-pencil-fill"></i></a>
+                                                    <a data-id="@bankAccount.Id"  data-toggle="modal" data-target="#update-bankAccount" class="btn btn-primary btn-edit-bankAccount">
+                                                        <i class="bi bi-pencil-fill"></i></a>
 
                                                     <a asp-area="Admin" asp-controller="BankAccounts" asp-action="RemoveBankAccount" asp-route-id="@bankAccount.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
                                                 </div>
@@ -168,16 +168,15 @@
                      dataType: 'json',
                      data: postData,
                      success: function(data){
-                         // console.log("data: ",data);
+                          console.log("data: ",data);
                          // console.log("test: ",data.id);
                         $("#update-bankAccount-modal #Id").val(data.id);
                         $("#update-bankAccount-modal #Name").val(data.name);
-                        $("#update-bankAccount-modal #Company").val(data.company);
-                        $("#update-bankAccount-modal #MobileNumber").val(data.mobileNumber);
-                        $("#update-bankAccount-modal #Address").val(data.address);
+                        $("#update-bankAccount-modal #AccountNo").val(data.accountNo);
+                        $("#update-bankAccount-modal #BankName").val(data.bankName);
+                        $("#update-bankAccount-modal #BranchName").val(data.branchName);
                         $("#update-bankAccount-modal #statusId").val(data.statusId);
                         $("#update-bankAccount-modal #OpeningBalance").val(data.openingBalance);
-                        $("#update-bankAccount-modal #Email").val(data.email);
                      },
                      error: function (xhr, status, error) {
                         console.error("AJAX Error:", error);
