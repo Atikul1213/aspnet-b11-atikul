@@ -1,7 +1,7 @@
 ﻿@model MobileAccountListModel
 
 @{
-    ViewData["Title"] = "Bank Account";
+    ViewData["Title"] = "Mobile Account";
 }
 
 @section Styles {
@@ -15,11 +15,11 @@
     <div class="container-fluid">
         <!--begin::Row-->
         <div class="row">
-            <div class="col-sm-6"><h3 class="mb-0 fw-bold">Bank Account</h3></div>
+            <div class="col-sm-6"><h3 class="mb-0 fw-bold">Mobile Account</h3></div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                     <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Bank Account</li>
+                    <li class="breadcrumb-item active" aria-current="page">Mobile Account</li>
                 </ol>
             </div>
         </div>
@@ -38,10 +38,10 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
-                            <div class="col-md-6"><div>Bank Account</div></div>
+                            <div class="col-md-6"><div>Mobile Account</div></div>
                             <div class="col-md-6 text-end">
                                 <button type="button" class="btn btn-primary btn-add-mobileAccount">
-                                    <i class="bi bi-bookmark-plus-fill"></i> New Bank Account
+                                    <i class="bi bi-bookmark-plus-fill"></i> New Mobile Account
                                 </button>
                             </div>
                         </div>
@@ -171,8 +171,7 @@
                         $("#update-mobileAccount-modal #Id").val(data.id);
                         $("#update-mobileAccount-modal #Name").val(data.name);
                         $("#update-mobileAccount-modal #AccountNo").val(data.accountNo);
-                        $("#update-mobileAccount-modal #BankName").val(data.bankName);
-                        $("#update-mobileAccount-modal #BranchName").val(data.branchName);
+                        $("#update-mobileAccount-modal #Owner").val(data.owner);
                         $("#update-mobileAccount-modal #statusId").val(data.statusId);
                         $("#update-mobileAccount-modal #OpeningBalance").val(data.openingBalance);
                      },
