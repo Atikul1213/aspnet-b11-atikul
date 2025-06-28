@@ -43,6 +43,7 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(CategoryAddCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(UpdateCategoryCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(CategoryDeleteCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetActiveCategoryListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetCategoryListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetCategoryByIdQuery).Assembly);
 
@@ -52,6 +53,7 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(UpdateUnitCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetUnitByIdQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetUnitListQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetActiveUnitListQuery).Assembly);
 
 
                 cfg.RegisterServicesFromAssembly(typeof(DepartmentAddCommand).Assembly);
@@ -59,6 +61,7 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(DepartmentDeleteCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetDepartmentListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetDepartmentByIdQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetActiveDepartmentListQuery).Assembly);
 
 
                 cfg.RegisterServicesFromAssembly(typeof(UserRoleAddCommand).Assembly);
@@ -66,6 +69,7 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(UserRoleDeleteCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetUserRoleListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetUserRoleByIdQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetActiveUserRoleListQuery).Assembly);
 
                 cfg.RegisterServicesFromAssembly(typeof(SupplierAddCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(SupplierUpdateCommand).Assembly);
@@ -73,6 +77,7 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(GetSupplierListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetSupplierByIdQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetAllSuppliersQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetAllActiveSuppliersQuery).Assembly);
 
                 cfg.RegisterServicesFromAssembly(typeof(EmployeeAddCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(EmployeeUpdateCommand).Assembly);
@@ -80,6 +85,7 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(GetEmployeeListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetEmployeeByIdQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetAllEmployeesQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetAllActiveEmployeesQuery).Assembly);
 
                 cfg.RegisterServicesFromAssembly(typeof(InventoryUserAddCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(InventoryUserUpdateCommand).Assembly);
@@ -87,6 +93,7 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(GetInventoryUserListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetInventoryUserByIdQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetAllInventoryUsersQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetAllActiveInventoryUsersQuery).Assembly);
 
 
                 cfg.RegisterServicesFromAssembly(typeof(CustomerAddCommand).Assembly);
@@ -103,18 +110,21 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(CashAccountDeleteCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetCashAccountListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetCashAccountByIdQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetActiveCashAccountListQuery).Assembly);
 
                 cfg.RegisterServicesFromAssembly(typeof(BankAccountAddCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(UpdateBankAccountCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(BankAccountDeleteCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetBankAccountListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetBankAccountByIdQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetActiveBankAccountListQuery).Assembly);
 
                 cfg.RegisterServicesFromAssembly(typeof(MobileAccountAddCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(UpdateMobileAccountCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(MobileAccountDeleteCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetMobileAccountListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetMobileAccountByIdQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetActiveMobileAccountListQuery).Assembly);
 
                 cfg.RegisterServicesFromAssembly(typeof(BalanceTransferAddCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(BalanceTransferDeleteCommand).Assembly);
