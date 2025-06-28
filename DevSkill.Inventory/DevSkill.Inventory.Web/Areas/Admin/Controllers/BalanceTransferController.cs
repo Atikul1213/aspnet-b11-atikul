@@ -10,6 +10,7 @@ using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.BalanceTransfers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Web;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
@@ -42,7 +43,13 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             var model = new BalanceTransferListModel();
 
-            model.AddBalanceTransferModel.AccountTypes = EnumHelper.PrepareSelectList<AccountType>();
+            var accountTypeSelectList = EnumHelper.PrepareSelectList<AccountType>();
+            accountTypeSelectList.Insert(0, new SelectListItem
+            {
+                Text = "Select One",
+                Value = Guid.Empty.ToString()
+            });
+            model.AddBalanceTransferModel.AccountTypes = accountTypeSelectList;
 
             return View(model);
         }
@@ -55,12 +62,13 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 try
                 {
-
                     model.FromAccountName = await GetAccountNameAsync(model.SendingAccountTypeId, model.SendingAccountId);
                     model.ToAccountName = await GetAccountNameAsync(model.ReceiveAccountTypeId, model.ReceiveAccountId);
-
+                    model.TransferDate = DateTime.UtcNow;
                     var balanceTransfer = _mapper.Map<BalanceTransferAddCommand>(model);
+
                     await _mediator.Send(balanceTransfer);
+                    await HandleBalanceTransfer(model);
 
                     TempData["success'"] = "Balance Transfer successfully.";
 
@@ -107,6 +115,137 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                 return Json(DataTables.EmptyResult);
             }
+        }
+
+        private async Task HandleBalanceTransfer(AddBalanceTransferModel model)
+        {
+
+            switch (model.SendingAccountTypeId)
+            {
+                case (int)AccountType.Bank:
+                    var sendingbankAccont = await _mediator.Send(new GetBankAccountByIdQuery(model.SendingAccountId));
+                    sendingbankAccont.CurrentBalance -= model.TransferAmount;
+                    await _mediator.Send(sendingbankAccont);
+
+                    switch (model.ReceiveAccountTypeId)
+                    {
+                        case (int)AccountType.Bank:
+                            var receivingbankAccont = await _mediator.Send(new GetBankAccountByIdQuery(model.ReceiveAccountId));
+                            receivingbankAccont.CurrentBalance += model.TransferAmount;
+                            await _mediator.Send(receivingbankAccont);
+                            break;
+                        case (int)AccountType.Mobile:
+                            var receivingMobileAccont = await _mediator.Send(new GetMobileAccountByIdQuery(model.ReceiveAccountId));
+                            receivingMobileAccont.CurrentBalance += model.TransferAmount;
+                            await _mediator.Send(receivingMobileAccont);
+                            break;
+
+                        case (int)AccountType.Cash:
+                            var receivingCashAccont = await _mediator.Send(new GetCashAccountByIdQuery(model.ReceiveAccountId));
+                            receivingCashAccont.CurrentBalance -= model.TransferAmount;
+                            await _mediator.Send(receivingCashAccont);
+                            break;
+                    }
+                    break;
+
+
+
+                case (int)AccountType.Mobile:
+
+                    var sendingMobileAccont = await _mediator.Send(new GetMobileAccountByIdQuery(model.SendingAccountId));
+                    sendingMobileAccont.CurrentBalance -= model.TransferAmount;
+                    await _mediator.Send(sendingMobileAccont);
+
+                    switch (model.ReceiveAccountTypeId)
+                    {
+                        case (int)AccountType.Bank:
+                            var receivingbankAccont = await _mediator.Send(new GetBankAccountByIdQuery(model.ReceiveAccountId));
+                            receivingbankAccont.CurrentBalance += model.TransferAmount;
+                            await _mediator.Send(receivingbankAccont);
+                            break;
+                        case (int)AccountType.Mobile:
+                            var receivingMobileAccont = await _mediator.Send(new GetMobileAccountByIdQuery(model.ReceiveAccountId));
+                            receivingMobileAccont.CurrentBalance += model.TransferAmount;
+                            await _mediator.Send(receivingMobileAccont);
+                            break;
+
+                        case (int)AccountType.Cash:
+                            var receivingCashAccont = await _mediator.Send(new GetCashAccountByIdQuery(model.ReceiveAccountId));
+                            receivingCashAccont.CurrentBalance -= model.TransferAmount;
+                            await _mediator.Send(receivingCashAccont);
+                            break;
+                    }
+                    break;
+
+
+
+
+                case (int)AccountType.Cash:
+                    var sendingCashAccont = await _mediator.Send(new GetCashAccountByIdQuery(model.SendingAccountId));
+                    sendingCashAccont.CurrentBalance -= model.TransferAmount;
+                    await _mediator.Send(sendingCashAccont);
+
+                    switch (model.ReceiveAccountTypeId)
+                    {
+                        case (int)AccountType.Bank:
+                            var receivingbankAccont = await _mediator.Send(new GetBankAccountByIdQuery(model.ReceiveAccountId));
+                            receivingbankAccont.CurrentBalance += model.TransferAmount;
+                            await _mediator.Send(receivingbankAccont);
+                            break;
+                        case (int)AccountType.Mobile:
+                            var receivingMobileAccont = await _mediator.Send(new GetMobileAccountByIdQuery(model.ReceiveAccountId));
+                            receivingMobileAccont.CurrentBalance += model.TransferAmount;
+                            await _mediator.Send(receivingMobileAccont);
+                            break;
+
+                        case (int)AccountType.Cash:
+                            var receivingCashAccont = await _mediator.Send(new GetCashAccountByIdQuery(model.ReceiveAccountId));
+                            receivingCashAccont.CurrentBalance -= model.TransferAmount;
+                            await _mediator.Send(receivingCashAccont);
+                            break;
+                    }
+                    break;
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> GetAccountInfoJsonData(string accountTypeId)
+        {
+            var result = await PrepareAccountInfoAsync(Convert.ToInt32(accountTypeId));
+
+            return Json(result);
+        }
+
+
+        private async Task<IList<SelectListItem>> PrepareAccountInfoAsync(int accountTypeId)
+        {
+            var result = new List<SelectListItem>();
+
+            switch (accountTypeId)
+            {
+                case (int)AccountType.Bank:
+                    var bankAccounts = await _mediator.Send(new GetBankAccountListQuery());
+                    result = EnumHelper.PrepareSelectListFromEntities(bankAccounts, b => b.Id, b => b.Name);
+                    break;
+                case (int)AccountType.Mobile:
+                    var mobileAccounts = await _mediator.Send(new GetMobileAccountListQuery());
+                    result = EnumHelper.PrepareSelectListFromEntities(mobileAccounts, b => b.Id, b => b.Name);
+                    break;
+
+                case (int)AccountType.Cash:
+                    var cashAccounts = await _mediator.Send(new GetCashAccountListQuery());
+                    result = EnumHelper.PrepareSelectListFromEntities(cashAccounts, b => b.Id, b => b.Name);
+                    break;
+            }
+
+            result.Insert(0, new SelectListItem()
+            {
+                Text = "Select Account No.",
+                Value = Guid.Empty.ToString()
+            });
+
+            return result;
         }
 
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Models.BalanceTransfers
 {
@@ -10,7 +11,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Models.BalanceTransfers
             SendingAccounts = new List<SelectListItem>();
             ReceivingAccounts = new List<SelectListItem>();
         }
+        [ValidateNever]
         public string FromAccountName { get; set; }
+        [ValidateNever]
         public string ToAccountName { get; set; }
         public int SendingAccountTypeId { get; set; }
         public int ReceiveAccountTypeId { get; set; }

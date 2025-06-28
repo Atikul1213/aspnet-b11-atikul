@@ -9,5 +9,6 @@
         public int CashAccountCount { get; set; }
         public int BankAccountCount { get; set; }
         public int MobileAccountCount { get; set; }
+        public decimal TotalTransferAmount { get; set; }
     }
 }

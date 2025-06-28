@@ -1,4 +1,5 @@
-﻿using DevSkill.Inventory.Application.Features.Settings.BankAccounts.Queries;
+﻿using DevSkill.Inventory.Application.Features.Settings.BalanceTransfers.Queries;
+using DevSkill.Inventory.Application.Features.Settings.BankAccounts.Queries;
 using DevSkill.Inventory.Application.Features.Settings.CashAccounts.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
 using DevSkill.Inventory.Application.Features.Settings.Departments.Queries;
@@ -50,6 +51,10 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
             var mobileAccounts = await _mediator.Send(new GetMobileAccountListQuery());
             model.MobileAccountCount = mobileAccounts.Count;
+
+
+            var balanceTransfer = await _mediator.Send(new GetAllBalanceTransferQuery());
+            model.TotalTransferAmount = balanceTransfer.Sum(tm => tm.TransferAmount);
 
             return View(model);
         }
