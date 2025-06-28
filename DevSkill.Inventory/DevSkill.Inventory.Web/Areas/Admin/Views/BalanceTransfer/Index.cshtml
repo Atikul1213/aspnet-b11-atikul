@@ -1,0 +1,202 @@
+﻿@model CustomerListModel
+
+@{
+    ViewData["Title"] = "Customer";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.min.css">
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0 fw-bold">Customer</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Customer</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-6"><div>Customer List</div></div>
+                            <div class="col-md-6 text-end">
+                                <button type="button" class="btn btn-primary btn-add-customer">
+                                    <i class="bi bi-bookmark-plus-fill"></i> New Customer
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="customer-table" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Mobile</th>
+                                    <th>Address</th>
+                                    <th>Email</th>
+                                    <th>Current Balance</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Mobile</th>
+                                    <th>Address</th>
+                                    <th>Email</th>
+                                    <th>Current Balance</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+
+                </div>
+                <!-- /.card -->
+            </div>
+            @Html.Partial("_CustomerInfo", Model.AddCustomerModel)
+            @Html.Partial("_UpdateCustomerInfo", Model.UpdateCustomerModel)
+
+            <!-- /.col -->
+        </div>
+
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+
+
+    <script>
+        $(function(){
+             $("#customer-table").DataTable({
+                 processing: true,
+                 serverSide: true,
+                 responsive: true,
+                 lengthChange: true,
+                 autoWidth: false,
+                 lengthMenu: [
+                     [10, 25, 50, -1],
+                     [10, 25, 50, 'All']
+                 ],
+                 dom: `Bfrtip`,
+                 buttons: [
+                      'copy', 'csv', 'excel', 'pdf', 'print'
+                 ],
+
+                 ajax: {
+                      url: '@Url.Action("GetCQRSCustomerJsonData", "Customers")',
+                      type: 'POST',
+                      contentType: "application/json",
+                      datatype: 'json',
+                      data: function (d) {
+                          d.SearchItem = {
+
+                          };
+                          return JSON.stringify(d);
+                      }
+                 },
+                 columnDefs: [
+                     {
+                         orderable: false,
+                         targets: 6,
+                         render: function(data, type, row){
+                                return `<a href="/Admin/Customers/ShowCustomer/${data}"  value='${data}' class="btn btn-danger">
+                                               <i class="bi bi-eye-fill"></i></a>
+                                <a data-id="${data}" data-toggle="modal" data-target="#update-customer-modal" class="btn btn-primary btn-edit-customer">
+                                            <i class="bi bi-pencil-fill"></i></a>
+                                <a href="/Admin/Customers/RemoveCustomer/${data}"  value='${data}' class="btn btn-danger">
+                                                <i class="bi bi-trash-fill"></i></a>`;
+                         }
+                     }
+                 ],
+             });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Handle Edit Customer button click
+            $(".btn-add-customer").on("click", function () {
+                $("#add-customer-modal").modal("show");
+            });
+        });
+    </script>
+
+    <script>
+        // Handle Edit Customer button click
+        $(document).on("click", ".btn-edit-customer", function () {
+                let customerId = $(this).data("id");
+                var postData ={
+                    customerId: customerId
+                };
+               $.ajax({
+                    cache: false,
+                     url: '@Url.Action("GetCustomerDataById", "Customers")',
+                     type: 'GET',
+                     contentType: "application/json",
+                     dataType: 'json',
+                     data: postData,
+                     success: function(data){
+                         // console.log("data: ",data);
+                         // console.log("test: ",data.id);
+                        $("#update-customer-modal #Id").val(data.id);
+                        $("#update-customer-modal #Name").val(data.name);
+                        $("#update-customer-modal #Company").val(data.company);
+                        $("#update-customer-modal #MobileNumber").val(data.mobileNumber);
+                        $("#update-customer-modal #Address").val(data.address);
+                        $("#update-customer-modal #statusId").val(data.statusId);
+                        $("#update-customer-modal #OpeningBalance").val(data.openingBalance);
+                        $("#update-customer-modal #Email").val(data.email);
+                     },
+                     error: function (xhr, status, error) {
+                        console.error("AJAX Error:", error);
+                    }
+                }),
+
+                $("#update-customer-modal").modal("show");
+            });
+
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

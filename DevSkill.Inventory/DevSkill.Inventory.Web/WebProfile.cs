@@ -3,6 +3,7 @@ using DevSkill.Inventory.Application.Features.Customers.Commands;
 using DevSkill.Inventory.Application.Features.Customers.Queries;
 using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Application.Features.Products.Queries;
+using DevSkill.Inventory.Application.Features.Settings.BalanceTransfers.Commands;
 using DevSkill.Inventory.Application.Features.Settings.BankAccounts.Commands;
 using DevSkill.Inventory.Application.Features.Settings.CashAccounts.Commands;
 using DevSkill.Inventory.Application.Features.Settings.Categories.Commands;
@@ -15,6 +16,7 @@ using DevSkill.Inventory.Application.Features.Users.InventoryUsers.Commands;
 using DevSkill.Inventory.Application.Features.Users.Suppliers.Commands;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
+using DevSkill.Inventory.Web.Areas.Admin.Models.BalanceTransfers;
 using DevSkill.Inventory.Web.Areas.Admin.Models.BankAccounts;
 using DevSkill.Inventory.Web.Areas.Admin.Models.CashAccounts;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
@@ -168,6 +170,14 @@ namespace DevSkill.Inventory.Web
 
             #endregion
 
+            #region Balance Transfter
+
+            CreateMap<BalanceTransferAddCommand, AddBalanceTransferModel>().ReverseMap();
+            CreateMap<BalanceTransfer, BalanceTransferAddCommand>().ReverseMap();
+            CreateMap<BalanceTransfer, AddBalanceTransferModel>().ReverseMap();
+            CreateMap<BalanceTransfer, BalanceTransferModel>().ReverseMap();
+
+            #endregion
         }
     }
 }

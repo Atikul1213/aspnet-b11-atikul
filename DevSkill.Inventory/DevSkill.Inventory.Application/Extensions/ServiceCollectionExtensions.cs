@@ -1,6 +1,9 @@
-﻿using DevSkill.Inventory.Application.Features.Customers.Commands;
+﻿using DevSkill.Inventory.Application.Features.BalanceTransfers.Queries;
+using DevSkill.Inventory.Application.Features.Customers.Commands;
 using DevSkill.Inventory.Application.Features.Customers.Queries;
 using DevSkill.Inventory.Application.Features.Products.Commands;
+using DevSkill.Inventory.Application.Features.Settings.BalanceTransfers.Commands;
+using DevSkill.Inventory.Application.Features.Settings.BalanceTransfers.Queries;
 using DevSkill.Inventory.Application.Features.Settings.BankAccounts.Commands;
 using DevSkill.Inventory.Application.Features.Settings.BankAccounts.Queries;
 using DevSkill.Inventory.Application.Features.Settings.CashAccounts.Commands;
@@ -112,6 +115,12 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(MobileAccountDeleteCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetMobileAccountListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetMobileAccountByIdQuery).Assembly);
+
+                cfg.RegisterServicesFromAssembly(typeof(BalanceTransferAddCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(BalanceTransferDeleteCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetAllBalanceTransferQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetBalanceTransferByIdQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetBalanceTransferListQuery).Assembly);
 
             });
 

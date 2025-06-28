@@ -1,4 +1,5 @@
-﻿using DevSkill.Inventory.Web.Areas.Admin.Models.BankAccounts;
+﻿using DevSkill.Inventory.Web.Areas.Admin.Models.BalanceTransfers;
+using DevSkill.Inventory.Web.Areas.Admin.Models.BankAccounts;
 using DevSkill.Inventory.Web.Areas.Admin.Models.CashAccounts;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Customers;
@@ -70,6 +71,8 @@ namespace DevSkill.Inventory.Web.Extensions
 
             services.AddTransient<IValidator<AddMobileAccountModel>, AddMobileAccountModelValidator>();
             services.AddTransient<IValidator<UpdateMobileAccountModel>, UpdateMobileAccountModelValidator>();
+
+            services.AddTransient<IValidator<AddBalanceTransferModel>, AddBalanceTransferModelValidator>();
 
             return services;
         }

@@ -20,7 +20,8 @@ namespace DevSkill.Inventory.Infrastructure
             ICustomerRepository customerRepository,
             ICashAccountRepository cashAccountRepository,
             IBankAccountRepository bankAccountRepository,
-            IMobileAccountRepository mobileAccountRepository) : base(context)
+            IMobileAccountRepository mobileAccountRepository,
+            IBalanceTransferRepository balanceTransferRepository) : base(context)
         {
             ProductRepository = productRepository;
             CategoryRepository = categoryRepository;
@@ -34,6 +35,7 @@ namespace DevSkill.Inventory.Infrastructure
             CashAccountRepository = cashAccountRepository;
             BankAccountRepository = bankAccountRepository;
             MobileAccountRepository = mobileAccountRepository;
+            BalanceTransferRepository = balanceTransferRepository;
         }
 
         #endregion
@@ -52,6 +54,7 @@ namespace DevSkill.Inventory.Infrastructure
         public ICashAccountRepository CashAccountRepository { get; set; }
         public IBankAccountRepository BankAccountRepository { get; set; }
         public IMobileAccountRepository MobileAccountRepository { get; set; }
+        public IBalanceTransferRepository BalanceTransferRepository { get; set; }
 
         #endregion
 
