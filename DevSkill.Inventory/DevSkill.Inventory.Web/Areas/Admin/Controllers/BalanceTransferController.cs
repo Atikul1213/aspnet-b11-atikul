@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using DevSkill.Inventory.Application.Features.BalanceTransfers.Queries;
 using DevSkill.Inventory.Application.Features.Settings.BalanceTransfers.Commands;
+using DevSkill.Inventory.Application.Features.Settings.BankAccounts.Commands;
 using DevSkill.Inventory.Application.Features.Settings.BankAccounts.Queries;
+using DevSkill.Inventory.Application.Features.Settings.CashAccounts.Commands;
 using DevSkill.Inventory.Application.Features.Settings.CashAccounts.Queries;
+using DevSkill.Inventory.Application.Features.Settings.MobileAccounts.Commands;
 using DevSkill.Inventory.Application.Features.Settings.MobileAccounts.Queries;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Entities;
@@ -125,25 +128,29 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 case (int)AccountType.Bank:
                     var sendingbankAccont = await _mediator.Send(new GetBankAccountByIdQuery(model.SendingAccountId));
                     sendingbankAccont.CurrentBalance -= model.TransferAmount;
-                    await _mediator.Send(sendingbankAccont);
+                    var bankAccountCommand = _mapper.Map<UpdateBankAccountCommand>(sendingbankAccont);
+                    await _mediator.Send(bankAccountCommand);
 
                     switch (model.ReceiveAccountTypeId)
                     {
                         case (int)AccountType.Bank:
                             var receivingbankAccont = await _mediator.Send(new GetBankAccountByIdQuery(model.ReceiveAccountId));
                             receivingbankAccont.CurrentBalance += model.TransferAmount;
-                            await _mediator.Send(receivingbankAccont);
+                            var bankAccountCommandReceive = _mapper.Map<UpdateBankAccountCommand>(receivingbankAccont);
+                            await _mediator.Send(bankAccountCommandReceive);
                             break;
                         case (int)AccountType.Mobile:
                             var receivingMobileAccont = await _mediator.Send(new GetMobileAccountByIdQuery(model.ReceiveAccountId));
                             receivingMobileAccont.CurrentBalance += model.TransferAmount;
-                            await _mediator.Send(receivingMobileAccont);
+                            var mobileAccountCommandReceiver = _mapper.Map<UpdateMobileAccountCommand>(receivingMobileAccont);
+                            await _mediator.Send(mobileAccountCommandReceiver);
                             break;
 
                         case (int)AccountType.Cash:
                             var receivingCashAccont = await _mediator.Send(new GetCashAccountByIdQuery(model.ReceiveAccountId));
                             receivingCashAccont.CurrentBalance -= model.TransferAmount;
-                            await _mediator.Send(receivingCashAccont);
+                            var cashAccountCommandReceiver = _mapper.Map<UpdateCashAccountCommand>(receivingCashAccont);
+                            await _mediator.Send(cashAccountCommandReceiver);
                             break;
                     }
                     break;
@@ -154,25 +161,29 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                     var sendingMobileAccont = await _mediator.Send(new GetMobileAccountByIdQuery(model.SendingAccountId));
                     sendingMobileAccont.CurrentBalance -= model.TransferAmount;
-                    await _mediator.Send(sendingMobileAccont);
+                    var mobileAccountCommand = _mapper.Map<UpdateMobileAccountCommand>(sendingMobileAccont);
+                    await _mediator.Send(mobileAccountCommand);
 
                     switch (model.ReceiveAccountTypeId)
                     {
                         case (int)AccountType.Bank:
                             var receivingbankAccont = await _mediator.Send(new GetBankAccountByIdQuery(model.ReceiveAccountId));
                             receivingbankAccont.CurrentBalance += model.TransferAmount;
-                            await _mediator.Send(receivingbankAccont);
+                            var bankAccountCommandReceive = _mapper.Map<UpdateBankAccountCommand>(receivingbankAccont);
+                            await _mediator.Send(bankAccountCommandReceive);
                             break;
                         case (int)AccountType.Mobile:
                             var receivingMobileAccont = await _mediator.Send(new GetMobileAccountByIdQuery(model.ReceiveAccountId));
                             receivingMobileAccont.CurrentBalance += model.TransferAmount;
-                            await _mediator.Send(receivingMobileAccont);
+                            var mobileAccountCommandReceive = _mapper.Map<UpdateMobileAccountCommand>(receivingMobileAccont);
+                            await _mediator.Send(mobileAccountCommandReceive);
                             break;
 
                         case (int)AccountType.Cash:
                             var receivingCashAccont = await _mediator.Send(new GetCashAccountByIdQuery(model.ReceiveAccountId));
                             receivingCashAccont.CurrentBalance -= model.TransferAmount;
-                            await _mediator.Send(receivingCashAccont);
+                            var cashAccountCommandReceive = _mapper.Map<UpdateCashAccountCommand>(receivingCashAccont);
+                            await _mediator.Send(cashAccountCommandReceive);
                             break;
                     }
                     break;
@@ -183,29 +194,51 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 case (int)AccountType.Cash:
                     var sendingCashAccont = await _mediator.Send(new GetCashAccountByIdQuery(model.SendingAccountId));
                     sendingCashAccont.CurrentBalance -= model.TransferAmount;
-                    await _mediator.Send(sendingCashAccont);
+                    var cashAccountCommand = _mapper.Map<UpdateCashAccountCommand>(sendingCashAccont);
+                    await _mediator.Send(cashAccountCommand);
 
                     switch (model.ReceiveAccountTypeId)
                     {
                         case (int)AccountType.Bank:
                             var receivingbankAccont = await _mediator.Send(new GetBankAccountByIdQuery(model.ReceiveAccountId));
                             receivingbankAccont.CurrentBalance += model.TransferAmount;
-                            await _mediator.Send(receivingbankAccont);
+                            var bankAccountCommandReceive = _mapper.Map<UpdateBankAccountCommand>(receivingbankAccont);
+                            await _mediator.Send(bankAccountCommandReceive);
                             break;
                         case (int)AccountType.Mobile:
                             var receivingMobileAccont = await _mediator.Send(new GetMobileAccountByIdQuery(model.ReceiveAccountId));
                             receivingMobileAccont.CurrentBalance += model.TransferAmount;
-                            await _mediator.Send(receivingMobileAccont);
+                            var mobileAccountCommandReceive = _mapper.Map<UpdateMobileAccountCommand>(receivingMobileAccont);
+                            await _mediator.Send(mobileAccountCommandReceive);
                             break;
 
                         case (int)AccountType.Cash:
                             var receivingCashAccont = await _mediator.Send(new GetCashAccountByIdQuery(model.ReceiveAccountId));
                             receivingCashAccont.CurrentBalance -= model.TransferAmount;
-                            await _mediator.Send(receivingCashAccont);
+                            var cashAccountCommandReceive = _mapper.Map<UpdateCashAccountCommand>(receivingCashAccont);
+                            await _mediator.Send(cashAccountCommandReceive);
                             break;
                     }
                     break;
             }
+        }
+
+
+        public async Task<IActionResult> RemoveBalanceTransfer(Guid id)
+        {
+            try
+            {
+                var balanceTransferCommand = new BalanceTransferDeleteCommand(id);
+                await _mediator.Send(balanceTransferCommand);
+
+                TempData["success'"] = "Balance transfer deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to delete balance transfer");
+            }
+
+            return RedirectToAction("Index");
         }
 
 

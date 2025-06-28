@@ -60,6 +60,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 try
                 {
+                    model.CurrentBalance = model.Balance;
                     var cashAccount = _mapper.Map<CashAccountAddCommand>(model);
                     await _mediator.Send(cashAccount);
 
@@ -85,6 +86,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 try
                 {
+                    model.CurrentBalance += model.Balance;
                     var cashAccount = _mapper.Map<UpdateCashAccountCommand>(model);
                     await _mediator.Send(cashAccount);
                     TempData["success'"] = "CashAccount updated successfully.";

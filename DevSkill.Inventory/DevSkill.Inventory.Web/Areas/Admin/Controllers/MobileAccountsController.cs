@@ -64,6 +64,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 try
                 {
+                    model.CurrentBalance = model.OpeningBalance;
                     var mobileAccount = _mapper.Map<MobileAccountAddCommand>(model);
                     await _mediator.Send(mobileAccount);
 
@@ -89,6 +90,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 try
                 {
+                    model.CurrentBalance += model.OpeningBalance;
                     var mobileAccount = _mapper.Map<UpdateMobileAccountCommand>(model);
                     await _mediator.Send(mobileAccount);
                     TempData["success'"] = "MobileAccount updated successfully.";
