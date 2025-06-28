@@ -31,13 +31,13 @@
         <div class="row">
             <div class="col-8">
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title">User Role</h3></div>
+                    <div class="card-header bg-info"><h3 class="card-title fw-bold">User Role</h3></div>
 
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="userRole-table" class="table table-bordered">
+                        <table id="userRole-table" class="table table-bordered p-3 text-center table-hover">
                             <thead>
-                                <tr>
+                                <tr class="table-primary">
                                     <th class="text-center">#SN.</th>
                                     <th class="text-center">User Role</th>
                                     <th class="text-center">Company</th>
@@ -53,7 +53,8 @@
                                     var idx = 1;
                                     @foreach (var userRole in Model.UserRoles)
                                     {
-                                        <tr>
+                                        var rowClass = (idx % 2 == 0) ? "table-info" : "table-success";
+                                        <tr class="@rowClass">
                                             <td class="text-center">@idx</td>
                                             <td class="text-center">@userRole.Name</td>
                                             <td class="text-center">@userRole.Company</td>
@@ -79,7 +80,7 @@
                                 }
                             </tbody>
                             <tfoot>
-                                <tr>
+                                <tr class="table-primary">
                                     <th class="text-center">#SN.</th>
                                     <th class="text-center">User Role</th>
                                     <th class="text-center">Company</th>
