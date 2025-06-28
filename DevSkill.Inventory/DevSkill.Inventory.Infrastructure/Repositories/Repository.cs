@@ -121,6 +121,17 @@ namespace DevSkill.Inventory.Infrastructure.Repositories
             IQueryable<TEntity> query = _dbSet;
             return await query.ToListAsync();
         }
+        public virtual async Task<IList<TEntity>> GetAllWithFilterAsync(
+          Expression<Func<TEntity, bool>> filter = null)
+        {
+            IQueryable<TEntity> query = _dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            return await query.ToListAsync();
+        }
 
         public virtual async Task<(IList<TEntity> data, int total, int totalDisplay)> GetAsync(
             Expression<Func<TEntity, bool>> filter = null,
