@@ -54,8 +54,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             var model = new ProductListModel();
 
-            var categories = await _mediator.Send(new GetCategoryListQuery());
-            var units = await _mediator.Send(new GetUnitListQuery());
+            var categories = await _mediator.Send(new GetActiveCategoryListQuery());
+            var units = await _mediator.Send(new GetActiveUnitListQuery());
 
             var categorySelectList = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
             categorySelectList.Insert(0, new SelectListItem
@@ -106,9 +106,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     return RedirectToAction("ProductIndex");
                 }
             }
-            catch (DuplicateProductSkuException dex)
+            catch (DuplicateProductBarCodeException dex)
             {
-                _logger.LogError(dex, "Product SKU already exists");
+                _logger.LogError(dex, "Product bar code already exists");
                 TempData["error"] = dex.Message;
             }
             catch (Exception ex)
@@ -194,9 +194,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     return RedirectToAction("ProductIndex");
                 }
             }
-            catch (DuplicateProductSkuException dex)
+            catch (DuplicateProductBarCodeException dex)
             {
-                _logger.LogError(dex, "Product SKU already exists");
+                _logger.LogError(dex, "Product bar code already exists");
                 TempData["error"] = dex.Message;
             }
             catch (Exception ex)
@@ -264,7 +264,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                             select new string[]
                             {
                                 HttpUtility.HtmlEncode(record.Name),
-                                HttpUtility.HtmlEncode(record.Sku),
+                                //HttpUtility.HtmlEncode(record.Sku),
                                 //record.Price.ToString("C"),
                                 //record.Quantity.ToString(),
                                 //record.IsAvailable ? "True" : "False",
@@ -320,7 +320,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     TempData["success"] = "Product created successfully";
                     return RedirectToAction("Index");
                 }
-                catch (DuplicateProductSkuException dex)
+                catch (DuplicateProductBarCodeException dex)
                 {
                     _logger.LogError(dex, "Product SKU already exists");
                     TempData["error"] = dex.Message;
@@ -368,7 +368,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                     return RedirectToAction("Index");
                 }
-                catch (DuplicateProductSkuException dex)
+                catch (DuplicateProductBarCodeException dex)
                 {
                     _logger.LogError(dex, "Product SKU already exists");
                     TempData["error"] = dex.Message;
@@ -418,7 +418,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                             select new string[]
                             {
                                 HttpUtility.HtmlEncode(record.Name),
-                                HttpUtility.HtmlEncode(record.Sku),
+                                //HttpUtility.HtmlEncode(record.Sku),
                                 //record.Price.ToString("C"),
                                 //record.Quantity.ToString(),
                                 //record.IsAvailable ? "True" : "False",
@@ -454,7 +454,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                             select new string[]
                             {
                                 HttpUtility.HtmlEncode(record.Name),
-                                HttpUtility.HtmlEncode(record.Sku),
+                                //HttpUtility.HtmlEncode(record.Sku),
                                 //record.Price.ToString("C"),
                                 //record.Quantity.ToString(),
                                 //record.IsAvailable ? "True" : "False",

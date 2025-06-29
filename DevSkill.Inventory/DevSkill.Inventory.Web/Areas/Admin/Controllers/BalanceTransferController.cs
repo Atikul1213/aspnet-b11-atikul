@@ -258,16 +258,16 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             switch (accountTypeId)
             {
                 case (int)AccountType.Bank:
-                    var bankAccounts = await _mediator.Send(new GetBankAccountListQuery());
+                    var bankAccounts = await _mediator.Send(new GetActiveBankAccountListQuery());
                     result = EnumHelper.PrepareSelectListFromEntities(bankAccounts, b => b.Id, b => b.Name);
                     break;
                 case (int)AccountType.Mobile:
-                    var mobileAccounts = await _mediator.Send(new GetMobileAccountListQuery());
+                    var mobileAccounts = await _mediator.Send(new GetActiveMobileAccountListQuery());
                     result = EnumHelper.PrepareSelectListFromEntities(mobileAccounts, b => b.Id, b => b.Name);
                     break;
 
                 case (int)AccountType.Cash:
-                    var cashAccounts = await _mediator.Send(new GetCashAccountListQuery());
+                    var cashAccounts = await _mediator.Send(new GetActiveCashAccountListQuery());
                     result = EnumHelper.PrepareSelectListFromEntities(cashAccounts, b => b.Id, b => b.Name);
                     break;
             }

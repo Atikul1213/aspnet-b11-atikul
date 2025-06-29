@@ -8,6 +8,6 @@ namespace DevSkill.Inventory.Domain.Repositories
     {
         Task<(IList<Product> data, int total, int totalDisplay)> GetPagedProductAsync(int pageIndex, int pageSize, string? order, DataTablesSearch search);
         Task<(IList<Product> data, int total, int totalDisplay)> GetCQRSPagedProductAsync(IGetProductQuery request);
-        Task<bool> CheckSkuDuplicateAsync(string sku, Guid? id = null);
+        Task<bool> CheckBarCodeDuplicateAsync(string barCode, Guid? id = null);
     }
 }

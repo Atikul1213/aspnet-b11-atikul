@@ -44,7 +44,6 @@ namespace DevSkill.Inventory.Infrastructure
         public DbSet<BalanceTransfer> BalanceTransfers { get; set; }
         #endregion
 
-
         #region Methods
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

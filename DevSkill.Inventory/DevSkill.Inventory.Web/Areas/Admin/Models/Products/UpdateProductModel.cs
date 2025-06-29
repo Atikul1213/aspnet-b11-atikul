@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Models.Products
 {
@@ -11,16 +10,18 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Models.Products
             Units = new List<SelectListItem>();
         }
         public Guid Id { get; set; }
+        public string BarCode { get; set; }
         public string Name { get; set; }
-        public string Sku { get; set; }
         public int CategoryId { get; set; }
+        public string CategoryName { get; set; }
         public int UnitId { get; set; }
-        [ValidateNever]
-        public string ImageUrl { get; set; }
-        public decimal PurchasePrice { get; set; }
         public decimal MRPPrice { get; set; }
         public decimal WholeSalePrice { get; set; }
+        public decimal PurchasePrice { get; set; }
+        public int Stock { get; set; }
         public int LowStock { get; set; }
+        public int DamageStock { get; set; }
+        public string ImageUrl { get; set; }
         public IEnumerable<SelectListItem> Categories { get; set; }
         public IEnumerable<SelectListItem> Units { get; set; }
     }

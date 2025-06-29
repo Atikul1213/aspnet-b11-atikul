@@ -26,7 +26,7 @@ namespace DevSkill.Inventory.Application.Features.Products.Commands
         {
             var product = _mapper.Map<Product>(request);
 
-            bool isDuplicate = await _applicationUnitOfWork.ProductRepository.CheckSkuDuplicateAsync(product.Sku, product.Id);
+            bool isDuplicate = await _applicationUnitOfWork.ProductRepository.CheckBarCodeDuplicateAsync(product.BarCode, product.Id);
 
             if (!isDuplicate)
             {
@@ -35,7 +35,7 @@ namespace DevSkill.Inventory.Application.Features.Products.Commands
             }
             else
             {
-                throw new DuplicateProductSkuException();
+                throw new DuplicateProductBarCodeException();
             }
         }
 

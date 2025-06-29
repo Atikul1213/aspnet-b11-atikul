@@ -29,7 +29,7 @@ namespace DevSkill.Inventory.Application.Features.Products.Queries
         {
             var productSearchDto = _mapper.Map<ProductSearchDto>(request);
 
-            return await _applicationUnitOfWork.GetProductSPAsync(request.PageIndex, request.PageSize, request.FormatSortExpression("Name", "Sku", "Price", "Id"), productSearchDto);
+            return await _applicationUnitOfWork.GetProductSPAsync(request.PageIndex, request.PageSize, request.FormatSortExpression("Name", "Id"), productSearchDto);
         }
         #endregion
     }

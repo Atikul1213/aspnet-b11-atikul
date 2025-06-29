@@ -12,9 +12,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Validator
                 .Length(3, 20).WithMessage("Product name must be between 3 and 20 characters long.");
 
 
-            RuleFor(p => p.Sku)
-                .NotEmpty().WithMessage("Product Sku is required.")
-                .Length(3, 15).WithMessage("Product Sku must be between 3 and 15 characters long.");
+            RuleFor(p => p.BarCode)
+                .NotEmpty().WithMessage("Product bar code is required.")
+                .Length(3, 15).WithMessage("Product bar code must be between 3 and 15 characters long.");
 
 
             //RuleFor(p => p.Price)

@@ -23,19 +23,19 @@ namespace DevSkill.Inventory.Infrastructure.Repositories
         public async Task<(IList<Product> data, int total, int totalDisplay)> GetCQRSPagedProductAsync(IGetProductQuery request)
         {
             if (string.IsNullOrEmpty(request.Search.Value))
-                return await GetDynamicAsync(null, request.FormatSortExpression("Id", "Name", "Sku", "Price"), null, request.PageIndex, request.PageSize, true);
+                return await GetDynamicAsync(null, request.FormatSortExpression("Id", "Name"), null, request.PageIndex, request.PageSize, true);
             else
-                return await GetDynamicAsync(x => x.Name.Contains(request.Search.Value) || x.Sku.Contains(request.Search.Value), request.FormatSortExpression("Id", "Name", "Sku", "Price"), null, request.PageIndex, request.PageSize, true);
+                return await GetDynamicAsync(x => x.Name.Contains(request.Search.Value) || x.BarCode.Contains(request.Search.Value), request.FormatSortExpression("Id", "Name"), null, request.PageIndex, request.PageSize, true);
         }
 
-        public async Task<bool> CheckSkuDuplicateAsync(string sku, Guid? id = null)
+        public async Task<bool> CheckBarCodeDuplicateAsync(string barCode, Guid? id = null)
         {
             if (id.HasValue)
             {
-                return await GetCountAsync(x => x.Id != id && x.Sku == sku) > 0;
+                return await GetCountAsync(x => x.Id != id && x.BarCode == barCode) > 0;
             }
 
-            return await GetCountAsync(x => x.Sku == sku) > 0;
+            return await GetCountAsync(x => x.BarCode == barCode) > 0;
         }
     }
 }

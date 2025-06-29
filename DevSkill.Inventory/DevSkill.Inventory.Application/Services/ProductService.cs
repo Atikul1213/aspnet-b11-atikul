@@ -15,26 +15,26 @@ namespace DevSkill.Inventory.Application.Services
         }
         public async Task AddProductAsync(Product product)
         {
-            if (!await _applicationUnitOfWork.ProductRepository.CheckSkuDuplicateAsync(product.Sku))
+            if (!await _applicationUnitOfWork.ProductRepository.CheckBarCodeDuplicateAsync(product.BarCode))
             {
                 await _applicationUnitOfWork.ProductRepository.AddAsync(product);
                 await _applicationUnitOfWork.SaveAsync();
             }
             else
             {
-                throw new DuplicateProductSkuException();
+                throw new DuplicateProductBarCodeException();
             }
         }
 
         public async Task UpdateProductAsync(Product product)
         {
-            if (!await _applicationUnitOfWork.ProductRepository.CheckSkuDuplicateAsync(product.Sku, product.Id))
+            if (!await _applicationUnitOfWork.ProductRepository.CheckBarCodeDuplicateAsync(product.BarCode, product.Id))
             {
                 await _applicationUnitOfWork.ProductRepository.UpdateAsync(product);
                 await _applicationUnitOfWork.SaveAsync();
             }
             else
-                throw new DuplicateProductSkuException();
+                throw new DuplicateProductBarCodeException();
         }
 
         public async Task DeleteProductAsync(Guid id)
