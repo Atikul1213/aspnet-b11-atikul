@@ -177,14 +177,15 @@
                      dataType: 'json',
                      data: postData,
                      success: function(data){
-                         // console.log("data: ",data);
+                          console.log("data: ",data);
                          // console.log("test: ",data.id);
                         $("#update-customer-modal #Id").val(data.id);
                         $("#update-customer-modal #Name").val(data.name);
-                        $("#update-customer-modal #Company").val(data.company);
+                        $("#update-customer-modal #CompanyName").val(data.companyName);
                         $("#update-customer-modal #MobileNumber").val(data.mobileNumber);
                         $("#update-customer-modal #Address").val(data.address);
                         $("#update-customer-modal #statusId").val(data.statusId);
+                        $("#update-customer-modal #ImageUrl").val(data.imageUrl);
                         $("#update-customer-modal #OpeningBalance").val(data.openingBalance);
                         $("#update-customer-modal #Email").val(data.email);
                      },
