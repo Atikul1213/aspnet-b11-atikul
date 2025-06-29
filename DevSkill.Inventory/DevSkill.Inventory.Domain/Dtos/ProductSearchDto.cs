@@ -3,8 +3,11 @@
     public class ProductSearchDto
     {
         public string? Name { get; set; }
-        public string? Sku { get; set; }
-        public int? PriceFrom { get; set; }
-        public int? PriceTo { get; set; }
+        public string? BarCode { get; set; }
+        public string? Category { get; set; }
+        public int? MRPFrom { get; set; }
+        public int? MRPTo { get; set; }
+        public int? StockFrom { get; set; }
+        public int? StockTo { get; set; }
     }
 }

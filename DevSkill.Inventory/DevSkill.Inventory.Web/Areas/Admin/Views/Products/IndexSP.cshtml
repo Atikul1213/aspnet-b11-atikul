@@ -64,20 +64,38 @@
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label>Sku</label>
-                                <input type="text" asp-for="SearchItem.Sku" class="form-control" />
+                                <label>Bar code</label>
+                                <input type="text" asp-for="SearchItem.BarCode" class="form-control" />
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label>Price From</label>
-                                <input type="number" asp-for="SearchItem.PriceFrom" class="form-control" />
+                                <label>Category</label>
+                                <input type="text" asp-for="SearchItem.Category" class="form-control" />
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label>Price To</label>
-                                <input type="number" asp-for="SearchItem.PriceTo" class="form-control" />
+                                <label>MRP From</label>
+                                <input type="number" asp-for="SearchItem.MRPFrom" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>MRP To</label>
+                                <input type="number" asp-for="SearchItem.MRPTo" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Stock From</label>
+                                <input type="number" asp-for="SearchItem.StockFrom" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Stock To</label>
+                                <input type="number" asp-for="SearchItem.StockTo" class="form-control" />
                             </div>
                         </div>
                     </div>
@@ -158,51 +176,54 @@
 
         <script>
            $(function(){
-                // $("#product-table").DataTable({
-                //     processing: true,
-                //     serverSide: true,
-                //     responsive: true,
-                //     lengthChange: true,
-                //     autoWidth: false,
-                //     searching: false,
-                //     lengthMenu: [
-                //         [10, 25, 50, -1],
-                //         [10, 25, 50, 'All']
-                //     ],
-                //     dom: `Bfrtip`,
-                //     buttons: [
-                //          'copy', 'csv', 'excel', 'pdf', 'print'
-                //     ],
+                $("#product-table").DataTable({
+                    processing: true,
+                    serverSide: true,
+                    responsive: true,
+                    lengthChange: true,
+                    autoWidth: false,
+                    searching: false,
+                    lengthMenu: [
+                        [10, 25, 50, -1],
+                        [10, 25, 50, 'All']
+                    ],
+                    dom: `Bfrtip`,
+                    buttons: [
+                         'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
 
-                //     ajax: {
-                //          url: '@Url.Action("GetProductSPJsonData", "Products")',
-                //          type: 'POST',
-                //          contentType: "application/json",
-                //          datatype: 'json',
-                //          data: function (d) {
-                //              d.SearchItem = {
-                //                 Name: $("#SearchItem_Name").val(),
-                //                 Sku: $("#SearchItem_Sku").val(),
-                //                 PriceFrom: $("#SearchItem_PriceFrom").val() == "" ? null : $("#SearchItem_PriceFrom").val(),
-                //                 PriceTo: $("#SearchItem_PriceTo").val() == "" ? null : $("#SearchItem_PriceTo").val()
-                //              };
-                //              return JSON.stringify(d);
-                //          }
-                //     },
-                //     columnDefs: [
-                //         {
-                //             orderable: false,
-                //             targets: 6,
-                //             render: function(data, type, row){
-                //                    return `<button type="submit" class="btn btn-info btn-sm" onclick="window.location.href='/admin/Products/edit/${data}'" value='${data}'>
-                //                                      <i class="fas fa-pencil-alt"> </i>  Edit </button>
+                    ajax: {
+                      url: '@Url.Action("GetCQRSProductSPJsonData", "Products")',
+                         type: 'POST',
+                         contentType: "application/json",
+                         datatype: 'json',
+                         data: function (d) {
+                             d.SearchItem = {
+                                Name: $("#SearchItem_Name").val(),
+                                BarCode: $("#SearchItem_BarCode").val(),
+                                Category: $("#SearchItem_Category").val(),
+                                MRPFrom: $("#SearchItem_MRPFrom").val() == "" ? null : $("#SearchItem_MRPFrom").val(),
+                                MRPTo: $("#SearchItem_MRPTo").val() == "" ? null : $("#SearchItem_MRPTo").val(),
+                                StockFrom: $("#SearchItem_StockFrom").val() == "" ? null : $("#SearchItem_StockFrom").val(),
+                                StockTo: $("#SearchItem_StockTo").val() == "" ? null : $("#SearchItem_StockTo").val()
+                             };
+                             return JSON.stringify(d);
+                         }
+                    },
+                    columnDefs: [
+                        {
+                            orderable: false,
+                            targets: 9,
+                            render: function(data, type, row){
+                                return `<button type="submit" class="btn btn-info btn-sm" onclick="window.location.href='/admin/Products/UpdateProduct/${data}'" value='${data}'>
+                                                     <i class="fas fa-pencil-alt"> </i>  Edit </button>
 
-                //                          <button type="submit" class="btn btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
-                //                              <i class="fas fa-trash"></i> Delete </button>`;
-                //             }
-                //         }
-                //     ],
-                // });
+                                         <button type="submit" class="btn btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
+                                             <i class="fas fa-trash"></i> Delete </button>`;
+                            }
+                        }
+                    ],
+                });
 
             $("#product-table").on('click', '.show-bs-modal', function(){
                   let id = $(this).data("id");

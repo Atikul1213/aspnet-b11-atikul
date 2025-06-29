@@ -69,10 +69,10 @@ namespace DevSkill.Inventory.Infrastructure
                     {"PageIndex", pageIndex },
                     {"PageSize", pageSize },
                     {"OrderBy", order },
-                    {"PriceFrom", search.PriceFrom },
-                    {"PriceTo", search.PriceTo },
+                    //{"PriceFrom", search.PriceFrom },
+                    //{"PriceTo", search.PriceTo },
                     {"Name", string.IsNullOrEmpty(search.Name) ? null : search.Name },
-                    {"Sku", string.IsNullOrEmpty(search.Sku) ? null : search.Sku }
+                    //{"Sku", string.IsNullOrEmpty(search.Sku) ? null : search.Sku }
                 },
                 new Dictionary<string, Type>
                 {

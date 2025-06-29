@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DevSkill.Inventory.Domain;
-using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
 using MediatR;
 
@@ -27,9 +26,8 @@ namespace DevSkill.Inventory.Application.Features.Products.Queries
         #region Methods
         public async Task<(IList<Product>, int, int)> Handle(GetProductQuery request, CancellationToken cancellationToken)
         {
-            var productSearchDto = _mapper.Map<ProductSearchDto>(request);
 
-            return await _applicationUnitOfWork.GetProductSPAsync(request.PageIndex, request.PageSize, request.FormatSortExpression("Name", "Id"), productSearchDto);
+            return await _applicationUnitOfWork.ProductRepository.GetAllPagedProductAsync(request.PageIndex, request.PageSize, request.FormatSortExpression("Name", "Id"), request.SearchItem);
         }
         #endregion
     }
