@@ -36,7 +36,15 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-search mr-1"></i>Search Product</h3>
+                    <div class="row">
+                        <div class="col-md-6  fw-bold"><div>Search Product</div></div>
+                        <div class="col-md-6 text-end">
+                            <button type="button" class="btn btn-primary btn-add-product">
+                                <i class="bi bi-bookmark-plus-fill"></i> New Product
+                            </button>
+                        </div>
+                    </div>
+                    @* <h3 class="card-title"><i class="fas fa-search mr-1"></i>Search Product</h3> *@
 
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -89,15 +97,18 @@
                     <!-- /.card-header -->
                     <div class="card-body">
                         <partial name="_ModalPartial" />
-                        <table id="product-table" class="table table-bordered">
+                        <table id="product-table" class="table table-bordered p-3 text-center table-hover">
                             <thead>
-                                <tr>
+                                <tr class="table-primary">
+                                    <th>Code</th>
                                     <th>Name</th>
-                                    <th>Sku</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>IsAvailable</th>
-                                    <th>CreateOnUtc</th>
+                                    <th>Category</th>
+                                    <th>Purchase</th>
+                                    <th>MRP</th>
+                                    <th>Wholesale</th>
+                                    <th>Stock</th>
+                                    <th>Low Stock</th>
+                                    <th>Damage Stock</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -105,13 +116,16 @@
 
                             </tbody>
                             <tfoot>
-                                <tr>
+                                <tr class="table-primary">
+                                    <th>Code</th>
                                     <th>Name</th>
-                                    <th>Sku</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>IsAvailable</th>
-                                    <th>CreateOnUtc</th>
+                                    <th>Category</th>
+                                    <th>Purchase</th>
+                                    <th>MRP</th>
+                                    <th>Wholesale</th>
+                                    <th>Stock</th>
+                                    <th>Low Stock</th>
+                                    <th>Damage Stock</th>
                                     <th>Actions</th>
                                 </tr>
                             </tfoot>
@@ -121,6 +135,7 @@
 
                 </div>
                 <!-- /.card -->
+                @Html.Partial("_ProductInfo", Model.AddProductModel)
             </div>
             <!-- /.col -->
         </div>
@@ -143,51 +158,51 @@
 
         <script>
            $(function(){
-                $("#product-table").DataTable({
-                    processing: true,
-                    serverSide: true,
-                    responsive: true,
-                    lengthChange: true,
-                    autoWidth: false,
-                    searching: false,
-                    lengthMenu: [
-                        [10, 25, 50, -1],
-                        [10, 25, 50, 'All']
-                    ],
-                    dom: `Bfrtip`,
-                    buttons: [
-                         'copy', 'csv', 'excel', 'pdf', 'print'
-                    ],
+                // $("#product-table").DataTable({
+                //     processing: true,
+                //     serverSide: true,
+                //     responsive: true,
+                //     lengthChange: true,
+                //     autoWidth: false,
+                //     searching: false,
+                //     lengthMenu: [
+                //         [10, 25, 50, -1],
+                //         [10, 25, 50, 'All']
+                //     ],
+                //     dom: `Bfrtip`,
+                //     buttons: [
+                //          'copy', 'csv', 'excel', 'pdf', 'print'
+                //     ],
 
-                    ajax: {
-                         url: '@Url.Action("GetProductSPJsonData", "Products")',
-                         type: 'POST',
-                         contentType: "application/json",
-                         datatype: 'json',
-                         data: function (d) {
-                             d.SearchItem = {
-                                Name: $("#SearchItem_Name").val(),
-                                Sku: $("#SearchItem_Sku").val(),
-                                PriceFrom: $("#SearchItem_PriceFrom").val() == "" ? null : $("#SearchItem_PriceFrom").val(),
-                                PriceTo: $("#SearchItem_PriceTo").val() == "" ? null : $("#SearchItem_PriceTo").val()
-                             };
-                             return JSON.stringify(d);
-                         }
-                    },
-                    columnDefs: [
-                        {
-                            orderable: false,
-                            targets: 6,
-                            render: function(data, type, row){
-                                   return `<button type="submit" class="btn btn-info btn-sm" onclick="window.location.href='/admin/Products/edit/${data}'" value='${data}'>
-                                                     <i class="fas fa-pencil-alt"> </i>  Edit </button>
+                //     ajax: {
+                //          url: '@Url.Action("GetProductSPJsonData", "Products")',
+                //          type: 'POST',
+                //          contentType: "application/json",
+                //          datatype: 'json',
+                //          data: function (d) {
+                //              d.SearchItem = {
+                //                 Name: $("#SearchItem_Name").val(),
+                //                 Sku: $("#SearchItem_Sku").val(),
+                //                 PriceFrom: $("#SearchItem_PriceFrom").val() == "" ? null : $("#SearchItem_PriceFrom").val(),
+                //                 PriceTo: $("#SearchItem_PriceTo").val() == "" ? null : $("#SearchItem_PriceTo").val()
+                //              };
+                //              return JSON.stringify(d);
+                //          }
+                //     },
+                //     columnDefs: [
+                //         {
+                //             orderable: false,
+                //             targets: 6,
+                //             render: function(data, type, row){
+                //                    return `<button type="submit" class="btn btn-info btn-sm" onclick="window.location.href='/admin/Products/edit/${data}'" value='${data}'>
+                //                                      <i class="fas fa-pencil-alt"> </i>  Edit </button>
 
-                                         <button type="submit" class="btn btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
-                                             <i class="fas fa-trash"></i> Delete </button>`;
-                            }
-                        }
-                    ],
-                });
+                //                          <button type="submit" class="btn btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
+                //                              <i class="fas fa-trash"></i> Delete </button>`;
+                //             }
+                //         }
+                //     ],
+                // });
 
             $("#product-table").on('click', '.show-bs-modal', function(){
                   let id = $(this).data("id");
@@ -208,5 +223,15 @@
               });
 
            });
+
         </script>
+
+    <script>
+        $(document).ready(function () {
+            // Handle Edit product button click
+            $(".btn-add-product").on("click", function () {
+                $("#add-product-modal").modal("show");
+            });
+        });
+    </script>
 }

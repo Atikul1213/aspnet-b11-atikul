@@ -50,7 +50,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
         #region Product Add Edit Delete Index using CQRS
 
-        public async Task<IActionResult> ProductIndex()
+        public async Task<IActionResult> IndexSP()
         {
             var model = new ProductListModel();
 
@@ -77,6 +77,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProduct(AddProductModel model, IFormFile? file)
@@ -120,7 +121,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return RedirectToAction("ProductIndex");
         }
 
-        public async Task<IActionResult> EditProduct(Guid id)
+        public async Task<IActionResult> UpdateProduct(Guid id)
         {
             try
             {
@@ -130,8 +131,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     return RedirectToAction("ProductIndex");
 
                 var model = _mapper.Map<UpdateProductModel>(product);
-                var categories = await _mediator.Send(new GetCategoryListQuery());
-                var units = await _mediator.Send(new GetUnitListQuery());
+                var categories = await _mediator.Send(new GetActiveCategoryListQuery());
+                var units = await _mediator.Send(new GetActiveUnitListQuery());
 
                 var categorySelectList = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
                 categorySelectList.Insert(0, new SelectListItem
@@ -139,7 +140,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     Text = "Select category",
                     Value = Guid.Empty.ToString()
                 });
-
                 model.Categories = categorySelectList;
 
                 var unitSelectList = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
@@ -148,7 +148,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     Text = "Select units",
                     Value = Guid.Empty.ToString()
                 });
-
                 model.Units = unitSelectList;
 
                 return View(model);
@@ -164,7 +163,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProduct(UpdateProductModel model, IFormFile? file)
+        public async Task<IActionResult> UpdateProduct(UpdateProductModel model, IFormFile? file)
         {
             try
             {
@@ -263,12 +262,15 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     data = (from record in data
                             select new string[]
                             {
+                                HttpUtility.HtmlEncode(record.BarCode),
                                 HttpUtility.HtmlEncode(record.Name),
-                                //HttpUtility.HtmlEncode(record.Sku),
-                                //record.Price.ToString("C"),
-                                //record.Quantity.ToString(),
-                                //record.IsAvailable ? "True" : "False",
-                                //record.CreateOnUtc.ToString("dd/MM/yyyy"),
+                                HttpUtility.HtmlEncode(record.CategoryName),
+                                record.PurchasePrice.ToString("C"),
+                                record.MRPPrice.ToString("C"),
+                                record.WholeSalePrice.ToString("C"),
+                                record.Stock.ToString(),
+                                record.LowStock.ToString(),
+                                record.DamageStock.ToString(),
                                 record.Id.ToString()
                             }).ToArray()
                 };
@@ -292,7 +294,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult IndexSP()
+        public IActionResult IndexSP2()
         {
             var model = new ProductListModel();
 
