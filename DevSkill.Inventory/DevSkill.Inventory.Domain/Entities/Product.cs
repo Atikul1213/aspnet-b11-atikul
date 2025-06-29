@@ -5,9 +5,10 @@
         public Guid Id { get; set; }
         public string BarCode { get; set; }
         public string Name { get; set; }
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
         public string CategoryName { get; set; }
-        public int UnitId { get; set; }
+        public Guid UnitId { get; set; }
+        public string BarcodeImagePath { get; set; }
         public decimal MRPPrice { get; set; }
         public decimal WholeSalePrice { get; set; }
         public decimal PurchasePrice { get; set; }

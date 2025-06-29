@@ -74,6 +74,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             });
 
             model.AddProductModel.Units = unitSelectList;
+            Random random = new Random();
+            int threeDigitNumber = random.Next(100, 1000);
+            model.AddProductModel.BarCode = $"P-SUN000{threeDigitNumber}";
 
             return View(model);
         }
@@ -100,6 +103,18 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                         model.ImageUrl = Path.Combine(@"/images/products", fileName);
                     }
+
+                    string folder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "barcodes");
+                    Directory.CreateDirectory(folder);
+
+                    string fileNameBarcode = $"{model.BarCode}_barcode.png";
+                    string savePath = Path.Combine(folder, fileNameBarcode);
+                    string imagePath = BarcodeHelper.GenerateProductBarcode(model.Name, model.BarCode, model.WholeSalePrice, savePath);
+                    model.BarcodeImagePath = imagePath;
+
+                    var category = await _mediator.Send(new GetCategoryByIdQuery(model.CategoryId));
+                    model.CategoryName = category.Name;
+
                     var productAddCommand = _mapper.Map<ProductAddCommand>(model);
 
                     await _mediator.Send(productAddCommand);
