@@ -110,7 +110,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     string fileNameBarcode = $"{model.BarCode}_barcode.png";
                     string savePath = Path.Combine(folder, fileNameBarcode);
                     string imagePath = BarcodeHelper.GenerateProductBarcode(model.Name, model.BarCode, model.WholeSalePrice, savePath);
-                    model.BarcodeImagePath = imagePath;
+                    model.BarcodeImagePath = Path.Combine(@"/images/barcodes", fileNameBarcode);
 
                     var category = await _mediator.Send(new GetCategoryByIdQuery(model.CategoryId));
                     model.CategoryName = category.Name;
