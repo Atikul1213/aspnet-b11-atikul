@@ -114,12 +114,12 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                     var category = await _mediator.Send(new GetCategoryByIdQuery(model.CategoryId));
                     model.CategoryName = category.Name;
-
+                    model.Stock = model.LowStock;
                     var productAddCommand = _mapper.Map<ProductAddCommand>(model);
 
                     await _mediator.Send(productAddCommand);
                     TempData["success"] = "Product created successfully";
-                    return RedirectToAction("ProductIndex");
+                    return RedirectToAction("IndexSP");
                 }
             }
             catch (DuplicateProductBarCodeException dex)
@@ -133,7 +133,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 _logger.LogError(ex, "There was an error while creating product");
             }
 
-            return RedirectToAction("ProductIndex");
+            return RedirectToAction("IndexSP");
         }
 
         public async Task<IActionResult> UpdateProduct(Guid id)

@@ -45,6 +45,8 @@
                         <div class="card-body p-3 bg-info text-white">
                             <div class="row">
                                 <div class="col-6">
+                                    <input asp-for="Id" hidden/>
+                                    <input asp-for="Stock" hidden/>
                                     <div class="mb-3">
                                         <label asp-for="BarCode" class="form-label fw-bold">Product Code </label>
                                         <input type="text" class="form-control" asp-for="BarCode" id="BarCode" placeholder="Product code" aria-describedby="titleHelp" />

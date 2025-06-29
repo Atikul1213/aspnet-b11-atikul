@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevSkill.Inventory.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250629094757_addProductBarcodeImagecolumn")]
-    partial class addProductBarcodeImagecolumn
+    [Migration("20250629150142_addPropertyIntoProductTable")]
+    partial class addPropertyIntoProductTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
