@@ -18,6 +18,7 @@
                         <div class="row">
                             <input type="hidden" asp-for="Id" />
                             <input type="hidden" asp-for="CurrentBalance" />
+                            <input type="hidden" asp-for="ImageUrl" />
 
                             <div class="mb-3 col-6">
                                 <label asp-for="Name" class="form-label fw-bold">Customer Name </label>
@@ -72,11 +73,11 @@
                                 <span asp-validation-for="StatusId" class="text-danger"></span>
                             </div>
 
-                            <div class="mb-3 col-6">
+                         @*    <div class="mb-3 col-6">
                                 <label asp-for="ImageUrl" class="form-label fw-bold">Customer Image</label>
                                 <input type="file" class="form-control" asp-for="ImageUrl" id="ImageUrl" aria-describedby="titleHelp" />
                                 <span asp-validation-for="ImageUrl" class="text-danger"></span>
-                            </div>
+                            </div> *@
                         </div>
                     </div>
                     <!--end::Body-->
