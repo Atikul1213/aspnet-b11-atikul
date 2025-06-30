@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using Amazon;
+using Amazon.SQS;
+using Amazon.SQS.Model;
+using AutoMapper;
 using DevSkill.Inventory.Application.Exceptions;
 using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Application.Features.Products.Queries;
@@ -10,9 +13,12 @@ using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
+using DevSkill.Inventory.Web.Extensions;
+using DevSkill.Inventory.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Options;
 using System.Web;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
@@ -30,6 +36,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         private readonly ILogger<ProductsController> _logger;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private static readonly RegionEndpoint ServiceRegion = RegionEndpoint.USEast1;
+        private static IAmazonSQS client;
+        private readonly AwsOptions _awsOptions;
 
         #endregion
 
@@ -38,13 +47,16 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             IMediator mediator,
             ILogger<ProductsController> logger,
             IMapper mapper,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            IOptions<AwsOptions> awsOptions)
         {
             _productService = productService;
             _mediator = mediator;
             _logger = logger;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
+            _awsOptions = awsOptions.Value;
+            client = new AmazonSQSClient(ServiceRegion);
         }
         #endregion
 
@@ -118,6 +130,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     var productAddCommand = _mapper.Map<ProductAddCommand>(model);
 
                     await _mediator.Send(productAddCommand);
+
+                    await SentMessageInSQS(model);
+
                     TempData["success"] = "Product created successfully";
                     return RedirectToAction("IndexSP");
                 }
@@ -134,6 +149,23 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             }
 
             return RedirectToAction("IndexSP");
+        }
+
+
+        private async Task SentMessageInSQS(AddProductModel model)
+        {
+            //var createQueueResponse = await CreateQueue(client, QueueName);
+
+            Dictionary<string, MessageAttributeValue> messageAttributes = new Dictionary<string, MessageAttributeValue>
+            {
+                { "ProductName",   new MessageAttributeValue { DataType = "String", StringValue = model.Name } },
+                { "BarCode",  new MessageAttributeValue { DataType = "String", StringValue = model.BarCode } },
+                { "ImageUrl",  new MessageAttributeValue { DataType = "String", StringValue = model.ImageUrl } },
+                { "WholeSalePrice", new MessageAttributeValue { DataType = "String", StringValue = model.WholeSalePrice.ToString() } },
+            };
+
+            var body = $"Add {model.Name} into the SQS message queue";
+            var result = await AWSManager.SendMessage(client, _awsOptions.SQSUrl, body, messageAttributes);
         }
 
         public async Task<IActionResult> UpdateProduct(Guid id)
@@ -299,6 +331,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 return Json(DataTables.EmptyResult);
             }
         }
+
 
 
         #endregion

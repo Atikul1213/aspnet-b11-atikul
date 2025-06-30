@@ -6,6 +6,7 @@ using DevSkill.Inventory.Infrastructure;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web;
 using DevSkill.Inventory.Web.Extensions;
+using DevSkill.Inventory.Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -88,6 +89,11 @@ try
 
     #region Email Configuration
     builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+    #endregion
+
+    #region AWS Bucket Configuration
+    builder.Services.Configure<AwsOptions>(builder.Configuration.GetSection("AWS"));
+
     #endregion
 
     var app = builder.Build();
