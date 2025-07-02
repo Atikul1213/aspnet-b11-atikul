@@ -68,7 +68,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     var employee = _mapper.Map<EmployeeAddCommand>(model);
                     await _mediator.Send(employee);
 
-                    TempData["success'"] = "Employee created successfully.";
+                    TempData["success"] = "Employee created successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -92,7 +92,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 {
                     var employee = _mapper.Map<EmployeeUpdateCommand>(model);
                     await _mediator.Send(employee);
-                    TempData["success'"] = "Employee updated successfully.";
+                    TempData["success"] = "Employee updated successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -113,7 +113,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 var employee = new EmployeeDeleteCommand(id);
                 await _mediator.Send(employee);
 
-                TempData["success'"] = "Employee deleted successfully.";
+                TempData["success"] = "Employee deleted successfully.";
             }
             catch (Exception ex)
             {

@@ -64,7 +64,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     var department = _mapper.Map<DepartmentAddCommand>(model);
                     await _mediator.Send(department);
 
-                    TempData["success'"] = "Department created successfully.";
+                    TempData["success"] = "Department created successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -88,7 +88,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 {
                     var department = _mapper.Map<UpdateDepartmentCommand>(model);
                     await _mediator.Send(department);
-                    TempData["success'"] = "Department updated successfully.";
+                    TempData["success"] = "Department updated successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -110,7 +110,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 var department = new DepartmentDeleteCommand(id);
                 await _mediator.Send(department);
 
-                TempData["success'"] = "Department deleted successfully.";
+                TempData["success"] = "Department deleted successfully.";
             }
             catch (Exception ex)
             {

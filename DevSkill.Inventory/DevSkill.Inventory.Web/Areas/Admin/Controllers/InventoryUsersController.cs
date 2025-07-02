@@ -87,7 +87,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                     await _mediator.Send(inventoryUser);
 
-                    TempData["success'"] = "InventoryUser created successfully.";
+                    TempData["success"] = "InventoryUser created successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -121,7 +121,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
                     await _mediator.Send(inventoryUser);
-                    TempData["success'"] = "InventoryUser updated successfully.";
+                    TempData["success"] = "InventoryUser updated successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -143,7 +143,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 var inventoryUser = new InventoryUserDeleteCommand(id);
                 await _mediator.Send(inventoryUser);
 
-                TempData["success'"] = "InventoryUser deleted successfully.";
+                TempData["success"] = "InventoryUser deleted successfully.";
             }
             catch (Exception ex)
             {

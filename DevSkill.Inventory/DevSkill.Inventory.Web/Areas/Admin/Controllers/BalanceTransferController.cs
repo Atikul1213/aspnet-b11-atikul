@@ -41,7 +41,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
         #endregion
 
-        #region Index AddBalanceTransfer UpdateBalanceTransfer RemoveBalanceTransfer
+        #region Index AddBalanceTransfer RemoveBalanceTransfer
         public async Task<IActionResult> Index()
         {
             var model = new BalanceTransferListModel();
@@ -65,15 +65,25 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 try
                 {
+
                     model.FromAccountName = await GetAccountNameAsync(model.SendingAccountTypeId, model.SendingAccountId);
                     model.ToAccountName = await GetAccountNameAsync(model.ReceiveAccountTypeId, model.ReceiveAccountId);
                     model.TransferDate = DateTime.UtcNow;
+
+                    var result = await HandleBalanceTransfer(model);
+                    if (result == false)
+                    {
+                        TempData["success"] = "Insufficient account balance.";
+
+                        return RedirectToAction("Index");
+                    }
+
+
                     var balanceTransfer = _mapper.Map<BalanceTransferAddCommand>(model);
 
                     await _mediator.Send(balanceTransfer);
-                    await HandleBalanceTransfer(model);
 
-                    TempData["success'"] = "Balance Transfer successfully.";
+                    TempData["success"] = "Balance Transfer successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -120,13 +130,16 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             }
         }
 
-        private async Task HandleBalanceTransfer(AddBalanceTransferModel model)
+        private async Task<bool> HandleBalanceTransfer(AddBalanceTransferModel model)
         {
 
             switch (model.SendingAccountTypeId)
             {
                 case (int)AccountType.Bank:
                     var sendingbankAccont = await _mediator.Send(new GetBankAccountByIdQuery(model.SendingAccountId));
+                    if (sendingbankAccont.CurrentBalance < model.TransferAmount)
+                        return false;
+
                     sendingbankAccont.CurrentBalance -= model.TransferAmount;
                     await _applicationUnitOfWork.BankAccountRepository.UpdateAsync(sendingbankAccont);
                     await _applicationUnitOfWork.SaveAsync();
@@ -160,6 +173,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 case (int)AccountType.Mobile:
 
                     var sendingMobileAccont = await _mediator.Send(new GetMobileAccountByIdQuery(model.SendingAccountId));
+                    if (sendingMobileAccont.CurrentBalance < model.TransferAmount)
+                        return false;
+
                     sendingMobileAccont.CurrentBalance -= model.TransferAmount;
                     await _applicationUnitOfWork.MobileAccountRepository.UpdateAsync(sendingMobileAccont);
                     await _applicationUnitOfWork.SaveAsync();
@@ -193,6 +209,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                 case (int)AccountType.Cash:
                     var sendingCashAccont = await _mediator.Send(new GetCashAccountByIdQuery(model.SendingAccountId));
+                    if (sendingCashAccont.CurrentBalance < model.TransferAmount)
+                        return false;
+
                     sendingCashAccont.CurrentBalance -= model.TransferAmount;
                     await _applicationUnitOfWork.CashAccountRepository.UpdateAsync(sendingCashAccont);
                     await _applicationUnitOfWork.SaveAsync();
@@ -220,6 +239,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     }
                     break;
             }
+
+            return true;
         }
 
 
@@ -230,7 +251,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 var balanceTransferCommand = new BalanceTransferDeleteCommand(id);
                 await _mediator.Send(balanceTransferCommand);
 
-                TempData["success'"] = "Balance transfer deleted successfully.";
+                TempData["success"] = "Balance transfer deleted successfully.";
             }
             catch (Exception ex)
             {

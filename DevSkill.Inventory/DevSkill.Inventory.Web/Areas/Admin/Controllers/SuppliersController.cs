@@ -54,7 +54,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     var supplier = _mapper.Map<SupplierAddCommand>(model);
                     await _mediator.Send(supplier);
 
-                    TempData["success'"] = "Supplier created successfully.";
+                    TempData["success"] = "Supplier created successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -78,7 +78,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 {
                     var supplier = _mapper.Map<SupplierUpdateCommand>(model);
                     await _mediator.Send(supplier);
-                    TempData["success'"] = "Supplier updated successfully.";
+                    TempData["success"] = "Supplier updated successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -100,7 +100,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 var supplier = new SupplierDeleteCommand(id);
                 await _mediator.Send(supplier);
 
-                TempData["success'"] = "Supplier deleted successfully.";
+                TempData["success"] = "Supplier deleted successfully.";
             }
             catch (Exception ex)
             {

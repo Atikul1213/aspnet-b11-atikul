@@ -72,7 +72,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     var customer = _mapper.Map<CustomerAddCommand>(model);
                     await _mediator.Send(customer);
 
-                    TempData["success'"] = "Customer created successfully.";
+                    TempData["success"] = "Customer created successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -108,7 +108,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                     var customer = _mapper.Map<CustomerUpdateCommand>(model);
                     await _mediator.Send(customer);
-                    TempData["success'"] = "Customer updated successfully.";
+                    TempData["success"] = "Customer updated successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -156,7 +156,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 var customer = new CustomerDeleteCommand(id);
                 await _mediator.Send(customer);
 
-                TempData["success'"] = "Customer deleted successfully.";
+                TempData["success"] = "Customer deleted successfully.";
             }
             catch (Exception ex)
             {

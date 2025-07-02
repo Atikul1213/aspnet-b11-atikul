@@ -64,7 +64,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     var cashAccount = _mapper.Map<CashAccountAddCommand>(model);
                     await _mediator.Send(cashAccount);
 
-                    TempData["success'"] = "CashAccount created successfully.";
+                    TempData["success"] = "CashAccount created successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -89,7 +89,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     model.CurrentBalance += model.Balance;
                     var cashAccount = _mapper.Map<UpdateCashAccountCommand>(model);
                     await _mediator.Send(cashAccount);
-                    TempData["success'"] = "CashAccount updated successfully.";
+                    TempData["success"] = "CashAccount updated successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -111,7 +111,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 var cashAccount = new CashAccountDeleteCommand(id);
                 await _mediator.Send(cashAccount);
 
-                TempData["success'"] = "CashAccount deleted successfully.";
+                TempData["success"] = "CashAccount deleted successfully.";
             }
             catch (Exception ex)
             {

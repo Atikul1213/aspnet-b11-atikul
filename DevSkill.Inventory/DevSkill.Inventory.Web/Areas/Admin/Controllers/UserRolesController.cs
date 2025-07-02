@@ -66,7 +66,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     var userRole = _mapper.Map<UserRoleAddCommand>(model);
                     await _mediator.Send(userRole);
 
-                    TempData["success'"] = "UserRole created successfully.";
+                    TempData["success"] = "UserRole created successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -90,7 +90,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 {
                     var userRole = _mapper.Map<UpdateUserRoleCommand>(model);
                     await _mediator.Send(userRole);
-                    TempData["success'"] = "UserRole updated successfully.";
+                    TempData["success"] = "UserRole updated successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -112,7 +112,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 var userRole = new UserRoleDeleteCommand(id);
                 await _mediator.Send(userRole);
 
-                TempData["success'"] = "UserRole deleted successfully.";
+                TempData["success"] = "UserRole deleted successfully.";
             }
             catch (Exception ex)
             {

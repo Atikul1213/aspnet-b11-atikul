@@ -64,7 +64,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     var unit = _mapper.Map<UnitAddCommand>(model);
                     await _mediator.Send(unit);
 
-                    TempData["success'"] = "Unit created successfully.";
+                    TempData["success"] = "Unit created successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -88,7 +88,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 {
                     var unit = _mapper.Map<UpdateUnitCommand>(model);
                     await _mediator.Send(unit);
-                    TempData["success'"] = "Unit updated successfully.";
+                    TempData["success"] = "Unit updated successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -110,7 +110,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 var unit = new UnitDeleteCommand(id);
                 await _mediator.Send(unit);
 
-                TempData["success'"] = "Unit deleted successfully.";
+                TempData["success"] = "Unit deleted successfully.";
             }
             catch (Exception ex)
             {

@@ -68,7 +68,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     var mobileAccount = _mapper.Map<MobileAccountAddCommand>(model);
                     await _mediator.Send(mobileAccount);
 
-                    TempData["success'"] = "MobileAccount created successfully.";
+                    TempData["success"] = "MobileAccount created successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -93,7 +93,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     model.CurrentBalance += model.OpeningBalance;
                     var mobileAccount = _mapper.Map<UpdateMobileAccountCommand>(model);
                     await _mediator.Send(mobileAccount);
-                    TempData["success'"] = "MobileAccount updated successfully.";
+                    TempData["success"] = "MobileAccount updated successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -115,7 +115,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 var mobileAccount = new MobileAccountDeleteCommand(id);
                 await _mediator.Send(mobileAccount);
 
-                TempData["success'"] = "MobileAccount deleted successfully.";
+                TempData["success"] = "MobileAccount deleted successfully.";
             }
             catch (Exception ex)
             {

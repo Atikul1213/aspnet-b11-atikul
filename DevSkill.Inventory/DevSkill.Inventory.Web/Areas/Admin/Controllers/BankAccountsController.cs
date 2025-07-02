@@ -68,7 +68,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     var bankAccount = _mapper.Map<BankAccountAddCommand>(model);
                     await _mediator.Send(bankAccount);
 
-                    TempData["success'"] = "BankAccount created successfully.";
+                    TempData["success"] = "BankAccount created successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -93,7 +93,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     model.CurrentBalance += model.OpeningBalance;
                     var bankAccount = _mapper.Map<UpdateBankAccountCommand>(model);
                     await _mediator.Send(bankAccount);
-                    TempData["success'"] = "BankAccount updated successfully.";
+                    TempData["success"] = "BankAccount updated successfully.";
 
                     return RedirectToAction("Index");
                 }
@@ -115,7 +115,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 var bankAccount = new BankAccountDeleteCommand(id);
                 await _mediator.Send(bankAccount);
 
-                TempData["success'"] = "BankAccount deleted successfully.";
+                TempData["success"] = "BankAccount deleted successfully.";
             }
             catch (Exception ex)
             {
