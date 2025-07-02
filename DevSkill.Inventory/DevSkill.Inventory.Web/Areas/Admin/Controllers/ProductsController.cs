@@ -97,16 +97,21 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProduct(AddProductModel model, IFormFile? file)
         {
+            var fullPath = string.Empty;
             try
             {
+
                 if (ModelState.IsValid)
                 {
+
                     string wwwRootPath = _webHostEnvironment.WebRootPath;
 
                     if (file != null)
                     {
                         string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                         string productImagePath = Path.Combine(wwwRootPath, @"images\products");
+
+                        fullPath = Path.Combine(productImagePath, fileName);
 
                         using (var fileStream = new FileStream(Path.Combine(productImagePath, fileName), FileMode.Create))
                         {
@@ -131,7 +136,10 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                     await _mediator.Send(productAddCommand);
 
-                    await SentMessageInSQS(model);
+                    if (model.ImageUrl != null)
+                    {
+                        await SentMessageInSQS(model, fullPath);
+                    }
 
                     TempData["success"] = "Product created successfully";
                     return RedirectToAction("IndexSP");
@@ -152,7 +160,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
-        private async Task SentMessageInSQS(AddProductModel model)
+        private async Task SentMessageInSQS(AddProductModel model, string fullPath)
         {
             //var createQueueResponse = await CreateQueue(client, QueueName);
 
@@ -161,6 +169,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 { "ProductName",   new MessageAttributeValue { DataType = "String", StringValue = model.Name } },
                 { "BarCode",  new MessageAttributeValue { DataType = "String", StringValue = model.BarCode } },
                 { "ImageUrl",  new MessageAttributeValue { DataType = "String", StringValue = model.ImageUrl } },
+                { "ImagePath",  new MessageAttributeValue { DataType = "String", StringValue = fullPath } },
                 { "WholeSalePrice", new MessageAttributeValue { DataType = "String", StringValue = model.WholeSalePrice.ToString() } },
             };
 
