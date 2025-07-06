@@ -77,6 +77,15 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 Value = Guid.Empty.ToString()
             });
 
+            var accountSelectList = new List<SelectListItem>();
+            accountSelectList.Insert(0, new SelectListItem
+            {
+                Text = "Select Account",
+                Value = Guid.Empty.ToString()
+            });
+
+            model.Accounts = accountSelectList;
+
             model.Products = productSelectList;
 
             model.SalesTypes = EnumHelper.PrepareSelectList<SalesType>();

@@ -90,8 +90,8 @@
                         <div class="col-sm-3"> 
                             <div class="form-group">
                                 <label>Sales Status</label>
-                                <select asp-for="SearchItem.StatusId">
-                                    <option value="@Model.Status">text</option>
+                                <select asp-for="SearchItem.StatusId" asp-items="Model.Status" class="form-control">
+                                    <option value="">-- Select Status --</option>
                                 </select>
                             </div>
                         </div>
