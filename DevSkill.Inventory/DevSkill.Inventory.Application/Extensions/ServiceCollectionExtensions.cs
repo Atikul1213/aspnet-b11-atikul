@@ -3,6 +3,8 @@ using DevSkill.Inventory.Application.Features.Customers.Commands;
 using DevSkill.Inventory.Application.Features.Customers.Queries;
 using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Application.Features.Products.Queries;
+using DevSkill.Inventory.Application.Features.SalesProduct.Commands;
+using DevSkill.Inventory.Application.Features.SalesProduct.Queries;
 using DevSkill.Inventory.Application.Features.Settings.BalanceTransfers.Commands;
 using DevSkill.Inventory.Application.Features.Settings.BalanceTransfers.Queries;
 using DevSkill.Inventory.Application.Features.Settings.BankAccounts.Commands;
@@ -42,6 +44,13 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(ProductDeleteCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetProductQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetAllProductQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetProductListQuery).Assembly);
+
+                cfg.RegisterServicesFromAssembly(typeof(SalesAddCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(SalesUpdateCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(SalesDeleteCommand).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetSalesQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetAllSalesQuery).Assembly);
 
                 cfg.RegisterServicesFromAssembly(typeof(CategoryAddCommand).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(UpdateCategoryCommand).Assembly);
@@ -105,6 +114,7 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(GetCustomerListQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetCustomerByIdQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetAllCustomersQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetActiveCustomerListQuery).Assembly);
 
 
 

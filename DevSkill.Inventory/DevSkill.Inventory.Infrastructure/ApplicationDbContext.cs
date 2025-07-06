@@ -42,6 +42,7 @@ namespace DevSkill.Inventory.Infrastructure
         public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<MobileAccount> MobileAccounts { get; set; }
         public DbSet<BalanceTransfer> BalanceTransfers { get; set; }
+        public DbSet<Sales> Sales { get; set; }
         #endregion
 
         #region Methods

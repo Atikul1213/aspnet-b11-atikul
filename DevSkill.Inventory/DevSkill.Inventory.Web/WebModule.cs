@@ -80,6 +80,9 @@ namespace DevSkill.Inventory.Web
             builder.RegisterType<BalanceTransferRepository>().As<IBalanceTransferRepository>()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<SalesRepository>().As<ISalesRepository>()
+                .InstancePerLifetimeScope();
+
             base.Load(builder);
         }
     }
