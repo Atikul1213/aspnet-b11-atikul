@@ -305,7 +305,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetCQRSProductSPJsonData([FromBody] GetProductQuery model)
+        public async Task<IActionResult> GetCQRSProductSPJsonData([FromBody] GetAllProductQuery model)
         {
             try
             {

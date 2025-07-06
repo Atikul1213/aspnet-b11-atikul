@@ -9,7 +9,7 @@ namespace DevSkill.Inventory.Infrastructure
     {
         #region Fields
         private readonly DbContext _dbContext;
-        protected ISqlUtility sqlUtility { get; private set; }
+        public ISqlUtility sqlUtility { get; private set; }
         #endregion
 
         #region Ctor

@@ -53,8 +53,8 @@ public class ProductAddCommandHandlerTests
 
         _applicationUnitOfWorkMock.SetupGet(p => p.ProductRepository).Returns(_productRepositoryMock.Object);
 
-        _productRepositoryMock.Setup(p => p.CheckBarCodeDuplicateAsync(product.BarCode, null).Result)
-           .Returns(false).Verifiable;
+        //_productRepositoryMock.Setup(p => p.CheckBarCodeDuplicateAsync(product.BarCode, null).Result)
+        //   .Returns(false).Verifiable;
 
         _productRepositoryMock.Setup(p => p.AddAsync(product)).Verifiable();
         _applicationUnitOfWorkMock.Setup(p => p.SaveAsync()).Verifiable();
