@@ -180,6 +180,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     data = (from record in result.data
                             select new string[]
                             {
+                                HttpUtility.HtmlEncode(record.ImageUrl),
                                 HttpUtility.HtmlEncode(record.Name),
                                 HttpUtility.HtmlEncode(record.MobileNumber),
                                 HttpUtility.HtmlEncode(record.Address),
