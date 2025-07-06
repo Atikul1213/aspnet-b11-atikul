@@ -118,6 +118,7 @@
                         <table id="product-table" class="table table-bordered p-3 text-center table-hover">
                             <thead>
                                 <tr class="table-primary">
+                                    <th>Image</th>
                                     <th>Code</th>
                                     <th>Name</th>
                                     <th>Category</th>
@@ -135,6 +136,7 @@
                             </tbody>
                             <tfoot>
                                 <tr class="table-primary">
+                                      <th>Image</th>
                                     <th>Code</th>
                                     <th>Name</th>
                                     <th>Category</th>
@@ -212,8 +214,15 @@
                     },
                     columnDefs: [
                         {
+                            targets: 0,
                             orderable: false,
-                            targets: 9,
+                            render: function (data, type, row) {
+                                return `<img src="${data}" alt="Product Image" width="80" height="80" style="object-fit: contain;" />`;
+                            }
+                        },
+                        {
+                            orderable: false,
+                            targets: 10,
                             render: function(data, type, row){
                                 return `<button type="submit" class="btn btn-info btn-sm" onclick="window.location.href='/admin/Products/UpdateProduct/${data}'" value='${data}'>
                                                      <i class="fas fa-pencil-alt"> </i>  Edit </button>
