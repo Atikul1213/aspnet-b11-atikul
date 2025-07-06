@@ -90,7 +90,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    model.CurrentBalance += model.OpeningBalance;
                     var bankAccount = _mapper.Map<UpdateBankAccountCommand>(model);
                     await _mediator.Send(bankAccount);
                     TempData["success"] = "BankAccount updated successfully.";
