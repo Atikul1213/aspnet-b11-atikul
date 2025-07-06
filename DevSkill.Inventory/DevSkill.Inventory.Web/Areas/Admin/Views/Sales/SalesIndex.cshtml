@@ -1,0 +1,279 @@
+﻿@model SalesListModel
+
+@{
+    ViewData["Title"] = "Sale";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.min.css">
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0 fw-bold">Sales</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Sales</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-6  fw-bold"><div>Sales List</div></div>
+                        <div class="col-md-6 text-end">
+                            <a class="btn btn-primary btn-sm ms-auto" asp-area="Admin" asp-controller="Sales" asp-action="AddSales">
+                                <i class="bi bi-bookmark-plus-fill"></i>New Sales
+                            </a>
+
+                         @*    <button type="button" class="btn btn-primary btn-add-sales">
+                                <i class="bi bi-bookmark-plus-fill"></i> New Sales
+                            </button> *@
+                        </div>
+                    </div>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body  p-3 bg-info text-white">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Customer Name</label>
+                                <input type="text" asp-for="SearchItem.CustomerName" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Total From</label>
+                                <input type="text" asp-for="SearchItem.TotalFrom" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Total To</label>
+                                <input type="text" asp-for="SearchItem.TotalTo" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Date From</label>
+                                <input type="text" asp-for="SearchItem.DateFrom" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Date To</label>
+                                <input type="number" asp-for="SearchItem.DateTo" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3"> 
+                            <div class="form-group">
+                                <label>Sales Status</label>
+                                <select asp-for="SearchItem.StatusId">
+                                    <option value="@Model.Status">text</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <button id="searchButton" type="submit" class="btn btn-primary float-right">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title">Available Saless</h3></div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="sales-table" class="table table-bordered text-center table-hover">
+                            <thead>
+                                <tr class="table-primary">
+                                    <th>In. No.</th>
+                                    <th>Date</th>
+                                    <th>Customer</th>
+                                    <th>Total</th>
+                                    <th>Paid</th>
+                                    <th>Due</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-primary">
+                                    <th>In. No.</th>
+                                    <th>Date</th>
+                                    <th>Customer</th>
+                                    <th>Total</th>
+                                    <th>Paid</th>
+                                    <th>Due</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+
+@* 
+    <script>
+        $(function(){
+             $("#sales-table").DataTable({
+                 processing: true,
+                 serverSide: true,
+                 responsive: true,
+                 lengthChange: true,
+                 autoWidth: false,
+                 searching: false,
+                 lengthMenu: [
+                     [10, 25, 50, -1],
+                     [10, 25, 50, 'All']
+                 ],
+                 dom: `Bfrtip`,
+                 buttons: [
+                      'copy', 'csv', 'excel', 'pdf', 'print'
+                 ],
+
+                 ajax: {
+                      url: '@Url.Action("GetCQRSSalesJsonData", "Saless")',
+                      type: 'POST',
+                      contentType: "application/json",
+                      datatype: 'json',
+                      data: function (d) {
+                          d.SearchItem = {
+                                Name: $("#SearchItem_Name").val(),
+                                Email: $("#SearchItem_Email").val(),
+                                CompanyName: $("#SearchItem_CompanyName").val(),
+                                MobileNumber: $("#SearchItem_MobileNumber").val(),
+                                BalanceFrom: $("#SearchItem_BalanceFrom").val() == "" ? null : $("#SearchItem_BalanceFrom").val(),
+                                BalanceTo: $("#SearchItem_BalanceTo").val() == "" ? null : $("#SearchItem_BalanceTo").val()
+                          };
+                          return JSON.stringify(d);
+                      }
+                 },
+                 columnDefs: [
+                    {
+                        targets: 0,
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return `<img src="${data}" alt="Sales Image" width="80" height="80" style="object-fit: contain;" />`;
+                        }
+                    },
+                     {
+                         orderable: false,
+                         targets: 7,
+                         render: function(data, type, row){
+                                return `<a href="/Admin/Saless/ShowSales/${data}"  value='${data}' class="btn btn-danger">
+                                               <i class="bi bi-eye-fill"></i></a>
+                                <a data-id="${data}" data-toggle="modal" data-target="#update-sales-modal" class="btn btn-primary btn-edit-sales">
+                                            <i class="bi bi-pencil-fill"></i></a>
+                                <a href="/Admin/Saless/RemoveSales/${data}"  value='${data}' class="btn btn-danger">
+                                                <i class="bi bi-trash-fill"></i></a>`;
+                         }
+                     }
+                 ],
+             });
+
+              $("#searchButton").on('click', function(){
+                  $("#sales-table").DataTable().ajax.reload(null, false);
+              });
+
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Handle Edit Sales button click
+            $(".btn-add-sales").on("click", function () {
+                $("#add-sales-modal").modal("show");
+            });
+        });
+    </script>
+
+    <script>
+        // Handle Edit Sales button click
+        $(document).on("click", ".btn-edit-sales", function () {
+                let salesId = $(this).data("id");
+                var postData ={
+                    salesId: salesId
+                };
+               $.ajax({
+                    cache: false,
+                     url: '@Url.Action("GetSalesDataById", "Saless")',
+                     type: 'GET',
+                     contentType: "application/json",
+                     dataType: 'json',
+                     data: postData,
+                     success: function(data){
+                          console.log("data: ",data);
+                         // console.log("test: ",data.id);
+                        $("#update-sales-modal #Id").val(data.id);
+                        $("#update-sales-modal #Name").val(data.name);
+                        $("#update-sales-modal #CompanyName").val(data.companyName);
+                        $("#update-sales-modal #MobileNumber").val(data.mobileNumber);
+                        $("#update-sales-modal #Address").val(data.address);
+                        $("#update-sales-modal #statusId").val(data.statusId);
+                        $("#update-sales-modal #ImageUrl").val(data.imageUrl);
+                        $("#update-sales-modal #OpeningBalance").val(data.openingBalance);
+                        $("#update-sales-modal #Email").val(data.email);
+                     },
+                     error: function (xhr, status, error) {
+                        console.error("AJAX Error:", error);
+                    }
+                }),
+
+                $("#update-sales-modal").modal("show");
+            });
+ *@
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

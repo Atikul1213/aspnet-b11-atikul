@@ -1,6 +1,6 @@
-﻿namespace DevSkill.Inventory.Domain.Dtos
+﻿namespace DevSkill.Inventory.Web.Areas.Admin.Models.Sales
 {
-    public class SalesSearchDto
+    public class SalesSearchModel
     {
         public string? CustomerName { get; set; }
         public int StatusId { get; set; }

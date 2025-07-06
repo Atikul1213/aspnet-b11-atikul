@@ -1,5 +1,181 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model AddSalesModel
+
 @{
+    ViewData["Title"] = "Sales";
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Sales Information</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Sales</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+        <a class="btn btn-primary" asp-area="Admin" asp-controller="Sales" asp-action="Index">
+            Back to sales list
+        </a>
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row g-4">
+            <!--begin::Col-->
+            <div class="col-md-12">
+                <!--begin::Quick Example-->
+                <div class="card card-primary card-outline mb-4">
+                    <!--begin::Header-->
+                    <div class="card-header"><div class="card-title">Update Sales</div></div>
+                    <!--end::Header-->
+                    <!--begin::Form-->
+                    <form asp-area="Admin" asp-controller="Sales" asp-action="AddSales" asp-antiforgery="true" method="post">
+                        <!--begin::Body-->
+                        <div class="card-body  p-3 bg-info text-white">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="mb-3">
+                                                <label asp-for="SaleDate" class="form-label fw-bold">Sale Date </label>
+                                                <input type="text" class="form-control" asp-for="SaleDate" id="SaleDate" placeholder="Sales date" aria-describedby="titleHelp" />
+                                                <span asp-validation-for="SaleDate" class="text-danger"></span>
+                                                <div id="titleHelp" class="form-text"> </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="mb-3">
+                                                <label asp-for="CustomerId" class="form-label fw-bold">Category</label>
+                                                <select class="form-select" asp-for="CustomerId" asp-items="Model.Customers" id="CustomerId" required>
+                                                </select>
+                                                <span asp-validation-for="CustomerId" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="mb-3">
+                                                <label asp-for="SalesTypeId" class="form-label fw-bold">Select Sales Type</label>
+                                                <select class="form-select" asp-for="SalesTypeId" asp-items="Model.SalesTypes" id="SalesTypeId" required>
+                                                </select>
+                                                <span asp-validation-for="SalesTypeId" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="mb-3">
+                                                <label asp-for="ProductId" class="form-label fw-bold">Select Product</label>
+                                                <select class="form-select" asp-for="ProductId" asp-items="Model.Products" id="SalesTypeId" required>
+                                                </select>
+                                                <span asp-validation-for="ProductId" class="text-danger"></span>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-6">
+                                            
+                                        @*     <div class="mb-3">
+                                                <label asp-for="PurchasePrice" class="form-label fw-bold">Purchase price</label>
+                                                <input type="text" class="form-control" asp-for="PurchasePrice" id="PurchasePrice" placeholder="Purchase price" aria-describedby="titleHelp" />
+                                                <span asp-validation-for="PurchasePrice" class="text-danger"></span>
+                                                <div id="titleHelp" class="form-text"> </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label asp-for="WholeSalePrice" class="form-label fw-bold">Whole sale Price</label>
+                                                <input type="text" class="form-control" asp-for="WholeSalePrice" id="WholeSalePrice" placeholder="Whole salse price" aria-describedby="titleHelp" />
+                                                <span asp-validation-for="WholeSalePrice" class="text-danger"></span>
+                                                <div id="titleHelp" class="form-text"> </div>
+                                            </div>
+                                             *@
+                                        </div>
+
+                                        <div class="col-6">
+                                          
+                                            @* <div class="mb-3">
+                                                <label asp-for="Name" class="form-label fw-bold">Sales Name </label>
+                                                <input type="text" class="form-control" asp-for="Name" id="Name" placeholder="Sales Name" aria-describedby="titleHelp" />
+                                                <span asp-validation-for="Name" class="text-danger"></span>
+                                                <div id="titleHelp" class="form-text"> </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label asp-for="UnitId" class="form-label fw-bold">Unit</label>
+                                                <select class="form-select" asp-for="UnitId" asp-items="Model.Units" id="UnitId" required>
+                                                </select>
+                                                <span asp-validation-for="UnitId" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label asp-for="MRPPrice" class="form-label fw-bold">MRP Price</label>
+                                                <input type="text" class="form-control" asp-for="MRPPrice" id="MRPPrice" placeholder="MRP price" aria-describedby="titleHelp" />
+                                                <span asp-validation-for="MRPPrice" class="text-danger"></span>
+                                                <div id="titleHelp" class="form-text"> </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label asp-for="LowStock" class="form-label fw-bold">Low Stock</label>
+                                                <input type="text" class="form-control" asp-for="LowStock" id="LowStock" placeholder="Low stock" aria-describedby="titleHelp" />
+                                                <span asp-validation-for="LowStock" class="text-danger"></span>
+                                                <div id="titleHelp" class="form-text"> </div>
+                                            </div> *@
+
+                                            <div class="mb-3">
+                                                <label asp-for="AccountTypeId" class="form-label fw-bold">Account Type</label>
+                                                <select class="form-select" asp-for="AccountTypeId" asp-items="Model.AccountTypes" id="SalesTypeId" required>
+                                                </select>
+                                                <span asp-validation-for="AccountTypeId" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label asp-for="AccountNoId" class="form-label fw-bold">Account No</label>
+                                                <select class="form-select" asp-for="AccountNoId" asp-items="Model.Accounts" id="AccountNoId" required>
+                                                </select>
+                                                <span asp-validation-for="AccountNoId" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label asp-for="Note" class="form-label fw-bold">Low Stock</label>
+                                                <input type="text" class="form-control" asp-for="Note" id="Note" placeholder="If have any note" aria-describedby="titleHelp" />
+                                                <span asp-validation-for="Note" class="text-danger"></span>
+                                                <div id="titleHelp" class="form-text"> </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label asp-for="TermsAndConditions" class="form-label fw-bold">Terms & Conditions</label>
+                                                <input type="text" class="form-control" asp-for="TermsAndConditions" id="TermsAndConditions" placeholder="If have any note" aria-describedby="titleHelp" />
+                                                <span asp-validation-for="TermsAndConditions" class="text-danger"></span>
+                                                <div id="titleHelp" class="form-text"> </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--end::Body-->
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button type="submit" class="btn btn-primary text-center">Submit</button>
+                        </div>
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <!--end::Quick Example-->
+
+            </div>
+            <!--end::Col-->
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
 }

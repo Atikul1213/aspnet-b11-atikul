@@ -1,20 +1,15 @@
-﻿using Amazon;
-using Amazon.SQS;
-using AutoMapper;
+﻿using AutoMapper;
 using DevSkill.Inventory.Application.Features.Customers.Queries;
 using DevSkill.Inventory.Application.Features.Products.Queries;
-using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
+using DevSkill.Inventory.Application.Features.SalesProduct.Commands;
+using DevSkill.Inventory.Application.Features.SalesProduct.Queries;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Entities;
-using DevSkill.Inventory.Domain.Services;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Sales;
-using DevSkill.Inventory.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Options;
-using System.Web;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 {
@@ -23,40 +18,38 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ISalesService _salesService;
         private readonly IMediator _mediator;
         private readonly ILogger<SalesController> _logger;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private static readonly RegionEndpoint ServiceRegion = RegionEndpoint.USEast1;
-        private static IAmazonSQS client;
-        private readonly AwsOptions _awsOptions;
 
         #endregion
 
         #region Ctor
-        public SalesController(ISalesService salesService,
-            IMediator mediator,
+        public SalesController(IMediator mediator,
             ILogger<SalesController> logger,
             IMapper mapper,
-            IWebHostEnvironment webHostEnvironment,
-            IOptions<AwsOptions> awsOptions)
+            IWebHostEnvironment webHostEnvironment)
         {
-            _salesService = salesService;
             _mediator = mediator;
             _logger = logger;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
-            _awsOptions = awsOptions.Value;
-            client = new AmazonSQSClient(ServiceRegion);
         }
         #endregion
 
         #region Sales Add Edit Delete Index using CQRS
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> SalesIndex()
         {
             var model = new SalesListModel();
+
+            model.Status = EnumHelper.PrepareSelectList<SalesStatus>();
+            model.Status.Insert(0, new SelectListItem
+            {
+                Text = "Select Status",
+                Value = "-1"
+            });
 
             return View(model);
         }
@@ -99,60 +92,23 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddSales(AddSalesModel model, IFormFile? file)
+        public async Task<IActionResult> AddSales(AddSalesModel model)
         {
-            var fullPath = string.Empty;
             try
             {
 
                 if (ModelState.IsValid)
                 {
+                    //var category = await _mediator.Send(new GetCategoryByIdQuery(model.CategoryId));
+                    //model.CategoryName = category.Name;
+                    //model.Stock = model.LowStock;
+                    //var salesAddCommand = _mapper.Map<SalesAddCommand>(model);
 
-                    string wwwRootPath = _webHostEnvironment.WebRootPath;
+                    //await _mediator.Send(salesAddCommand);
 
-                    if (file != null)
-                    {
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        string salesImagePath = Path.Combine(wwwRootPath, @"images\saless");
-
-                        fullPath = Path.Combine(salesImagePath, fileName);
-
-                        using (var fileStream = new FileStream(Path.Combine(salesImagePath, fileName), FileMode.Create))
-                        {
-                            file.CopyTo(fileStream);
-                        }
-
-                        model.ImageUrl = Path.Combine(@"/images/saless", fileName);
-                    }
-
-                    string folder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "barcodes");
-                    Directory.CreateDirectory(folder);
-
-                    string fileNameBarcode = $"{model.BarCode}_barcode.png";
-                    string savePath = Path.Combine(folder, fileNameBarcode);
-                    string imagePath = BarcodeHelper.GenerateSalesBarcode(model.Name, model.BarCode, model.WholeSalePrice, savePath);
-                    model.BarcodeImagePath = Path.Combine(@"/images/barcodes", fileNameBarcode);
-
-                    var category = await _mediator.Send(new GetCategoryByIdQuery(model.CategoryId));
-                    model.CategoryName = category.Name;
-                    model.Stock = model.LowStock;
-                    var salesAddCommand = _mapper.Map<SalesAddCommand>(model);
-
-                    await _mediator.Send(salesAddCommand);
-
-                    if (model.ImageUrl != null)
-                    {
-                        await SentMessageInSQS(model, fullPath);
-                    }
-
-                    TempData["success"] = "Sales created successfully";
+                    //TempData["success"] = "Sales created successfully";
                     return RedirectToAction("IndexSP");
                 }
-            }
-            catch (DuplicateSalesBarCodeException dex)
-            {
-                _logger.LogError(dex, "Sales bar code already exists");
-                TempData["error"] = dex.Message;
             }
             catch (Exception ex)
             {
@@ -211,28 +167,12 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateSales(UpdateSalesModel model, IFormFile? file)
+        public async Task<IActionResult> UpdateSales(UpdateSalesModel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-
-                    string wwwRootPath = _webHostEnvironment.WebRootPath;
-
-                    if (file != null)
-                    {
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        string salesImagePath = Path.Combine(wwwRootPath, @"images\saless");
-
-                        using (var fileStream = new FileStream(Path.Combine(salesImagePath, fileName), FileMode.Create))
-                        {
-                            file.CopyTo(fileStream);
-                        }
-
-                        model.ImageUrl = Path.Combine(@"/images/saless", fileName);
-                    }
-
                     var salesUpdateCommand = _mapper.Map<SalesUpdateCommand>(model);
 
                     await _mediator.Send(salesUpdateCommand);
@@ -240,11 +180,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                     return RedirectToAction("SalesIndex");
                 }
-            }
-            catch (DuplicateSalesBarCodeException dex)
-            {
-                _logger.LogError(dex, "Sales bar code already exists");
-                TempData["error"] = dex.Message;
             }
             catch (Exception ex)
             {
@@ -313,16 +248,16 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     data = (from record in data
                             select new string[]
                             {
-                                HttpUtility.HtmlEncode(record.ImageUrl),
-                                HttpUtility.HtmlEncode(record.BarCode),
-                                HttpUtility.HtmlEncode(record.Name),
-                                HttpUtility.HtmlEncode(record.CategoryName),
-                                record.PurchasePrice.ToString("C"),
-                                record.MRPPrice.ToString("C"),
-                                record.WholeSalePrice.ToString("C"),
-                                record.Stock.ToString(),
-                                record.LowStock.ToString(),
-                                record.DamageStock.ToString(),
+                                //HttpUtility.HtmlEncode(record.ImageUrl),
+                                //HttpUtility.HtmlEncode(record.BarCode),
+                                //HttpUtility.HtmlEncode(record.Name),
+                                //HttpUtility.HtmlEncode(record.CategoryName),
+                                //record.PurchasePrice.ToString("C"),
+                                //record.MRPPrice.ToString("C"),
+                                //record.WholeSalePrice.ToString("C"),
+                                //record.Stock.ToString(),
+                                //record.LowStock.ToString(),
+                                //record.DamageStock.ToString(),
                                 record.Id.ToString()
                             }).ToArray()
                 };
