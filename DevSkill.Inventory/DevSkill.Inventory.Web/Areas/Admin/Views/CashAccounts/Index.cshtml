@@ -61,7 +61,8 @@
                                             <td class="text-center">@cashAccount.CurrentBalance</td>
                                             <td class="text-center">
                                                 <div class="w-75 btn-group" role="group">
-                                                    <a data-id="@cashAccount.Id" data-name="@cashAccount.Name" data-statusid="@cashAccount.StatusId" data-balance="@cashAccount.Balance" data-currentBalance="@cashAccount.CurrentBalance"
+                                                    <a data-id="@cashAccount.Id" data-name="@cashAccount.Name" data-statusid="@cashAccount.StatusId" 
+                                                    data-balance="@cashAccount.Balance" data-currentBalance="@cashAccount.CurrentBalance"
                                                        data-toggle="modal" data-target="#update-cashAccount" class="btn btn-primary btn-edit-cashAccount"><i class="bi bi-pencil-fill"></i></a>
 
                                                     <a asp-area="Admin" asp-controller="CashAccounts" asp-action="RemoveCashAccount" asp-route-id="@cashAccount.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
@@ -121,11 +122,14 @@
                 const name = $(this).data("name");
                 const statusId = $(this).data("statusid");
                 const balance = $(this).data("balance");
-                console.log("balance: ",balance);
+                const currBalance = $(this).data("currentbalance");
+
+                // console.log("balance: ",currBalance);
                 $("#Id").val(id);
                 $("#Name").val(name);
                 $("#statusId").val(statusId);
                 $("#Balance").val(balance);
+                $("#CurrentBalance").val(currBalance);
 
                 $("#update-cashAccount").modal("show");
             });
