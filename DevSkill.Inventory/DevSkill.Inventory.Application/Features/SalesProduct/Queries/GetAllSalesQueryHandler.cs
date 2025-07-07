@@ -33,14 +33,13 @@ namespace DevSkill.Inventory.Application.Features.SalesProduct.Queries
                 {
                     {"PageIndex", request.PageIndex },
                     {"PageSize", request.PageSize },
-                    {"OrderBy", request.FormatSortExpression(["Name", "CategoryName", "WholeSalePrice"]) },
-                    //{"MRPFrom", request.SearchItem.MRPFrom },
-                    //{"MRPTo", request.SearchItem.MRPTo },
-                    //{"StockFrom", request.SearchItem.StockFrom },
-                    //{"StockTo", request.SearchItem.StockTo},
-                    //{"Name", string.IsNullOrEmpty(request.SearchItem.Name) ? null : request.SearchItem.Name},
-                    //{"Category", string.IsNullOrEmpty(request.SearchItem.Category) ? null : request.SearchItem.Category },
-                    //{"BarCode", string.IsNullOrEmpty( request.SearchItem.BarCode) ? null : request.SearchItem.BarCode }
+                    {"OrderBy", request.FormatSortExpression(["SaleDate", "CustomerName", "TotalAmount"]) },
+                    //{"DateFrom", request.SearchItem.DateFrom },
+                    //{"DateTo", request.SearchItem.DateTo },
+                    //{"TotalFrom", request.SearchItem.TotalFrom },
+                    //{"TotalTo", request.SearchItem.TotalTo},
+                    //{"StatusId", request.SearchItem.StatusId},
+                    //{"CustomerName", string.IsNullOrEmpty(request.SearchItem.CustomerName) ? null : request.SearchItem.CustomerName},
                 },
                 new Dictionary<string, Type>
                 {

@@ -184,7 +184,6 @@ namespace DevSkill.Inventory.Web
 
             #endregion
 
-
             #region Sales
 
             CreateMap<AddSalesModel, SalesAddCommand>().ReverseMap();
@@ -199,6 +198,7 @@ namespace DevSkill.Inventory.Web
             CreateMap<Product, UpdateSalesProductModel>().ReverseMap();
             CreateMap<SaleProduct, UpdateSalesProductModel>().ReverseMap();
             CreateMap<SaleProduct, UpdateSalesProductModel>().ReverseMap();
+            CreateMap<Sales, ShowSalesModel>().ReverseMap();
 
             #endregion
         }

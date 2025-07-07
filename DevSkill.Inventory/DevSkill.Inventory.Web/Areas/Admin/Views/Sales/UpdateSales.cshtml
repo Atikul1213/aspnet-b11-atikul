@@ -50,6 +50,7 @@
                             <div class="row">
                                 <div class="col-12">
                                     <input type="hidden" asp-for="Id" />
+                                    <input type="hidden" asp-for="InvoiceNo" />
                                     <div class="row">
                                         <div class="col-3">
                                             <div class="mb-3">
@@ -78,7 +79,7 @@
                                         <div class="col-3">
                                             <div class="mb-3">
                                                 <label asp-for="ProductId" class="form-label fw-bold">Select Product</label>
-                                                <select class="form-select" asp-for="ProductId" asp-items="Model.Products" id="SalesTypeId" required>
+                                                <select class="form-select" asp-for="ProductId" asp-items="Model.Products" id="ProductId" required>
                                                 </select>
                                                 <span asp-validation-for="ProductId" class="text-danger"></span>
                                             </div>
@@ -99,16 +100,32 @@
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>@Model.InvoiceNo</td>
-                                                    @* <td>@Model.ProductName</td>
-                                                    <td>@Model.Stock</td>
-                                                    <td>@Model.Quantity</td>
-                                                    <td>@Model.UnitPrice</td> *@
-                                                    <td>@Model.TotalAmount</td>
-                                                    <td></td>
-                                                </tr>
+                                            <tbody id="sale-products-body">
+                                                <!-- Check if there are any bankAccount to display -->
+                                                @if (Model.SaleProducts.Any())
+                                                {
+                                                    <!-- Loop through each bankAccount in the model's bankAccount list -->
+                                                    var idx = 1;
+                                                    @foreach (var product in Model.SaleProducts)
+                                                    {
+                                                        var rowClass = (idx % 2 == 0) ? "table-info" : "table-success";
+                                                        <tr class="@rowClass">
+                                                            <td class="text-center">@product.BarCode</td>
+                                                            <td class="text-center">@product.Name</td>
+                                                            <td class="text-center">@product.Stock</td>
+                                                            <td class="text-center">@product.Quantity</td>
+                                                            <td class="text-center">@product.MRPPrice</td>
+                                                            <td class="text-center">@product.SubTotal</td>
+                                                            <td class="text-center">
+                                                                <div class="w-75 btn-group" role="group">
+                                                                    <a asp-area="Admin" asp-controller="Sales" asp-action="RemoveBankAccount" asp-route-id="@product.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        idx++;
+                                                    }
+                                                }
+
                                                 <tr>
                                                     <td colspan="5" class="text-end">
                                                         <label for="VatPercentage">VAT (%)</label>
@@ -187,7 +204,7 @@
                                         </div>
                                         <div class="col-4">
                                             <div class="mb-3">
-                                                <label asp-for="Note" class="form-label fw-bold">Low Stock</label>
+                                                <label asp-for="Note" class="form-label fw-bold">Note</label>
                                                 <input type="text" class="form-control" asp-for="Note" id="Note" placeholder="If have any note" aria-describedby="titleHelp" />
                                                 <span asp-validation-for="Note" class="text-danger"></span>
                                                 <div id="titleHelp" class="form-text"> </div>
@@ -265,4 +282,177 @@
               });
         });
     </script>
+
+
+    <script>
+         $("#ProductId").on('click', function(){
+            // alert('call here');
+            var postData ={
+                productId : $("#ProductId").val()
+            };
+            if (postData.productId === '0' || postData.productId === "00000000-0000-0000-0000-000000000000") {
+                console.log('return for 0');
+                return;
+            }
+            // console.log('postData: ',postData);
+            // addAntiForgeryToken(postData);
+                $.ajax({
+                    cache: false,
+                    url: '@Url.Action("GetProductInfoJsonData", "Sales")',
+                    type: 'POST',
+                    data: postData,
+                    success: function (data) {
+                         console.log('data: ', data);
+                           let rowIndex = data.productId;
+                           let subtotal = parseFloat(data.subTotal || data.subtotal || 0).toFixed(2);
+                            let row = `
+                                <tr id="product-row-${rowIndex}">
+                                    <td class="text-center">
+                                        <input type="hidden" name="SaleProducts[${rowIndex}].BarCode" value="${data.barCode}" />
+                                        ${data.barCode}
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="hidden" name="SaleProducts[${rowIndex}].Name" value="${data.name}" />
+                                        ${data.name}
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="hidden" name="SaleProducts[${rowIndex}].Stock" value="${data.stock}" />
+                                        ${data.stock}
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="number" name="SaleProducts[${rowIndex}].Quantity" class="form-control text-center qty-input" data-index="${rowIndex}" data-price="${data.quantity}" value="1" min="1" />
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="hidden" name="SaleProducts[${rowIndex}].MRPPrice" value="${data.mrpPrice}" />
+                                        ${data.mrpPrice}
+                                    </td>
+                                    <td class="text-center">
+                                        <span id="sub-total-${rowIndex}">${subtotal}</span>
+                                        <input type="hidden" name="SaleProducts[${rowIndex}].SubTotal" value="${data.subtotal}" />
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="$('#product-row-${rowIndex}').remove();">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+
+                            $("#sale-products-body").append(row);
+                            $("#ProductId").val("00000000-0000-0000-0000-000000000000");
+
+                            let currentNet = parseFloat($("#NetAmount").val()) || 0;
+                            let currentTotal = parseFloat($("#TotalAmount").val()) || 0;
+                            let currentDue = parseFloat($("#DueAmount").val()) || 0;
+
+                            // Get the new product subtotal
+                            let productSubtotal = parseFloat(data.subTotal) || 0;
+
+                            // Add to the current totals
+                            let newNet = currentNet + productSubtotal;
+                            let newTotal = currentTotal + productSubtotal;
+                            let newDue = currentDue + productSubtotal;
+
+                            // Set the updated values back to the inputs
+                            $("#NetAmount").val(newNet.toFixed(2));
+                            $("#TotalAmount").val(newTotal.toFixed(2));
+                            $("#DueAmount").val(newDue.toFixed(2));
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX error:', error);
+                    }
+              });
+        });
+    </script>
+
+    <script>
+         $('#Vat').on('input', function () {
+            let vat = parseFloat($(this).val()) || 0;
+
+            let netAmount = parseFloat($('#NetAmount').val()) || 0;
+            let totalAmount = parseFloat($('#TotalAmount').val()) || 0;
+            let dueAmount = parseFloat($('#DueAmount').val()) || 0;
+
+            // Remove previously added VAT if any
+            let baseNetAmount = netAmount - (parseFloat($(this).data('last-vat')) || 0);
+            let baseTotalAmount = totalAmount - (parseFloat($(this).data('last-vat')) || 0);
+            let baseDueAmount = dueAmount - (parseFloat($(this).data('last-vat')) || 0);
+
+            // Add new VAT
+            let newNetAmount = baseNetAmount + vat;
+            let newTotalAmount = baseTotalAmount + vat;
+            let newDueAmount = baseDueAmount + vat;
+
+            $('#NetAmount').val(newNetAmount.toFixed(2));
+            $('#TotalAmount').val(newTotalAmount.toFixed(2));
+            $('#DueAmount').val(newDueAmount.toFixed(2));
+
+            // Store last VAT to remove it next time
+            $(this).data('last-vat', vat);
+        });
+    </script>
+
+
+    <script>
+          $('#Discount').on('input', function () {
+            let discount = parseFloat($(this).val()) || 0;
+
+            let totalAmount = parseFloat($('#TotalAmount').val()) || 0;
+            let dueAmount = parseFloat($('#DueAmount').val()) || 0;
+
+            // Ensure discount is not greater than total or due
+            if (discount > totalAmount || discount > dueAmount) {
+                alert("Discount cannot be greater than Total or Due Amount.");
+                $(this).val(0);
+                discount = 0;
+            }
+
+            // Get the original values before any discount applied
+            let baseTotalAmount = (parseFloat($(this).data('base-total')) || totalAmount + (parseFloat($(this).data('last-discount')) || 0));
+            let baseDueAmount = (parseFloat($(this).data('base-due')) || dueAmount + (parseFloat($(this).data('last-discount')) || 0));
+
+            // Subtract new discount
+            let newTotalAmount = baseTotalAmount - discount;
+            let newDueAmount = baseDueAmount - discount;
+
+            $('#TotalAmount').val(newTotalAmount.toFixed(2));
+            $('#DueAmount').val(newDueAmount.toFixed(2));
+
+            // Store the base values and last discount for accurate recalculation
+            $(this).data('base-total', baseTotalAmount);
+            $(this).data('base-due', baseDueAmount);
+            $(this).data('last-discount', discount);
+        });
+    </script>
+
+
+
+    <script>
+          $('#PaidAmount').on('input', function () {
+            let paidAmount = parseFloat($(this).val()) || 0;
+
+            let totalAmount = parseFloat($('#TotalAmount').val()) || 0;
+            let dueAmount = parseFloat($('#DueAmount').val()) || 0;
+
+            if (paidAmount > dueAmount) {
+                alert("Paid amount greater than Total or Due Amount.");
+                $(this).val(0);
+                paidAmount = 0;
+            }
+
+            // Get the original values before any paidAmount applied
+            let baseDueAmount = (parseFloat($(this).data('base-due')) || dueAmount + (parseFloat($(this).data('last-paidAmount')) || 0));
+
+            // Subtract new paidAmount
+            let newDueAmount = baseDueAmount - paidAmount;
+
+            $('#DueAmount').val(newDueAmount.toFixed(2));
+
+            // Store the base values and last paidAmount for accurate recalculation
+            $(this).data('base-due', baseDueAmount);
+            $(this).data('last-paidAmount', discount);
+        });
+    </script>
+
 }

@@ -9,6 +9,8 @@ using DevSkill.Inventory.Application.Features.Settings.MobileAccounts.Queries;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Infrastructure.Extensions;
+using DevSkill.Inventory.Web.Areas.Admin.Models.BalanceTransfers;
+using DevSkill.Inventory.Web.Areas.Admin.Models.Customers;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Sales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +28,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         private readonly ILogger<SalesController> _logger;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IApplicationUnitOfWork _applicationUnitOfWork;
 
         #endregion
 
@@ -33,12 +36,14 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         public SalesController(IMediator mediator,
             ILogger<SalesController> logger,
             IMapper mapper,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            IApplicationUnitOfWork applicationUnitOfWork)
         {
             _mediator = mediator;
             _logger = logger;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
+            _applicationUnitOfWork = applicationUnitOfWork;
         }
         #endregion
 
@@ -48,6 +53,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             var model = new SalesListModel();
 
+            model.SearchItem.DateFrom = DateTime.UtcNow;
+            model.SearchItem.DateTo = DateTime.UtcNow;
             model.Status = EnumHelper.PrepareSelectList<SalesStatus>();
             model.Status.Insert(0, new SelectListItem
             {
@@ -248,6 +255,34 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> ShowSales(Guid id)
+        {
+            try
+            {
+                var sales = await _mediator.Send(new GetSalesByIdQuery(id));
+
+                if (sales is null)
+                    return RedirectToAction("SalesIndex");
+
+                var model = _mapper.Map<ShowSalesModel>(sales);
+                var customer = await _mediator.Send(new GetCustomerByIdQuery(sales.CustomerId));
+                var products = await _mediator.Send(new GetProductListQuery());
+
+                var customerModel = _mapper.Map<CustomerModel>(customer);
+
+                model.Customer = customerModel;
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "No sales found with the Id";
+                _logger.LogError(ex, "No sales found with the Id");
+            }
+
+            return RedirectToAction("SalesIndex");
+        }
+
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteSales(Guid id)
@@ -357,9 +392,51 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             result.ProductId = product.Id;
             result.Quantity = 1;
             result.SubTotal = product.MRPPrice * result.Quantity;
-
             return Json(result);
         }
+
+        private async Task<bool> HandleBalanceTransfer(AddBalanceTransferModel model)
+        {
+
+            switch (model.SendingAccountTypeId)
+            {
+                case (int)AccountType.Bank:
+                    var sendingbankAccont = await _mediator.Send(new GetBankAccountByIdQuery(model.SendingAccountId));
+                    if (sendingbankAccont.CurrentBalance < model.TransferAmount)
+                        return false;
+
+                    sendingbankAccont.CurrentBalance -= model.TransferAmount;
+                    await _applicationUnitOfWork.BankAccountRepository.UpdateAsync(sendingbankAccont);
+                    await _applicationUnitOfWork.SaveAsync();
+                    break;
+
+                case (int)AccountType.Mobile:
+
+                    var sendingMobileAccont = await _mediator.Send(new GetMobileAccountByIdQuery(model.SendingAccountId));
+                    if (sendingMobileAccont.CurrentBalance < model.TransferAmount)
+                        return false;
+
+                    sendingMobileAccont.CurrentBalance -= model.TransferAmount;
+                    await _applicationUnitOfWork.MobileAccountRepository.UpdateAsync(sendingMobileAccont);
+                    await _applicationUnitOfWork.SaveAsync();
+
+                    break;
+
+
+                case (int)AccountType.Cash:
+                    var sendingCashAccont = await _mediator.Send(new GetCashAccountByIdQuery(model.SendingAccountId));
+                    if (sendingCashAccont.CurrentBalance < model.TransferAmount)
+                        return false;
+
+                    sendingCashAccont.CurrentBalance -= model.TransferAmount;
+                    await _applicationUnitOfWork.CashAccountRepository.UpdateAsync(sendingCashAccont);
+                    await _applicationUnitOfWork.SaveAsync();
+                    break;
+            }
+
+            return true;
+        }
+
 
         #endregion
     }

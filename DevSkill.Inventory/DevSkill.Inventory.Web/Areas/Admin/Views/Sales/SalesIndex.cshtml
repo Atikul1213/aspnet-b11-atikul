@@ -104,7 +104,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title">Available Saless</h3></div>
+                    <div class="card-header"><h3 class="card-title">Available Sales</h3></div>
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table id="sales-table" class="table table-bordered text-center table-hover">
@@ -185,32 +185,26 @@
                       datatype: 'json',
                       data: function (d) {
                           d.SearchItem = {
-                                CustomerName: $("#SearchItem_CustomerName").val(),
-                                StatusId: $("#SearchItem_StatusId").val() == "" ? null : $("#SearchItem_StatusId").val(),
-                                TotalFrom: $("#SearchItem_TotalFrom").val() == "" ? null : $("#SearchItem_TotalFrom").val(),
-                                TotalTo: $("#SearchItem_TotalTo").val() == "" ? null : $("#SearchItem_TotalTo").val(),
-                                DateFrom: $("#SearchItem_DateFrom").val() == "" ? null : $("#SearchItem_DateFrom").val(),
-                                DateTo: $("#SearchItem_DateTo").val() == "" ? null : $("#SearchItem_DateTo").val()
+                                // CustomerName: $("#SearchItem_CustomerName").val(),
+                                // StatusId: $("#SearchItem_StatusId").val() == "" ? null : $("#SearchItem_StatusId").val(),
+                                // TotalFrom: $("#SearchItem_TotalFrom").val() == "" ? null : $("#SearchItem_TotalFrom").val(),
+                                // TotalTo: $("#SearchItem_TotalTo").val() == "" ? null : $("#SearchItem_TotalTo").val(),
+                                // DateFrom: $("#SearchItem_DateFrom").val() == "" ? null : $("#SearchItem_DateFrom").val(),
+                                // DateTo: $("#SearchItem_DateTo").val() == "" ? null : $("#SearchItem_DateTo").val()
                           };
                           return JSON.stringify(d);
                       }
                  },
                  columnDefs: [
-                    {
-                        targets: 0,
-                        orderable: false,
-                        render: function (data, type, row) {
-                            return `<img src="${data}" alt="Sales Image" width="80" height="80" style="object-fit: contain;" />`;
-                        }
-                    },
                      {
                          orderable: false,
                          targets: 7,
                          render: function(data, type, row){
                                 return `<a href="/Admin/Sales/ShowSales/${data}"  value='${data}' class="btn btn-danger">
                                                <i class="bi bi-eye-fill"></i></a>
-                                <a data-id="${data}" data-toggle="modal" data-target="#update-sales-modal" class="btn btn-primary btn-edit-sales">
-                                            <i class="bi bi-pencil-fill"></i></a>
+                                <a href="/Admin/Sales/UpdateSales/${data}" data-id="${data}"   value='${data}' class="btn btn-primary">
+                                                <i class="bi bi-pencil-fill"></i></a>
+
                                 <a href="/Admin/Sales/DeleteSales/${data}"  value='${data}' class="btn btn-danger">
                                                 <i class="bi bi-trash-fill"></i></a>`;
                          }
