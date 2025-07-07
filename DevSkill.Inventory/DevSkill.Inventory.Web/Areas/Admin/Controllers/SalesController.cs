@@ -3,6 +3,9 @@ using DevSkill.Inventory.Application.Features.Customers.Queries;
 using DevSkill.Inventory.Application.Features.Products.Queries;
 using DevSkill.Inventory.Application.Features.SalesProduct.Commands;
 using DevSkill.Inventory.Application.Features.SalesProduct.Queries;
+using DevSkill.Inventory.Application.Features.Settings.BankAccounts.Queries;
+using DevSkill.Inventory.Application.Features.Settings.CashAccounts.Queries;
+using DevSkill.Inventory.Application.Features.Settings.MobileAccounts.Queries;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Infrastructure.Extensions;
@@ -88,8 +91,21 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
             model.Products = productSelectList;
 
-            model.SalesTypes = EnumHelper.PrepareSelectList<SalesType>();
-            model.AccountTypes = EnumHelper.PrepareSelectList<AccountType>();
+            var salesTypeSelectList = EnumHelper.PrepareSelectList<SalesType>();
+            salesTypeSelectList.Insert(0, new SelectListItem
+            {
+                Text = "Select One",
+                Value = Guid.Empty.ToString()
+            });
+            model.SalesTypes = salesTypeSelectList;
+
+            var accountTypeSelectList = EnumHelper.PrepareSelectList<AccountType>();
+            accountTypeSelectList.Insert(0, new SelectListItem
+            {
+                Text = "Select One",
+                Value = Guid.Empty.ToString()
+            });
+            model.AccountTypes = accountTypeSelectList;
 
             Random random = new Random();
             int threeDigitNumber = random.Next(100, 1000);
@@ -281,6 +297,47 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             }
         }
 
+
+
+        [HttpPost]
+        public async Task<IActionResult> GetAccountInfoJsonData(string accountTypeId)
+        {
+            var result = await PrepareAccountInfoAsync(Convert.ToInt32(accountTypeId));
+
+            return Json(result);
+        }
+
+
+
+        private async Task<IList<SelectListItem>> PrepareAccountInfoAsync(int accountTypeId)
+        {
+            var result = new List<SelectListItem>();
+
+            switch (accountTypeId)
+            {
+                case (int)AccountType.Bank:
+                    var bankAccounts = await _mediator.Send(new GetActiveBankAccountListQuery());
+                    result = EnumHelper.PrepareSelectListFromEntities(bankAccounts, b => b.Id, b => b.Name);
+                    break;
+                case (int)AccountType.Mobile:
+                    var mobileAccounts = await _mediator.Send(new GetActiveMobileAccountListQuery());
+                    result = EnumHelper.PrepareSelectListFromEntities(mobileAccounts, b => b.Id, b => b.Name);
+                    break;
+
+                case (int)AccountType.Cash:
+                    var cashAccounts = await _mediator.Send(new GetActiveCashAccountListQuery());
+                    result = EnumHelper.PrepareSelectListFromEntities(cashAccounts, b => b.Id, b => b.Name);
+                    break;
+            }
+
+            result.Insert(0, new SelectListItem()
+            {
+                Text = "Select Account No.",
+                Value = Guid.Empty.ToString()
+            });
+
+            return result;
+        }
 
 
         #endregion

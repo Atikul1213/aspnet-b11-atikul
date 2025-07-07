@@ -4,6 +4,10 @@
     ViewData["Title"] = "Sales";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.min.css">
+}
 <!--begin::App Content Header-->
 <div class="app-content-header">
     <!--begin::Container-->
@@ -102,7 +106,6 @@
                                                     </td>
                                                     <td class="text-end">
                                                         <input type="number" class="form-control" asp-for="Vat" id="Vat" placeholder="Enter VAT" aria-describedby="titleHelp" />
-                                                        @* <input type="number" id="VatPercentage" name="VatPercentage" class="form-control" placeholder="Enter VAT %" /> *@
                                                     </td>
                                                     <td></td>
                                                 </tr>
@@ -111,7 +114,7 @@
                                                         <label for="VatPercentage">Net Amount</label>
                                                     </td>
                                                     <td class="text-end">
-                                                        <input type="number" id="VatPercentage" name="VatPercentage" class="form-control" placeholder="Enter VAT %" />
+                                                        <input type="number" class="form-control" asp-for="NetAmount" id="NetAmount" placeholder="Enter net amount" aria-describedby="titleHelp" />
                                                     </td>
                                                     <td></td>
                                                 </tr>
@@ -120,7 +123,7 @@
                                                         <label for="VatPercentage">Discount</label>
                                                     </td>
                                                     <td class="text-end">
-                                                        <input type="number" id="VatPercentage" name="VatPercentage" class="form-control" placeholder="Enter VAT %" />
+                                                        <input type="number" class="form-control" asp-for="Discount" id="Discount" placeholder="Enter discount" aria-describedby="titleHelp" />
                                                     </td>
                                                     <td></td>
                                                 </tr>
@@ -129,7 +132,7 @@
                                                         <label for="VatPercentage">Total Amount</label>
                                                     </td>
                                                     <td class="text-end">
-                                                        <input type="number" id="VatPercentage" name="VatPercentage" class="form-control" placeholder="Enter VAT %" />
+                                                        <input type="number" class="form-control" asp-for="TotalAmount" id="TotalAmount" placeholder="Enter total amount" aria-describedby="titleHelp" />
                                                     </td>
                                                     <td></td>
                                                 </tr>
@@ -138,7 +141,7 @@
                                                         <label for="VatPercentage">Paid Amount</label>
                                                     </td>
                                                     <td class="text-end">
-                                                        <input type="number" id="VatPercentage" name="VatPercentage" class="form-control" placeholder="Enter VAT %" />
+                                                        <input type="number" class="form-control" asp-for="PaidAmount" id="PaidAmount" placeholder="Enter paid amount" aria-describedby="titleHelp" />
                                                     </td>
                                                     <td></td>
                                                 </tr>
@@ -147,7 +150,7 @@
                                                         <label for="VatPercentage">Due Amount</label>
                                                     </td>
                                                     <td class="text-end">
-                                                        <input type="number" id="VatPercentage" name="VatPercentage" class="form-control" placeholder="Enter VAT %" />
+                                                        <input type="number" class="form-control" asp-for="DueAmount" id="DueAmount" placeholder="Enter due amount" aria-describedby="titleHelp" />
                                                     </td>
                                                     <td></td>
                                                 </tr>
@@ -160,7 +163,7 @@
                                         <div class="col-4">
                                             <div class="mb-3">
                                                 <label asp-for="AccountTypeId" class="form-label fw-bold">Account Type</label>
-                                                <select class="form-select" asp-for="AccountTypeId" asp-items="Model.AccountTypes" id="SalesTypeId" required>
+                                                <select class="form-select" asp-for="AccountTypeId" asp-items="Model.AccountTypes" id="AccountTypeId" required>
                                                 </select>
                                                 <span asp-validation-for="AccountTypeId" class="text-danger"></span>
                                             </div>
@@ -186,7 +189,7 @@
                                     <div class="row">
                                         <div class="mb-3">
                                             <label asp-for="TermsAndConditions" class="form-label fw-bold">Terms & Conditions</label>
-                                            <input type="text" class="form-control" asp-for="TermsAndConditions" id="TermsAndConditions" placeholder="If have any note" aria-describedby="titleHelp" />
+                                            <textarea class="form-control" asp-for="TermsAndConditions" id="TermsAndConditions" rows="5" placeholder="If have any note"></textarea>
                                             <span asp-validation-for="TermsAndConditions" class="text-danger"></span>
                                             <div id="titleHelp" class="form-text"> </div>
                                         </div>
@@ -218,4 +221,39 @@
 {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $("#AccountTypeId").on('click', function(){
+            // alert('call here');
+            var postData ={
+                accountTypeId : $("#AccountTypeId").val()
+            };
+            if (postData.accountTypeId === '0' || postData.accountTypeId === "00000000-0000-0000-0000-000000000000") {
+                console.log('return for 0');
+                return;
+            }
+            // console.log('postData: ',postData);
+            // addAntiForgeryToken(postData);
+                $.ajax({
+                    cache: false,
+                    url: '@Url.Action("GetAccountInfoJsonData", "Sales")',
+                    type: 'POST',
+                    data: postData,
+                    success: function (data) {
+                        // console.log('data: ', data);
+                        var sendingAccountSelect = $('#AccountNoId');
+                        sendingAccountSelect.empty(); // Clear old options
+
+                        $.each(data, function (i, item) {
+                            sendingAccountSelect.append(
+                                $('<option></option>').val(item.value).text(item.text)
+                            );
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX error:', error);
+                    }
+              });
+        });
+    </script>
 }

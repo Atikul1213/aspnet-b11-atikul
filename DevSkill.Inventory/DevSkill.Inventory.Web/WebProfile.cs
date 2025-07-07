@@ -3,6 +3,8 @@ using DevSkill.Inventory.Application.Features.Customers.Commands;
 using DevSkill.Inventory.Application.Features.Customers.Queries;
 using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Application.Features.Products.Queries;
+using DevSkill.Inventory.Application.Features.SalesProduct.Commands;
+using DevSkill.Inventory.Application.Features.SalesProduct.Queries;
 using DevSkill.Inventory.Application.Features.Settings.BalanceTransfers.Commands;
 using DevSkill.Inventory.Application.Features.Settings.BankAccounts.Commands;
 using DevSkill.Inventory.Application.Features.Settings.CashAccounts.Commands;
@@ -26,6 +28,7 @@ using DevSkill.Inventory.Web.Areas.Admin.Models.Employees;
 using DevSkill.Inventory.Web.Areas.Admin.Models.InventoryUsers;
 using DevSkill.Inventory.Web.Areas.Admin.Models.MobileAccount;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
+using DevSkill.Inventory.Web.Areas.Admin.Models.Sales;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Supplier;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Unit;
 using DevSkill.Inventory.Web.Areas.Admin.Models.UserRole;
@@ -178,6 +181,20 @@ namespace DevSkill.Inventory.Web
             CreateMap<BalanceTransfer, BalanceTransferAddCommand>().ReverseMap();
             CreateMap<BalanceTransfer, AddBalanceTransferModel>().ReverseMap();
             CreateMap<BalanceTransfer, BalanceTransferModel>().ReverseMap();
+
+            #endregion
+
+
+            #region Sales
+
+            CreateMap<AddSalesModel, SalesAddCommand>().ReverseMap();
+            CreateMap<AddSalesModel, Sales>().ReverseMap();
+            CreateMap<UpdateSalesModel, Sales>().ReverseMap();
+            CreateMap<UpdateSalesModel, SalesUpdateCommand>().ReverseMap();
+            CreateMap<SalesSearchDto, SalesSearchModel>().ReverseMap();
+            CreateMap<Sales, SalesAddCommand>().ReverseMap();
+            CreateMap<Sales, SalesUpdateCommand>().ReverseMap();
+            CreateMap<SalesSearchDto, GetSalesQuery>().ReverseMap();
 
             #endregion
         }

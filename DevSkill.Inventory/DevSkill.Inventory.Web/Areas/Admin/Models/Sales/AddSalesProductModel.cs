@@ -1,0 +1,14 @@
+﻿namespace DevSkill.Inventory.Web.Areas.Admin.Models.Sales
+{
+    public class AddSalesProductModel
+    {
+        public Guid Id { get; set; }
+        public Guid SalesId { get; set; }
+        public Guid ProductId { get; set; }
+        public string BarCode { get; set; }
+        public string Name { get; set; }
+        public decimal MRPPrice { get; set; }
+        public decimal Quantity { get; set; }
+        public int Stock { get; set; }
+    }
+}
