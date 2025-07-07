@@ -42,10 +42,6 @@
                             <a class="btn btn-primary btn-sm ms-auto" asp-area="Admin" asp-controller="Sales" asp-action="AddSales">
                                 <i class="bi bi-bookmark-plus-fill"></i>New Sales
                             </a>
-
-                         @*    <button type="button" class="btn btn-primary btn-add-sales">
-                                <i class="bi bi-bookmark-plus-fill"></i> New Sales
-                            </button> *@
                         </div>
                     </div>
                     <div class="card-tools">
@@ -163,7 +159,7 @@
     <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
 
-@* 
+
     <script>
         $(function(){
              $("#sales-table").DataTable({
@@ -183,18 +179,18 @@
                  ],
 
                  ajax: {
-                      url: '@Url.Action("GetCQRSSalesJsonData", "Saless")',
+                      url: '@Url.Action("GetCQRSSalesSPJsonData", "Sales")',
                       type: 'POST',
                       contentType: "application/json",
                       datatype: 'json',
                       data: function (d) {
                           d.SearchItem = {
-                                Name: $("#SearchItem_Name").val(),
-                                Email: $("#SearchItem_Email").val(),
-                                CompanyName: $("#SearchItem_CompanyName").val(),
-                                MobileNumber: $("#SearchItem_MobileNumber").val(),
-                                BalanceFrom: $("#SearchItem_BalanceFrom").val() == "" ? null : $("#SearchItem_BalanceFrom").val(),
-                                BalanceTo: $("#SearchItem_BalanceTo").val() == "" ? null : $("#SearchItem_BalanceTo").val()
+                                CustomerName: $("#SearchItem_CustomerName").val(),
+                                StatusId: $("#SearchItem_StatusId").val() == "" ? null : $("#SearchItem_StatusId").val(),
+                                TotalFrom: $("#SearchItem_TotalFrom").val() == "" ? null : $("#SearchItem_TotalFrom").val(),
+                                TotalTo: $("#SearchItem_TotalTo").val() == "" ? null : $("#SearchItem_TotalTo").val(),
+                                DateFrom: $("#SearchItem_DateFrom").val() == "" ? null : $("#SearchItem_DateFrom").val(),
+                                DateTo: $("#SearchItem_DateTo").val() == "" ? null : $("#SearchItem_DateTo").val()
                           };
                           return JSON.stringify(d);
                       }
@@ -211,11 +207,11 @@
                          orderable: false,
                          targets: 7,
                          render: function(data, type, row){
-                                return `<a href="/Admin/Saless/ShowSales/${data}"  value='${data}' class="btn btn-danger">
+                                return `<a href="/Admin/Sales/ShowSales/${data}"  value='${data}' class="btn btn-danger">
                                                <i class="bi bi-eye-fill"></i></a>
                                 <a data-id="${data}" data-toggle="modal" data-target="#update-sales-modal" class="btn btn-primary btn-edit-sales">
                                             <i class="bi bi-pencil-fill"></i></a>
-                                <a href="/Admin/Saless/RemoveSales/${data}"  value='${data}' class="btn btn-danger">
+                                <a href="/Admin/Sales/DeleteSales/${data}"  value='${data}' class="btn btn-danger">
                                                 <i class="bi bi-trash-fill"></i></a>`;
                          }
                      }
@@ -227,52 +223,6 @@
               });
 
         });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            // Handle Edit Sales button click
-            $(".btn-add-sales").on("click", function () {
-                $("#add-sales-modal").modal("show");
-            });
-        });
-    </script>
-
-    <script>
-        // Handle Edit Sales button click
-        $(document).on("click", ".btn-edit-sales", function () {
-                let salesId = $(this).data("id");
-                var postData ={
-                    salesId: salesId
-                };
-               $.ajax({
-                    cache: false,
-                     url: '@Url.Action("GetSalesDataById", "Saless")',
-                     type: 'GET',
-                     contentType: "application/json",
-                     dataType: 'json',
-                     data: postData,
-                     success: function(data){
-                          console.log("data: ",data);
-                         // console.log("test: ",data.id);
-                        $("#update-sales-modal #Id").val(data.id);
-                        $("#update-sales-modal #Name").val(data.name);
-                        $("#update-sales-modal #CompanyName").val(data.companyName);
-                        $("#update-sales-modal #MobileNumber").val(data.mobileNumber);
-                        $("#update-sales-modal #Address").val(data.address);
-                        $("#update-sales-modal #statusId").val(data.statusId);
-                        $("#update-sales-modal #ImageUrl").val(data.imageUrl);
-                        $("#update-sales-modal #OpeningBalance").val(data.openingBalance);
-                        $("#update-sales-modal #Email").val(data.email);
-                     },
-                     error: function (xhr, status, error) {
-                        console.error("AJAX Error:", error);
-                    }
-                }),
-
-                $("#update-sales-modal").modal("show");
-            });
- *@
     </script>
 
     <partial name="_ValidationScriptsPartial" />

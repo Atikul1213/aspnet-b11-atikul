@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Models.Sales
 {
@@ -16,7 +17,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Models.Sales
         public string InvoiceNo { get; set; }
         public DateTime SaleDate { get; set; }
         public Guid CustomerId { get; set; }
+        [ValidateNever]
         public string CustomerName { get; set; }
+        [ValidateNever]
         public string CustomerPhoneNumber { get; set; }
         public int StatusId { get; set; }
         public int SalesTypeId { get; set; }

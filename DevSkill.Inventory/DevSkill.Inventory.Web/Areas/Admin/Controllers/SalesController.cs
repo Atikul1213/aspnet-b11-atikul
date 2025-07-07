@@ -13,6 +13,7 @@ using DevSkill.Inventory.Web.Areas.Admin.Models.Sales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Web;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 {
@@ -121,18 +122,26 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             try
             {
-
                 if (ModelState.IsValid)
                 {
-                    //var category = await _mediator.Send(new GetCategoryByIdQuery(model.CategoryId));
-                    //model.CategoryName = category.Name;
-                    //model.Stock = model.LowStock;
-                    //var salesAddCommand = _mapper.Map<SalesAddCommand>(model);
+                    var customer = await _mediator.Send(new GetCustomerByIdQuery(model.CustomerId));
+                    model.CustomerName = customer?.Name;
+                    model.CustomerPhoneNumber = customer?.MobileNumber;
+                    if (model.DueAmount == 0)
+                    {
+                        model.StatusId = (int)SalesStatus.FullPaid;
+                    }
+                    else
+                    {
+                        model.StatusId = (int)SalesStatus.Due;
+                    }
 
-                    //await _mediator.Send(salesAddCommand);
+                    var salesAddCommand = _mapper.Map<SalesAddCommand>(model);
 
-                    //TempData["success"] = "Sales created successfully";
-                    return RedirectToAction("IndexSP");
+                    await _mediator.Send(salesAddCommand);
+
+                    TempData["success"] = "Sales created successfully";
+                    return RedirectToAction("SalesIndex");
                 }
             }
             catch (Exception ex)
@@ -141,7 +150,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 _logger.LogError(ex, "There was an error while creating sales");
             }
 
-            return RedirectToAction("IndexSP");
+            return RedirectToAction("SalesIndex");
         }
 
         public async Task<IActionResult> UpdateSales(Guid id)
@@ -273,16 +282,13 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     data = (from record in data
                             select new string[]
                             {
-                                //HttpUtility.HtmlEncode(record.ImageUrl),
-                                //HttpUtility.HtmlEncode(record.BarCode),
-                                //HttpUtility.HtmlEncode(record.Name),
-                                //HttpUtility.HtmlEncode(record.CategoryName),
-                                //record.PurchasePrice.ToString("C"),
-                                //record.MRPPrice.ToString("C"),
-                                //record.WholeSalePrice.ToString("C"),
-                                //record.Stock.ToString(),
-                                //record.LowStock.ToString(),
-                                //record.DamageStock.ToString(),
+                                HttpUtility.HtmlEncode(record.InvoiceNo),
+                                HttpUtility.HtmlEncode(record.SaleDate.ToString("dd-MM-yyyy")),
+                                HttpUtility.HtmlEncode($"{record.CustomerName} {record.CustomerPhoneNumber}"),
+                                record.TotalAmount.ToString("C"),
+                                record.PaidAmount.ToString("C"),
+                                record.DueAmount.ToString("C"),
+                                HttpUtility.HtmlEncode(((SalesStatus)record.StatusId).ToString()),
                                 record.Id.ToString()
                             }).ToArray()
                 };

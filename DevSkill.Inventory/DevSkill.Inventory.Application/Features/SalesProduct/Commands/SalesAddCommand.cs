@@ -11,7 +11,6 @@ namespace DevSkill.Inventory.Application.Features.SalesProduct.Commands
         public string CustomerPhoneNumber { get; set; }
         public int StatusId { get; set; }
         public int SalesTypeId { get; set; }
-        public Guid ProductId { get; set; }
         public decimal Vat { get; set; }
         public decimal NetAmount { get; set; }
         public decimal Discount { get; set; }

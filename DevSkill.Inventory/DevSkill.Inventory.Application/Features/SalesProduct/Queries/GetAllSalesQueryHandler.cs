@@ -26,7 +26,7 @@ namespace DevSkill.Inventory.Application.Features.SalesProduct.Queries
         #region Methods
         public async Task<(IList<Sales>, int, int)> Handle(GetAllSalesQuery request, CancellationToken cancellationToken)
         {
-            var procedureName = "GetSaless";
+            var procedureName = "GetSalesProduct";
 
             var result = await _applicationUnitOfWork.sqlUtility.QueryWithStoredProcedureAsync<Sales>(procedureName,
                 new Dictionary<string, object>
