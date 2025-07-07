@@ -78,7 +78,7 @@
                                         <div class="col-3">
                                             <div class="mb-3">
                                                 <label asp-for="ProductId" class="form-label fw-bold">Select Product</label>
-                                                <select class="form-select" asp-for="ProductId" asp-items="Model.Products" id="SalesTypeId" required>
+                                                <select class="form-select" asp-for="ProductId" asp-items="Model.Products" id="ProductId" required>
                                                 </select>
                                                 <span asp-validation-for="ProductId" class="text-danger"></span>
                                             </div>
@@ -99,7 +99,32 @@
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="sale-products-body">
+                                                <!-- Check if there are any bankAccount to display -->
+                                                @if (Model.SaleProducts.Any())
+                                                {
+                                                    <!-- Loop through each bankAccount in the model's bankAccount list -->
+                                                    var idx = 1;
+                                                    @foreach (var product in Model.SaleProducts)
+                                                    {
+                                                        var rowClass = (idx % 2 == 0) ? "table-info" : "table-success";
+                                                        <tr class="@rowClass">
+                                                            <td class="text-center">@product.BarCode</td>
+                                                            <td class="text-center">@product.Name</td>
+                                                            <td class="text-center">@product.Stock</td>
+                                                            <td class="text-center">@product.Quantity</td>
+                                                            <td class="text-center">@product.MRPPrice</td>
+                                                            <td class="text-center">@product.SubTotal</td>
+                                                            <td class="text-center">
+                                                                <div class="w-75 btn-group" role="group">
+                                                                    <a asp-area="Admin" asp-controller="Sales" asp-action="RemoveBankAccount" asp-route-id="@product.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        idx++;
+                                                    }
+                                                }
+
                                                 <tr>
                                                     <td colspan="5" class="text-end">
                                                         <label for="VatPercentage">VAT (%)</label>
@@ -256,4 +281,71 @@
               });
         });
     </script>
+
+
+    <script>
+         $("#ProductId").on('click', function(){
+            // alert('call here');
+            var postData ={
+                productId : $("#ProductId").val()
+            };
+            if (postData.productId === '0' || postData.productId === "00000000-0000-0000-0000-000000000000") {
+                console.log('return for 0');
+                return;
+            }
+            // console.log('postData: ',postData);
+            // addAntiForgeryToken(postData);
+                $.ajax({
+                    cache: false,
+                    url: '@Url.Action("GetProductInfoJsonData", "Sales")',
+                    type: 'POST',
+                    data: postData,
+                    success: function (data) {
+                         console.log('data: ', data);
+                           let subtotal = data.mrpPrice; // Default quantity = 1
+                           let rowIndex = data.productId;
+                            let row = `
+                                <tr id="product-row-${rowIndex}">
+                                    <td class="text-center">
+                                        <input type="hidden" name="SaleProducts[${rowIndex}].BarCode" value="${data.barCode}" />
+                                        ${data.barCode}
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="hidden" name="SaleProducts[${rowIndex}].Name" value="${data.name}" />
+                                        ${data.name}
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="hidden" name="SaleProducts[${rowIndex}].Stock" value="${data.stock}" />
+                                        ${data.stock}
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="number" name="SaleProducts[${rowIndex}].Quantity" class="form-control text-center qty-input" data-index="${rowIndex}" data-price="${data.quantity}" value="1" min="1" />
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="hidden" name="SaleProducts[${rowIndex}].MRPPrice" value="${data.mrpPrice}" />
+                                        ${data.mrpPrice}
+                                    </td>
+                                    <td class="text-center">
+                                        <span id="sub-total-${rowIndex}">${subtotal.toFixed(2)}</span>
+                                        <input type="hidden" name="SaleProducts[${rowIndex}].SubTotal" value="${subtotal}" />
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="$('#product-row-${rowIndex}').remove();">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+
+                            $("#sale-products-body").append(row);
+                            $("#ProductId").val("00000000-0000-0000-0000-000000000000");
+                         
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX error:', error);
+                    }
+              });
+        });
+    </script>
+
 }

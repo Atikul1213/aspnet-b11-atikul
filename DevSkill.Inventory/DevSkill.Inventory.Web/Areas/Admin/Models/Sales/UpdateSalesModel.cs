@@ -11,6 +11,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Models.Sales
             Products = new List<SelectListItem>();
             AccountTypes = new List<SelectListItem>();
             Accounts = new List<SelectListItem>();
+            SaleProducts = new List<UpdateSalesProductModel>();
         }
         public Guid Id { get; set; }
         public string InvoiceNo { get; set; }
@@ -31,6 +32,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Models.Sales
         public Guid AccountNoId { get; set; }
         public string Note { get; set; }
         public string TermsAndConditions { get; set; }
+        public IList<UpdateSalesProductModel> SaleProducts { get; set; }
         public IEnumerable<SelectListItem> Customers { get; set; }
         public IEnumerable<SelectListItem> SalesTypes { get; set; }
         public IEnumerable<SelectListItem> Products { get; set; }

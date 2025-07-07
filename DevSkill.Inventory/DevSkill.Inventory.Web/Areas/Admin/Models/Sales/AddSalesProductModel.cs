@@ -9,6 +9,7 @@
         public string Name { get; set; }
         public decimal MRPPrice { get; set; }
         public decimal Quantity { get; set; }
+        public decimal SubTotal { get; set; }
         public int Stock { get; set; }
     }
 }

@@ -340,6 +340,21 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> GetProductInfoJsonData(string productId)
+        {
+            var saleProductId = Guid.Parse(productId);
+
+            var product = await _mediator.Send(new GetProductByIdQuery(saleProductId));
+
+            var result = _mapper.Map<AddSalesProductModel>(product);
+            result.ProductId = product.Id;
+            result.Quantity = 1;
+            result.SubTotal = product.MRPPrice * result.Quantity;
+
+            return Json(result);
+        }
+
         #endregion
     }
 }
