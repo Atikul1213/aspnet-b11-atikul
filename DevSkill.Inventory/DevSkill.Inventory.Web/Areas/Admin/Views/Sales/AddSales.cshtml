@@ -302,8 +302,8 @@
                     data: postData,
                     success: function (data) {
                          console.log('data: ', data);
-                           let subtotal = data.mrpPrice; // Default quantity = 1
                            let rowIndex = data.productId;
+                           let subtotal = parseFloat(data.subTotal || data.subtotal || 0).toFixed(2);
                             let row = `
                                 <tr id="product-row-${rowIndex}">
                                     <td class="text-center">
@@ -326,8 +326,8 @@
                                         ${data.mrpPrice}
                                     </td>
                                     <td class="text-center">
-                                        <span id="sub-total-${rowIndex}">${subtotal.toFixed(2)}</span>
-                                        <input type="hidden" name="SaleProducts[${rowIndex}].SubTotal" value="${subtotal}" />
+                                        <span id="sub-total-${rowIndex}">${subtotal}</span>
+                                        <input type="hidden" name="SaleProducts[${rowIndex}].SubTotal" value="${data.subtotal}" />
                                     </td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-danger btn-sm" onclick="$('#product-row-${rowIndex}').remove();">
@@ -339,12 +339,56 @@
 
                             $("#sale-products-body").append(row);
                             $("#ProductId").val("00000000-0000-0000-0000-000000000000");
+
+                            let currentNet = parseFloat($("#NetAmount").val()) || 0;
+                            let currentTotal = parseFloat($("#TotalAmount").val()) || 0;
+                            let currentDue = parseFloat($("#DueAmount").val()) || 0;
+
+                            // Get the new product subtotal
+                            let productSubtotal = parseFloat(data.subTotal) || 0;
+
+                            // Add to the current totals
+                            let newNet = currentNet + productSubtotal;
+                            let newTotal = currentTotal + productSubtotal;
+                            let newDue = currentDue + productSubtotal;
+
+                            // Set the updated values back to the inputs
+                            $("#NetAmount").val(newNet.toFixed(2));
+                            $("#TotalAmount").val(newTotal.toFixed(2));
+                            $("#DueAmount").val(newDue.toFixed(2));
                          
                     },
                     error: function (xhr, status, error) {
                         console.error('AJAX error:', error);
                     }
               });
+        });
+    </script>
+
+    <script>
+         $('#Vat').on('input', function () {
+            let vat = parseFloat($(this).val()) || 0;
+
+            let netAmount = parseFloat($('#NetAmount').val()) || 0;
+            let totalAmount = parseFloat($('#TotalAmount').val()) || 0;
+            let dueAmount = parseFloat($('#DueAmount').val()) || 0;
+
+            // Remove previously added VAT if any
+            let baseNetAmount = netAmount - (parseFloat($(this).data('last-vat')) || 0);
+            let baseTotalAmount = totalAmount - (parseFloat($(this).data('last-vat')) || 0);
+            let baseDueAmount = dueAmount - (parseFloat($(this).data('last-vat')) || 0);
+
+            // Add new VAT
+            let newNetAmount = baseNetAmount + vat;
+            let newTotalAmount = baseTotalAmount + vat;
+            let newDueAmount = baseDueAmount + vat;
+
+            $('#NetAmount').val(newNetAmount.toFixed(2));
+            $('#TotalAmount').val(newTotalAmount.toFixed(2));
+            $('#DueAmount').val(newDueAmount.toFixed(2));
+
+            // Store last VAT to remove it next time
+            $(this).data('last-vat', vat);
         });
     </script>
 
