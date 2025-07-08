@@ -184,7 +184,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 var product = await _mediator.Send(new GetProductByIdQuery(id));
 
                 if (product is null)
-                    return RedirectToAction("ProductIndex");
+                    return RedirectToAction("IndexSP");
 
                 var model = _mapper.Map<UpdateProductModel>(product);
                 var categories = await _mediator.Send(new GetActiveCategoryListQuery());
@@ -214,7 +214,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 _logger.LogError(ex, "No product found with the Id");
             }
 
-            return RedirectToAction("ProductIndex");
+            return RedirectToAction("IndexSP");
         }
 
 
@@ -246,7 +246,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     await _mediator.Send(productUpdateCommand);
                     TempData["success"] = "Product updated successfully";
 
-                    return RedirectToAction("ProductIndex");
+                    return RedirectToAction("IndexSP");
                 }
             }
             catch (DuplicateProductBarCodeException dex)
@@ -284,8 +284,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-
-        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             try
@@ -301,7 +299,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 _logger.LogError(ex, "There was an error while deleting product");
             }
 
-            return RedirectToAction("ProductIndex");
+            return RedirectToAction("IndexSP");
         }
 
         [HttpPost]
@@ -341,8 +339,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 return Json(DataTables.EmptyResult);
             }
         }
-
-
 
         #endregion
 

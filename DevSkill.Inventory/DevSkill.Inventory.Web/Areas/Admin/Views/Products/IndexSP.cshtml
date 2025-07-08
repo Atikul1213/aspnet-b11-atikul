@@ -114,7 +114,7 @@
                     <div class="card-header"><h3 class="card-title">Available Products</h3></div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <partial name="_ModalPartial" />
+                        @* <partial name="_ModalPartial" /> *@
                         <table id="product-table" class="table table-bordered p-3 text-center table-hover">
                             <thead>
                                 <tr class="table-primary">
@@ -224,29 +224,25 @@
                             orderable: false,
                             targets: 10,
                             render: function(data, type, row){
-                                return `<button type="submit" class="btn btn-info btn-sm" onclick="window.location.href='/admin/Products/UpdateProduct/${data}'" value='${data}'>
-                                                     <i class="fas fa-pencil-alt"> </i>  Edit </button>
+                                 return `<a href="/Admin/Products/UpdateProduct/${data}" data-id="${data}"   value='${data}' class="btn btn-primary">
+                                             <i class="bi bi-pencil-fill"></i></a>
 
-                                         <button type="submit" class="btn btn-danger btn-sm show-bs-modal" data-id='${data}' value='${data}'>
-                                             <i class="fas fa-trash"></i> Delete </button>`;
+                                    <a href="/Admin/Products/DeleteProduct/${data}"  value='${data}' class="btn btn-danger">
+                                             <i class="bi bi-trash-fill"></i></a>`;
                             }
                         }
                     ],
                 });
 
-            $("#product-table").on('click', '.show-bs-modal', function(){
-                  let id = $(this).data("id");
-                  let deleteModel = $("#modal-delete");
+            // $("#product-table").on('click', '.show-bs-modal', function(){
+            //       let id = $(this).data("id");
+            //       let deleteModel = $("#modal-delete");
 
-                  deleteModel.find('.modal-body p').text('Are you sure you want to delete the product');
-                  $("#delete-id").val(id);
-                  $("#delete-form").attr('action', '/admin/products/delete');
-                  deleteModel.modal('show');
-            });
-
-             $("#delete-button").click(function(){
-                  $("#delete-form").submit();
-             });
+            //       deleteModel.find('.modal-body p').text('Are you sure you want to delete the product');
+            //       $("#delete-id").val(id);
+            //       $("#delete-form").attr('action', '/admin/products/delete');
+            //       deleteModel.modal('show');
+            // });
 
               $("#searchButton").on('click', function(){
                   $("#product-table").DataTable().ajax.reload(null, false);
