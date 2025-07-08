@@ -42,7 +42,7 @@ namespace DevSkill.Inventory.Web.Data.Migrations
                 	SET @countsql = @countsql + ' AND s.CustomerName LIKE ''%'' + @xCustomerName + ''%''' 
 
                 	IF @StatusId IS NOT NULL
-                	SET @countsql = @countsql + ' AND s.StatusId == @xStatusId'
+                	SET @countsql = @countsql + ' AND s.StatusId = @xStatusId'
 
                 	IF @TotalFrom IS NOT NULL
                 	SET @countsql = @countsql + ' AND s.TotalAmount >= @xTotalFrom'
@@ -79,7 +79,7 @@ namespace DevSkill.Inventory.Web.Data.Migrations
                 	SET @sql = @sql + ' AND s.CustomerName LIKE ''%'' + @xCustomerName + ''%''' 
 
                 	IF @StatusId IS NOT NULL
-                	SET @sql = @sql + ' AND s.StatusId == @xStatusId'
+                	SET @sql = @sql + ' AND s.StatusId = @xStatusId'
 
                 	IF @TotalFrom IS NOT NULL
                 	SET @sql = @sql + ' AND s.TotalAmount >= @xTotalFrom'

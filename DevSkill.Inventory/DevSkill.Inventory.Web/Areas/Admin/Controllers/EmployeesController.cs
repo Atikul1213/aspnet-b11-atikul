@@ -49,6 +49,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             });
 
             model.AddEmployeeModel.StatusId = (int)Status.Active;
+            model.AddEmployeeModel.JoiningDate = new DateTime(2025, 1, 1);
             model.AddEmployeeModel.Departments = departmenSelecttList;
 
             model.UpdateEmployeeModel.Status = EnumHelper.PrepareSelectList<Status>();

@@ -74,13 +74,13 @@
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label>Date From</label>
-                                <input type="text" asp-for="SearchItem.DateFrom" class="form-control" />
+                                <input type="date" asp-for="SearchItem.DateFrom" class="form-control" />
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label>Date To</label>
-                                <input type="number" asp-for="SearchItem.DateTo" class="form-control" />
+                                <input type="date" asp-for="SearchItem.DateTo" class="form-control" />
                             </div>
                         </div>
                         <div class="col-sm-3"> 
@@ -184,13 +184,16 @@
                       contentType: "application/json",
                       datatype: 'json',
                       data: function (d) {
+                          const fixedDate = "2025-01-01";
+                          const dateFromVal = $("#SearchItem_DateFrom").val();
+                          const dateToVal = $("#SearchItem_DateTo").val();
                           d.SearchItem = {
-                                // CustomerName: $("#SearchItem_CustomerName").val(),
-                                // StatusId: $("#SearchItem_StatusId").val() == "" ? null : $("#SearchItem_StatusId").val(),
-                                // TotalFrom: $("#SearchItem_TotalFrom").val() == "" ? null : $("#SearchItem_TotalFrom").val(),
-                                // TotalTo: $("#SearchItem_TotalTo").val() == "" ? null : $("#SearchItem_TotalTo").val(),
-                                // DateFrom: $("#SearchItem_DateFrom").val() == "" ? null : $("#SearchItem_DateFrom").val(),
-                                // DateTo: $("#SearchItem_DateTo").val() == "" ? null : $("#SearchItem_DateTo").val()
+                                CustomerName: $("#SearchItem_CustomerName").val(),
+                                StatusId: $("#SearchItem_StatusId").val() == "" ? null : $("#SearchItem_StatusId").val(),
+                                TotalFrom: $("#SearchItem_TotalFrom").val() == "" ? null : $("#SearchItem_TotalFrom").val(),
+                                TotalTo: $("#SearchItem_TotalTo").val() == "" ? null : $("#SearchItem_TotalTo").val(),
+                                DateFrom: (dateFromVal === fixedDate || !dateFromVal) ? null : dateFromVal,
+                                DateTo: (dateToVal === fixedDate || !dateToVal) ? null : dateToVal
                           };
                           return JSON.stringify(d);
                       }

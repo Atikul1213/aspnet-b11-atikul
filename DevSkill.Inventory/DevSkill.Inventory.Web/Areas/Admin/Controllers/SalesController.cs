@@ -52,13 +52,13 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             var model = new SalesListModel();
 
-            model.SearchItem.DateFrom = DateTime.UtcNow;
-            model.SearchItem.DateTo = DateTime.UtcNow;
+            model.SearchItem.DateFrom = new DateTime(2025, 1, 1);
+            model.SearchItem.DateTo = new DateTime(2025, 1, 1);
             model.Status = EnumHelper.PrepareSelectList<SalesStatus>();
             model.Status.Insert(0, new SelectListItem
             {
                 Text = "Select Status",
-                Value = "-1"
+                Value = ""
             });
 
             return View(model);
