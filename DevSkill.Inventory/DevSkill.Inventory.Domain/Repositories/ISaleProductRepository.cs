@@ -5,5 +5,6 @@ namespace DevSkill.Inventory.Domain.Repositories
 {
     public interface ISaleProductRepository : IRepository<SaleProduct, Guid>
     {
+        Task<IList<SaleProduct>> GetSaleProductsBySaleIdAsync(Guid saleId);
     }
 }

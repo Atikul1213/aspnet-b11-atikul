@@ -10,5 +10,10 @@ namespace DevSkill.Inventory.Infrastructure.Repositories
         {
             _applicationDbContext = dbContext;
         }
+
+        public async Task<IList<SaleProduct>> GetSaleProductsBySaleIdAsync(Guid saleId)
+        {
+            return await GetAllWithFilterAsync(x => x.SalesId == saleId);
+        }
     }
 }

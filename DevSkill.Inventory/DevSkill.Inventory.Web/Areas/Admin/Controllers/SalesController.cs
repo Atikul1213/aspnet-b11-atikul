@@ -46,7 +46,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
         #endregion
 
-        #region Sales Add Edit Delete Index using CQRS
+        #region SalesIndex / AddSales / UpdateSales / ShowSales / DeleteSales
 
         public async Task<IActionResult> SalesIndex()
         {
@@ -303,7 +303,16 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                 var model = _mapper.Map<ShowSalesModel>(sales);
                 var customer = await _mediator.Send(new GetCustomerByIdQuery(sales.CustomerId));
-                var products = await _mediator.Send(new GetProductListQuery());
+                var saleProducts = await _applicationUnitOfWork.SaleProductRepository.GetSaleProductsBySaleIdAsync(sales.Id);
+
+                if (saleProducts is not null && saleProducts.Count > 0)
+                {
+                    foreach (var product in saleProducts)
+                    {
+                        var productModel = _mapper.Map<SalesProductModel>(product);
+                        model.SaleProducts.Add(productModel);
+                    }
+                }
 
                 var customerModel = _mapper.Map<CustomerModel>(customer);
 
@@ -375,7 +384,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             }
         }
 
+        #endregion
 
+        #region Utilities
 
         [HttpPost]
         public async Task<IActionResult> GetAccountInfoJsonData(string accountTypeId)

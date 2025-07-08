@@ -7,7 +7,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Models.Sales
         public ShowSalesModel()
         {
             Customer = new CustomerModel();
-            SaleProducts = new List<AddSalesProductModel>();
+            SaleProducts = new List<SalesProductModel>();
         }
         public CustomerModel Customer { get; set; }
         public string InvoiceNo { get; set; }
@@ -21,6 +21,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Models.Sales
         public decimal DueAmount { get; set; }
         public string Note { get; set; }
         public string TermsAndConditions { get; set; }
-        public IList<AddSalesProductModel> SaleProducts { get; set; }
+        public IList<SalesProductModel> SaleProducts { get; set; }
     }
 }
