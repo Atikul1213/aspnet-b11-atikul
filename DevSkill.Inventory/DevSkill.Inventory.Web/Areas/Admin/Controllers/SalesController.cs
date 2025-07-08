@@ -117,6 +117,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             Random random = new Random();
             int threeDigitNumber = random.Next(100, 1000);
             model.InvoiceNo = $"INV-SUN000{threeDigitNumber}";
+            model.SaleDate = new DateTime(2025, 1, 1);
 
             return View(model);
         }
@@ -243,7 +244,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                 model.SalesTypes = EnumHelper.PrepareSelectList<SalesType>();
                 model.AccountTypes = EnumHelper.PrepareSelectList<AccountType>();
-
+                model.SaleDate = new DateTime(2025, 1, 1);
 
                 return View(model);
             }
