@@ -424,8 +424,8 @@ namespace DevSkill.Inventory.Web.Data.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("SalesId")
                         .HasColumnType("uniqueidentifier");

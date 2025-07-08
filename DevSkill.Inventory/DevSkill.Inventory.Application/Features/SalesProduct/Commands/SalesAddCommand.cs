@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using DevSkill.Inventory.Domain.Entities;
+using MediatR;
 
 namespace DevSkill.Inventory.Application.Features.SalesProduct.Commands
 {
-    public class SalesAddCommand : IRequest
+    public class SalesAddCommand : IRequest<Sales>
     {
         public string InvoiceNo { get; set; }
         public DateTime SaleDate { get; set; }

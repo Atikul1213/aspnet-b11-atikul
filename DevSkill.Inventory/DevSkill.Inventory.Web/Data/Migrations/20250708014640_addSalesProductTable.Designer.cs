@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevSkill.Inventory.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250707171829_addSalesProductTable")]
+    [Migration("20250708014640_addSalesProductTable")]
     partial class addSalesProductTable
     {
         /// <inheritdoc />
@@ -427,8 +427,8 @@ namespace DevSkill.Inventory.Web.Data.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("SalesId")
                         .HasColumnType("uniqueidentifier");

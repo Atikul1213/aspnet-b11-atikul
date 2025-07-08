@@ -5,7 +5,7 @@ using MediatR;
 
 namespace DevSkill.Inventory.Application.Features.SalesProduct.Commands
 {
-    public class SalesAddCommandHandler : IRequestHandler<SalesAddCommand>
+    public class SalesAddCommandHandler : IRequestHandler<SalesAddCommand, Sales>
     {
         #region Fields
         private readonly IApplicationUnitOfWork _applicationUnitOfWork;
@@ -21,13 +21,17 @@ namespace DevSkill.Inventory.Application.Features.SalesProduct.Commands
         #endregion
 
         #region Methods
-        public async Task Handle(SalesAddCommand request, CancellationToken cancellationToken)
+        public async Task<Sales> Handle(SalesAddCommand request, CancellationToken cancellationToken)
         {
             var sales = _mapper.Map<Sales>(request);
 
-            await _applicationUnitOfWork.SalesRepository.AddAsync(sales);
-            await _applicationUnitOfWork.SaveAsync();
+            var result = await _applicationUnitOfWork.SalesRepository.InsertSalesAsync(sales);
 
+
+
+            //await _applicationUnitOfWork.SalesRepository.AddAsync(sales);
+            await _applicationUnitOfWork.SaveAsync();
+            return result;
         }
 
         #endregion

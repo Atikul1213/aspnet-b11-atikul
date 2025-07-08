@@ -27,5 +27,12 @@ namespace DevSkill.Inventory.Infrastructure.Repositories
             }
             return await GetDynamicAsync(filter, order, null, pageIndex, pageSize, true);
         }
+
+        public async Task<Sales> InsertSalesAsync(Sales sales)
+        {
+            await AddAsync(sales);
+
+            return sales;
+        }
     }
 }
