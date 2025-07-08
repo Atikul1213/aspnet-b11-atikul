@@ -26,10 +26,6 @@ namespace DevSkill.Inventory.Application.Features.SalesProduct.Commands
             var sales = _mapper.Map<Sales>(request);
 
             var result = await _applicationUnitOfWork.SalesRepository.InsertSalesAsync(sales);
-
-
-
-            //await _applicationUnitOfWork.SalesRepository.AddAsync(sales);
             await _applicationUnitOfWork.SaveAsync();
             return result;
         }

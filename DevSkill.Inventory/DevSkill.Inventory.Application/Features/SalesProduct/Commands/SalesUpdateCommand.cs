@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using DevSkill.Inventory.Domain.Entities;
+using MediatR;
 
 namespace DevSkill.Inventory.Application.Features.SalesProduct.Commands
 {
-    public class SalesUpdateCommand : IRequest
+    public class SalesUpdateCommand : IRequest<Sales>
     {
         public Guid Id { get; set; }
         public string InvoiceNo { get; set; }

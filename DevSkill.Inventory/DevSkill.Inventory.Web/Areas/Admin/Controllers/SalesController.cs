@@ -206,9 +206,22 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 if (sales is null)
                     return RedirectToAction("SalesIndex");
 
+                var saleProducts = await _applicationUnitOfWork.SaleProductRepository.GetSaleProductsBySaleIdAsync(sales.Id);
                 var model = _mapper.Map<UpdateSalesModel>(sales);
+
+                if (saleProducts is not null && saleProducts.Count > 0)
+                {
+                    foreach (var product in saleProducts)
+                    {
+                        var productModel = _mapper.Map<UpdateSalesProductModel>(product);
+                        model.SaleProducts.Add(productModel);
+                    }
+                }
+
                 var customers = await _mediator.Send(new GetActiveCustomerListQuery());
                 var products = await _mediator.Send(new GetProductListQuery());
+
+
 
                 var customerSelectList = EnumHelper.PrepareSelectListFromEntities(customers, c => c.Id, c => c.Name);
                 customerSelectList.Insert(0, new SelectListItem
@@ -251,45 +264,72 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    var customer = await _mediator.Send(new GetCustomerByIdQuery(model.CustomerId));
+                    model.CustomerName = customer?.Name;
+                    model.CustomerPhoneNumber = customer?.MobileNumber;
+                    if (model.DueAmount == 0)
+                    {
+                        model.StatusId = (int)SalesStatus.FullPaid;
+                    }
+                    else
+                    {
+                        model.StatusId = (int)SalesStatus.Due;
+                    }
+
                     var salesUpdateCommand = _mapper.Map<SalesUpdateCommand>(model);
 
-                    await _mediator.Send(salesUpdateCommand);
-                    TempData["success"] = "Sales updated successfully";
+                    var addSalesModel = _mapper.Map<AddSalesModel>(model);
 
+                    var isEnougBalance = await HandleBalanceTransfer(addSalesModel);
+
+                    if (!isEnougBalance)
+                    {
+                        TempData["error"] = "You don't have enough balance. Please try again later.";
+                        return RedirectToAction("SalesIndex");
+                    }
+
+                    var sales = await _mediator.Send(salesUpdateCommand);
+
+                    if (sales is not null && sales.Id != Guid.Empty && model.SaleProducts is not null && model.SaleProducts.Count > 0)
+                    {
+                        foreach (var saleProduct in model.SaleProducts)
+                        {
+                            saleProduct.SalesId = sales.Id;
+
+                            var saleProductEntity = _mapper.Map<SaleProduct>(saleProduct);
+                            await _applicationUnitOfWork.SaleProductRepository.AddAsync(saleProductEntity);
+                            await _applicationUnitOfWork.SaveAsync();
+
+                            var product = await _applicationUnitOfWork.ProductRepository.GetByIdAsync(saleProduct.ProductId);
+
+                            if (product is not null)
+                            {
+                                product.Stock -= saleProduct.Quantity;
+
+                                if (model.SalesTypeId == (int)SalesType.WholeSales)
+                                    product.WholeSalePrice += saleProduct.SubTotal;
+
+                                if (model.SalesTypeId == (int)SalesType.MRPSales)
+                                    product.PurchasePrice += saleProduct.SubTotal;
+
+                                await _applicationUnitOfWork.ProductRepository.UpdateAsync(product);
+                                await _applicationUnitOfWork.SaveAsync();
+                            }
+
+                        }
+                    }
+
+                    TempData["success"] = "Sales updated successfully";
                     return RedirectToAction("SalesIndex");
                 }
             }
             catch (Exception ex)
             {
-                TempData["error"] = "Failed to edit sales.";
-                _logger.LogError(ex, "There was an error while updating sales");
+                TempData["error"] = "Failed to create sales.";
+                _logger.LogError(ex, "There was an error while creating sales");
             }
-            var customers = await _mediator.Send(new GetActiveCustomerListQuery());
-            var products = await _mediator.Send(new GetProductListQuery());
 
-            var customerSelectList = EnumHelper.PrepareSelectListFromEntities(customers, c => c.Id, c => c.Name);
-            customerSelectList.Insert(0, new SelectListItem
-            {
-                Text = "Select customer",
-                Value = Guid.Empty.ToString()
-            });
-
-            model.Customers = customerSelectList;
-
-            var productSelectList = EnumHelper.PrepareSelectListFromEntities(products, c => c.Id, c => c.Name);
-            productSelectList.Insert(0, new SelectListItem
-            {
-                Text = "Select product",
-                Value = Guid.Empty.ToString()
-            });
-
-            model.Products = productSelectList;
-
-            model.SalesTypes = EnumHelper.PrepareSelectList<SalesType>();
-            model.AccountTypes = EnumHelper.PrepareSelectList<AccountType>();
-
-
-            return View(model);
+            return RedirectToAction("SalesIndex");
         }
 
         public async Task<IActionResult> ShowSales(Guid id)

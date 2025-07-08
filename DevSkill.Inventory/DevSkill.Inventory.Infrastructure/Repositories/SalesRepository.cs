@@ -34,5 +34,11 @@ namespace DevSkill.Inventory.Infrastructure.Repositories
 
             return sales;
         }
+        public async Task<Sales> UpdateSalesAsync(Sales sales)
+        {
+            await EditAsync(sales);
+
+            return sales;
+        }
     }
 }
