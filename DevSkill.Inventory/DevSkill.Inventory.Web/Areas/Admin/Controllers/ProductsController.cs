@@ -60,7 +60,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
         #endregion
 
-        #region Product Add Edit Delete Index using CQRS
+        #region Product IndexSP AddProduct UpdateProduct DeleteProduct GetCQRSProductSPJsonData
 
         public async Task<IActionResult> IndexSP()
         {
@@ -131,6 +131,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                     var category = await _mediator.Send(new GetCategoryByIdQuery(model.CategoryId));
                     model.CategoryName = category.Name;
+
                     model.Stock = model.LowStock;
                     var productAddCommand = _mapper.Map<ProductAddCommand>(model);
 
@@ -138,7 +139,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                     if (model.ImageUrl != null)
                     {
-                        await SentMessageInSQS(model, fullPath);
+                        //await SentMessageInSQS(model, fullPath);
                     }
 
                     TempData["success"] = "Product created successfully";
@@ -225,9 +226,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
                     string wwwRootPath = _webHostEnvironment.WebRootPath;
-
                     if (file != null)
                     {
                         string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
@@ -241,8 +240,10 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                         model.ImageUrl = Path.Combine(@"/images/products", fileName);
                     }
 
-                    var productUpdateCommand = _mapper.Map<ProductUpdateCommand>(model);
+                    var category = await _mediator.Send(new GetCategoryByIdQuery(model.CategoryId));
+                    model.CategoryName = category.Name;
 
+                    var productUpdateCommand = _mapper.Map<ProductUpdateCommand>(model);
                     await _mediator.Send(productUpdateCommand);
                     TempData["success"] = "Product updated successfully";
 
@@ -270,16 +271,13 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             });
 
             model.Categories = categorySelectList;
-
             var unitSelectList = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
             unitSelectList.Insert(0, new SelectListItem
             {
                 Text = "Select units",
                 Value = Guid.Empty.ToString()
             });
-
             model.Units = unitSelectList;
-
 
             return View(model);
         }
@@ -289,7 +287,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             try
             {
                 var productDeleteCommand = new ProductDeleteCommand(id);
-
                 await _mediator.Send(productDeleteCommand);
                 ViewData["success"] = "Product deleted successfully";
             }
@@ -302,13 +299,13 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return RedirectToAction("IndexSP");
         }
 
+
         [HttpPost]
         public async Task<IActionResult> GetCQRSProductSPJsonData([FromBody] GetAllProductQuery model)
         {
             try
             {
                 var (data, total, totalDisplay) = await _mediator.Send(model);
-
                 var products = new
                 {
                     recordsTotal = total,
@@ -335,7 +332,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "There was an error while getting product data");
-
                 return Json(DataTables.EmptyResult);
             }
         }

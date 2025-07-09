@@ -176,15 +176,20 @@
         <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
 
+
+
+        @* <script src="https://cdn.datatables.net/buttons/3.2.4/js/dataTables.buttons.js"></script> *@
+ 
         <script>
            $(function(){
                 $("#product-table").DataTable({
                     processing: true,
                     serverSide: true,
                     responsive: true,
+                    searching: false,
+                    // paging: true,
                     lengthChange: true,
                     autoWidth: false,
-                    searching: false,
                     lengthMenu: [
                         [10, 25, 50, -1],
                         [10, 25, 50, 'All']
@@ -234,15 +239,15 @@
                     ],
                 });
 
-            // $("#product-table").on('click', '.show-bs-modal', function(){
-            //       let id = $(this).data("id");
-            //       let deleteModel = $("#modal-delete");
 
-            //       deleteModel.find('.modal-body p').text('Are you sure you want to delete the product');
-            //       $("#delete-id").val(id);
-            //       $("#delete-form").attr('action', '/admin/products/delete');
-            //       deleteModel.modal('show');
-            // });
+             // new DataTable('#product-table', {
+             //        layout: {
+             //            topStart: {
+             //                buttons: ['pageLength']
+             //            }
+             //        }
+             //    });
+
 
               $("#searchButton").on('click', function(){
                   $("#product-table").DataTable().ajax.reload(null, false);
