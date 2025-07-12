@@ -355,9 +355,12 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     }
                 }
 
-                var customerModel = _mapper.Map<CustomerModel>(customer);
+                if (customer != null)
+                {
+                    var customerModel = _mapper.Map<CustomerModel>(customer);
 
-                model.Customer = customerModel;
+                    model.Customer = customerModel;
+                }
 
                 return View(model);
             }
