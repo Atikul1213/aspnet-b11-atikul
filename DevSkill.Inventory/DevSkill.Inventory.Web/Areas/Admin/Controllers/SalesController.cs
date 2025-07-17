@@ -55,12 +55,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             model.SearchItem.DateFrom = new DateTime(2025, 1, 1);
             model.SearchItem.DateTo = new DateTime(2025, 1, 1);
             model.Status = EnumHelper.PrepareSelectList<SalesStatus>();
-            model.Status.Insert(0, new SelectListItem
-            {
-                Text = "Select Status",
-                Value = ""
-            });
-
             return View(model);
         }
 
@@ -72,46 +66,23 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             var products = await _mediator.Send(new GetProductListQuery());
 
             var customerSelectList = EnumHelper.PrepareSelectListFromEntities(customers, c => c.Id, c => c.Name);
-            customerSelectList.Insert(0, new SelectListItem
-            {
-                Text = "Select customer",
-                Value = Guid.Empty.ToString()
-            });
 
             model.Customers = customerSelectList;
 
             var productSelectList = EnumHelper.PrepareSelectListFromEntities(products, c => c.Id, c => c.Name);
-            productSelectList.Insert(0, new SelectListItem
-            {
-                Text = "Select product",
-                Value = Guid.Empty.ToString()
-            });
 
             var accountSelectList = new List<SelectListItem>();
-            accountSelectList.Insert(0, new SelectListItem
-            {
-                Text = "Select Account",
-                Value = Guid.Empty.ToString()
-            });
 
             model.Accounts = accountSelectList;
 
             model.Products = productSelectList;
 
             var salesTypeSelectList = EnumHelper.PrepareSelectList<SalesType>();
-            salesTypeSelectList.Insert(0, new SelectListItem
-            {
-                Text = "Select One",
-                Value = Guid.Empty.ToString()
-            });
+
             model.SalesTypes = salesTypeSelectList;
 
             var accountTypeSelectList = EnumHelper.PrepareSelectList<AccountType>();
-            accountTypeSelectList.Insert(0, new SelectListItem
-            {
-                Text = "Select One",
-                Value = Guid.Empty.ToString()
-            });
+
             model.AccountTypes = accountTypeSelectList;
 
             Random random = new Random();
@@ -222,23 +193,11 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 var customers = await _mediator.Send(new GetActiveCustomerListQuery());
                 var products = await _mediator.Send(new GetProductListQuery());
 
-
-
                 var customerSelectList = EnumHelper.PrepareSelectListFromEntities(customers, c => c.Id, c => c.Name);
-                customerSelectList.Insert(0, new SelectListItem
-                {
-                    Text = "Select customer",
-                    Value = Guid.Empty.ToString()
-                });
 
                 model.Customers = customerSelectList;
 
                 var productSelectList = EnumHelper.PrepareSelectListFromEntities(products, c => c.Id, c => c.Name);
-                productSelectList.Insert(0, new SelectListItem
-                {
-                    Text = "Select product",
-                    Value = Guid.Empty.ToString()
-                });
 
                 model.Products = productSelectList;
 
@@ -462,13 +421,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     result = EnumHelper.PrepareSelectListFromEntities(cashAccounts, b => b.Id, b => b.Name);
                     break;
             }
-
-            result.Insert(0, new SelectListItem()
-            {
-                Text = "Select Account No.",
-                Value = Guid.Empty.ToString()
-            });
-
             return result;
         }
 

@@ -18,6 +18,7 @@ using DevSkill.Inventory.Application.Features.Users.InventoryUsers.Commands;
 using DevSkill.Inventory.Application.Features.Users.Suppliers.Commands;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
+using DevSkill.Inventory.Infrastructure.Identity;
 using DevSkill.Inventory.Web.Areas.Admin.Models.BalanceTransfers;
 using DevSkill.Inventory.Web.Areas.Admin.Models.BankAccounts;
 using DevSkill.Inventory.Web.Areas.Admin.Models.CashAccounts;
@@ -95,6 +96,9 @@ namespace DevSkill.Inventory.Web
             CreateMap<UserRole, AddUserRoleModel>().ReverseMap();
             CreateMap<UserRole, UpdateUserRoleModel>().ReverseMap();
             CreateMap<UserRole, UserRoleModel>().ReverseMap();
+            CreateMap<ApplicationRole, UserRoleModel>().ReverseMap();
+            CreateMap<ApplicationRole, AddUserRoleModel>().ReverseMap();
+            CreateMap<ApplicationRole, UpdateUserRoleModel>().ReverseMap();
 
             #endregion
 

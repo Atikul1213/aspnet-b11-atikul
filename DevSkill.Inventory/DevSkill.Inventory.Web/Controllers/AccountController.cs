@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 
@@ -76,7 +77,7 @@ namespace DevSkill.Inventory.Web.Controllers
 
                 var age = DateTime.UtcNow.Subtract(model.DateOfBirth).TotalDays / 365;
 
-                //await _userManager.AddClaimAsync(user, new Claim("create_product", "allowed"));
+                await _userManager.AddClaimAsync(user, new Claim("registered", "registeredAllowed"));
                 // await _userManager.AddClaimAsync(user, new Claim("age", age.ToString()));
 
                 if (result.Succeeded)

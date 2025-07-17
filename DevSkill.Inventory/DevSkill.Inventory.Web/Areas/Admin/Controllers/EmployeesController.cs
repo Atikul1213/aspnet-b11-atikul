@@ -8,7 +8,6 @@ using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Employees;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Web;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
@@ -42,11 +41,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
             model.AddEmployeeModel.Status = EnumHelper.PrepareSelectList<Status>();
             var departmenSelecttList = EnumHelper.PrepareSelectListFromEntities(departments, d => d.Id, d => d.Name);
-            departmenSelecttList.Insert(0, new SelectListItem
-            {
-                Text = "Select One",
-                Value = Guid.Empty.ToString()
-            });
 
             model.AddEmployeeModel.StatusId = (int)Status.Active;
             model.AddEmployeeModel.JoiningDate = new DateTime(2025, 1, 1);

@@ -1,15 +1,23 @@
 ﻿using AutoMapper;
-using DevSkill.Inventory.Application.Features.Settings.UserRoles.Queries;
 using DevSkill.Inventory.Application.Features.Users.Employees.Queries;
 using DevSkill.Inventory.Application.Features.Users.InventoryUsers.Commands;
 using DevSkill.Inventory.Application.Features.Users.InventoryUsers.Queries;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Entities;
+using DevSkill.Inventory.Domain.Utilities;
 using DevSkill.Inventory.Infrastructure.Extensions;
+using DevSkill.Inventory.Infrastructure.Identity;
+using DevSkill.Inventory.Infrastructure.Utilities;
 using DevSkill.Inventory.Web.Areas.Admin.Models.InventoryUsers;
+using DevSkill.Inventory.Web.Models.IdentityModel;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Web;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
@@ -21,16 +29,33 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger<InventoryUsersController> _logger;
         private readonly IMediator _mediator;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserStore<ApplicationUser> _userStore;
+        private readonly IUserEmailStore<ApplicationUser> _emailStore;
+        private readonly IEmailUtility _emailUtility;
+        private readonly RoleManager<ApplicationRole> _roleManager;
         #endregion
 
         #region Ctor
         public InventoryUsersController(IMapper mapper,
             ILogger<InventoryUsersController> logger,
-            IMediator mediator)
+            IMediator mediator,
+            UserManager<ApplicationUser> userManager,
+            IUserStore<ApplicationUser> userStore,
+            SignInManager<ApplicationUser> signInManager,
+            IEmailUtility emailUtility,
+            RoleManager<ApplicationRole> roleManager)
         {
             _mapper = mapper;
             _logger = logger;
             _mediator = mediator;
+            _userManager = userManager;
+            _userStore = userStore;
+            _emailStore = IdentityHelper.GetEmailStore(userManager, userStore);
+            _signInManager = signInManager;
+            _emailUtility = emailUtility;
+            _roleManager = roleManager;
         }
         #endregion
 
@@ -39,21 +64,26 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             var model = new InventoryUserListModel();
 
+            //var users = await _userManager.Users.ToListAsync();
+            //var employeeSelecttList = users.Select(u => new SelectListItem
+            //{
+            //    Value = u.Id.ToString(),
+            //    Text = $"{u.FirstName} {u.LastName}"
+            //}).ToList();
+
+            var roles = await _roleManager.Roles.ToListAsync();
+
+            var userRoleSelecttList = roles.Select(r => new SelectListItem
+            {
+                Value = r.Id.ToString(),
+                Text = r.Name
+            }).ToList();
+
             var employees = await _mediator.Send(new GetAllEmployeesQuery());
             var employeeSelecttList = EnumHelper.PrepareSelectListFromEntities(employees, d => d.Id, d => d.Name);
-            employeeSelecttList.Insert(0, new SelectListItem
-            {
-                Text = "Select One",
-                Value = Guid.Empty.ToString()
-            });
 
-            var userRoles = await _mediator.Send(new GetUserRoleListQuery());
-            var userRoleSelecttList = EnumHelper.PrepareSelectListFromEntities(userRoles, d => d.Id, d => d.Name);
-            userRoleSelecttList.Insert(0, new SelectListItem
-            {
-                Text = "Select type",
-                Value = Guid.Empty.ToString()
-            });
+            //var userRoles = await _mediator.Send(new GetUserRoleListQuery());
+            //var userRoleSelecttList = EnumHelper.PrepareSelectListFromEntities(userRoles, d => d.Id, d => d.Name);
 
             model.AddInventoryUserModel.StatusId = (int)Status.Active;
             model.AddInventoryUserModel.Status = EnumHelper.PrepareSelectList<Status>();
@@ -77,15 +107,37 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 {
                     var inventoryUser = _mapper.Map<InventoryUserAddCommand>(model);
                     var employee = await _mediator.Send(new GetEmployeeByIdQuery(model.EmployeeId));
-                    var userRole = await _mediator.Send(new GetUserRoleByIdQuery(model.UserRoleId));
+                    //var userRole = await _mediator.Send(new GetUserRoleByIdQuery(model.UserRoleId));
 
-                    inventoryUser.EmployeeName = employee.Name;
-                    inventoryUser.Company = ((Company)userRole.CompanyId).ToString();
-                    inventoryUser.Email = employee.Email;
-                    inventoryUser.MobileNumber = employee.MobileNumber;
-                    inventoryUser.Role = userRole.Name;
+                    //var employee = await _userManager.FindByIdAsync(model.EmployeeId.ToString());
+                    var userRole = await _roleManager.FindByIdAsync(model.UserRoleId.ToString());
 
-                    await _mediator.Send(inventoryUser);
+                    var prevInventoryUser = await _mediator.Send(new GetInventoryUserByEmailQuery(employee.Email));
+
+                    if (prevInventoryUser == null)
+                    {
+                        inventoryUser.EmployeeName = employee.Name;
+                        inventoryUser.Company = userRole != null ? ((Company)userRole.CompanyId).ToString() : Company.BrainStation.ToString();
+                        inventoryUser.Email = employee.Email;
+                        inventoryUser.MobileNumber = employee.MobileNumber;
+                        inventoryUser.Role = userRole?.Name ?? string.Empty;
+
+                        await _mediator.Send(inventoryUser);
+                    }
+
+                    var registerModel = new RegisterModel
+                    {
+                        FirstName = employee.Name,
+                        LastName = employee.Name,
+                        Email = employee.Email,
+                        Password = model.Password,
+                        ConfirmPassword = model.Password,
+                        PhoneNumber = employee.MobileNumber,
+                        DateOfBirth = DateTime.UtcNow.AddYears(-18),
+
+                    };
+
+                    await RegisterUserAsync(registerModel, model.UserRoleId);
 
                     TempData["success"] = "InventoryUser created successfully.";
 
@@ -111,7 +163,10 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 {
                     var inventoryUser = _mapper.Map<InventoryUserUpdateCommand>(model);
                     var employee = await _mediator.Send(new GetEmployeeByIdQuery(model.EmployeeId));
-                    var userRole = await _mediator.Send(new GetUserRoleByIdQuery(model.UserRoleId));
+                    //var userRole = await _mediator.Send(new GetUserRoleByIdQuery(model.UserRoleId));
+
+                    var userRole = await _roleManager.FindByIdAsync(model.UserRoleId.ToString());
+                    var prevInventoryUser = await _mediator.Send(new GetInventoryUserByEmailQuery(employee.Email));
 
                     inventoryUser.EmployeeName = employee.Name;
                     inventoryUser.Company = ((Company)userRole.CompanyId).ToString();
@@ -119,8 +174,21 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     inventoryUser.MobileNumber = employee.MobileNumber;
                     inventoryUser.Role = userRole.Name;
 
-
                     await _mediator.Send(inventoryUser);
+
+                    var registerModel = new RegisterModel
+                    {
+                        FirstName = employee.Name,
+                        LastName = employee.Name,
+                        Email = employee.Email,
+                        Password = model.Password,
+                        ConfirmPassword = model.Password,
+                        PhoneNumber = employee.MobileNumber,
+                        DateOfBirth = DateTime.UtcNow.AddYears(-18),
+
+                    };
+
+                    await RegisterUserAsync(registerModel, model.UserRoleId);
                     TempData["success"] = "InventoryUser updated successfully.";
 
                     return RedirectToAction("Index");
@@ -196,6 +264,79 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return Json(inventoryUser);
         }
 
+
+        private async Task RegisterUserAsync(RegisterModel model, Guid userRoleId)
+        {
+            model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            if (ModelState.IsValid)
+            {
+                var user = IdentityHelper.CreateUser();
+
+                var preUser = await _userManager.FindByNameAsync(model.FirstName);
+
+                if (preUser == null)
+                {
+                    preUser = await _userManager.FindByEmailAsync(model.Email);
+                }
+
+                if (preUser == null)
+                {
+                    await _userStore.SetUserNameAsync(user, model.Email, CancellationToken.None);
+                    await _emailStore.SetEmailAsync(user, model.Email, CancellationToken.None);
+                    user.FirstName = model.FirstName;
+                    user.LastName = model.LastName;
+                    user.DateOfBirth = model.DateOfBirth;
+
+                    var result = await _userManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        var userId = await _userManager.GetUserIdAsync(user);
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                        var callbackUrl = Url.Action(
+                            "ConfirmEmail",
+                            "Account",
+                            values: new { area = "", userId = userId, code = code, returnUrl = model.ReturnUrl },
+                            protocol: Request.Scheme);
+
+                        _emailUtility.SendEmail(model.Email, $"{model.FirstName} {model.LastName}",
+                            "Confirm your email", $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                        //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                        //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    }
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+                else
+                {
+                    user = preUser;
+                }
+
+                if (userRoleId != Guid.Empty)
+                {
+                    var userRole = await _roleManager.FindByIdAsync(userRoleId.ToString());
+                    if (userRole != null)
+                    {
+                        var existRole = await _userManager.IsInRoleAsync(user, userRole.Name);
+
+                        if (!existRole)
+                        {
+                            await _userManager.AddToRoleAsync(user, userRole.Name);
+                        }
+                    }
+                }
+
+                //await _userManager.AddClaimAsync(user, new Claim("registered", "registeredAllowed"));
+                // await _userManager.AddClaimAsync(user, new Claim("age", age.ToString()));
+            }
+        }
+
         #endregion
+
     }
 }

@@ -12,6 +12,8 @@ namespace DevSkill.Inventory.Web.Models.IdentityModel
         [Required]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
+        public string PhoneNumber { get; set; }
+
 
         [Required]
         [Display(Name = "Date of Birth")]

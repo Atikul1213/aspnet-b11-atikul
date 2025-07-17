@@ -46,13 +46,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             var model = new BalanceTransferListModel();
 
-            var accountTypeSelectList = EnumHelper.PrepareSelectList<AccountType>();
-            accountTypeSelectList.Insert(0, new SelectListItem
-            {
-                Text = "Select One",
-                Value = Guid.Empty.ToString()
-            });
-            model.AddBalanceTransferModel.AccountTypes = accountTypeSelectList;
+            model.AddBalanceTransferModel.AccountTypes = EnumHelper.PrepareSelectList<AccountType>();
 
             return View(model);
         }

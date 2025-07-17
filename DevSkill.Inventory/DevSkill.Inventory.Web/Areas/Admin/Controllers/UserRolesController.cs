@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
-using DevSkill.Inventory.Application.Features.Settings.UserRoles.Commands;
-using DevSkill.Inventory.Application.Features.Settings.UserRoles.Queries;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Infrastructure.Extensions;
+using DevSkill.Inventory.Infrastructure.Identity;
 using DevSkill.Inventory.Web.Areas.Admin.Models.UserRole;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 {
@@ -16,24 +17,26 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger<UserRolesController> _logger;
         private readonly IMediator _mediator;
+        private readonly RoleManager<ApplicationRole> _roleManager;
         #endregion
 
         #region Ctor
         public UserRolesController(IMapper mapper,
             ILogger<UserRolesController> logger,
-            IMediator mediator)
+            IMediator mediator,
+            RoleManager<ApplicationRole> roleManager)
         {
             _mapper = mapper;
             _logger = logger;
             _mediator = mediator;
+            _roleManager = roleManager;
         }
         #endregion
 
         #region Index AddUserRole UpdateUserRole RemoveUserRole
         public async Task<IActionResult> Index()
         {
-            var getUserRoleListQuery = new GetUserRoleListQuery();
-            var userRoles = await _mediator.Send(getUserRoleListQuery);
+            var userRoles = await _roleManager.Roles.ToListAsync();
 
             var model = new UserRoleListModel();
             model.AddUserRoleModel.CompanyId = (int)Company.SunshineIt;
@@ -63,8 +66,11 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    var userRole = _mapper.Map<UserRoleAddCommand>(model);
-                    await _mediator.Send(userRole);
+                    var applicationRole = _mapper.Map<ApplicationRole>(model);
+                    applicationRole.NormalizedName = model.Name.ToUpperInvariant();
+                    applicationRole.ConcurrencyStamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+
+                    await _roleManager.CreateAsync(applicationRole);
 
                     TempData["success"] = "UserRole created successfully.";
 
@@ -88,9 +94,20 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    var userRole = _mapper.Map<UpdateUserRoleCommand>(model);
-                    await _mediator.Send(userRole);
-                    TempData["success"] = "UserRole updated successfully.";
+                    var prevRole = await _roleManager.FindByIdAsync(model.Id.ToString());
+
+                    if (prevRole is not null)
+                    {
+                        prevRole.Name = model.Name;
+                        prevRole.NormalizedName = model.Name.ToUpperInvariant();
+                        prevRole.StatusId = model.StatusId;
+                        prevRole.CompanyId = model.CompanyId;
+                        prevRole.ConcurrencyStamp = Guid.NewGuid().ToString();
+
+                        await _roleManager.UpdateAsync(prevRole);
+
+                        TempData["success"] = "UserRole updated successfully.";
+                    }
 
                     return RedirectToAction("Index");
                 }
@@ -109,8 +126,14 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             try
             {
-                var userRole = new UserRoleDeleteCommand(id);
-                await _mediator.Send(userRole);
+                var userRole = await _roleManager.FindByIdAsync(id.ToString());
+                if (userRole == null)
+                {
+                    TempData["error"] = "UserRole not found.";
+                    return RedirectToAction("Index");
+                }
+
+                await _roleManager.DeleteAsync(userRole);
 
                 TempData["success"] = "UserRole deleted successfully.";
             }

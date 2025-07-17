@@ -106,6 +106,7 @@ namespace DevSkill.Inventory.Application.Extensions
                 cfg.RegisterServicesFromAssembly(typeof(GetInventoryUserByIdQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetAllInventoryUsersQuery).Assembly);
                 cfg.RegisterServicesFromAssembly(typeof(GetAllActiveInventoryUsersQuery).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetInventoryUserByEmailQuery).Assembly);
 
 
                 cfg.RegisterServicesFromAssembly(typeof(CustomerAddCommand).Assembly);

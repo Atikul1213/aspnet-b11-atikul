@@ -44,16 +44,22 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
         {
             services.AddAuthorization(options =>
             {
+                options.AddPolicy("SuperAdminPermission", policy =>
+                {
+                    policy.RequireClaim("superAdmin", "superAdminAllowed");
+                });
+
+                options.AddPolicy("RegisteredPermission", policy =>
+                {
+                    policy.RequireClaim("registered", "registeredAllowed");
+                });
+
                 options.AddPolicy("CustomAccess", policy =>
                 {
                     policy.RequireRole("Admin");
                     policy.RequireRole("Registered");
                 });
 
-                options.AddPolicy("ProductAddPermission", policy =>
-                {
-                    policy.RequireClaim("create_product", "allowed");
-                });
 
                 options.AddPolicy("AgeRestriction", policy =>
                 {

@@ -17,7 +17,6 @@ using DevSkill.Inventory.Web.Extensions;
 using DevSkill.Inventory.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using System.Web;
 
@@ -25,7 +24,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     //[Authorize(Roles = "Admin, SuperAdmin")]
-    //[Authorize(Policy = "ProductAddPermission")]
+    //[Authorize(Policy = "AdministratorsPermission")]
 
     public class ProductsController : Controller
     {
@@ -69,23 +68,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             var categories = await _mediator.Send(new GetActiveCategoryListQuery());
             var units = await _mediator.Send(new GetActiveUnitListQuery());
 
-            var categorySelectList = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
-            categorySelectList.Insert(0, new SelectListItem
-            {
-                Text = "Select category",
-                Value = Guid.Empty.ToString()
-            });
+            model.AddProductModel.Categories = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
+            model.AddProductModel.Units = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
 
-            model.AddProductModel.Categories = categorySelectList;
-
-            var unitSelectList = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
-            unitSelectList.Insert(0, new SelectListItem
-            {
-                Text = "Select units",
-                Value = Guid.Empty.ToString()
-            });
-
-            model.AddProductModel.Units = unitSelectList;
             Random random = new Random();
             int threeDigitNumber = random.Next(100, 1000);
             model.AddProductModel.BarCode = $"P-SUN000{threeDigitNumber}";
@@ -191,21 +176,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 var categories = await _mediator.Send(new GetActiveCategoryListQuery());
                 var units = await _mediator.Send(new GetActiveUnitListQuery());
 
-                var categorySelectList = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
-                categorySelectList.Insert(0, new SelectListItem
-                {
-                    Text = "Select category",
-                    Value = Guid.Empty.ToString()
-                });
-                model.Categories = categorySelectList;
+                model.Categories = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
 
-                var unitSelectList = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
-                unitSelectList.Insert(0, new SelectListItem
-                {
-                    Text = "Select units",
-                    Value = Guid.Empty.ToString()
-                });
-                model.Units = unitSelectList;
+                model.Units = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
 
                 return View(model);
             }
@@ -263,21 +236,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             var categories = await _mediator.Send(new GetCategoryListQuery());
             var units = await _mediator.Send(new GetUnitListQuery());
 
-            var categorySelectList = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
-            categorySelectList.Insert(0, new SelectListItem
-            {
-                Text = "Select category",
-                Value = Guid.Empty.ToString()
-            });
 
-            model.Categories = categorySelectList;
-            var unitSelectList = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
-            unitSelectList.Insert(0, new SelectListItem
-            {
-                Text = "Select units",
-                Value = Guid.Empty.ToString()
-            });
-            model.Units = unitSelectList;
+            model.Categories = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
+            model.Units = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
 
             return View(model);
         }
