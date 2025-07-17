@@ -64,13 +64,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             var model = new InventoryUserListModel();
 
-            //var users = await _userManager.Users.ToListAsync();
-            //var employeeSelecttList = users.Select(u => new SelectListItem
-            //{
-            //    Value = u.Id.ToString(),
-            //    Text = $"{u.FirstName} {u.LastName}"
-            //}).ToList();
-
             var roles = await _roleManager.Roles.ToListAsync();
 
             var userRoleSelecttList = roles.Select(r => new SelectListItem
@@ -81,9 +74,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
             var employees = await _mediator.Send(new GetAllEmployeesQuery());
             var employeeSelecttList = EnumHelper.PrepareSelectListFromEntities(employees, d => d.Id, d => d.Name);
-
-            //var userRoles = await _mediator.Send(new GetUserRoleListQuery());
-            //var userRoleSelecttList = EnumHelper.PrepareSelectListFromEntities(userRoles, d => d.Id, d => d.Name);
 
             model.AddInventoryUserModel.StatusId = (int)Status.Active;
             model.AddInventoryUserModel.Status = EnumHelper.PrepareSelectList<Status>();
@@ -107,14 +97,14 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 {
                     var inventoryUser = _mapper.Map<InventoryUserAddCommand>(model);
                     var employee = await _mediator.Send(new GetEmployeeByIdQuery(model.EmployeeId));
-                    //var userRole = await _mediator.Send(new GetUserRoleByIdQuery(model.UserRoleId));
 
-                    //var employee = await _userManager.FindByIdAsync(model.EmployeeId.ToString());
                     var userRole = await _roleManager.FindByIdAsync(model.UserRoleId.ToString());
 
-                    var prevInventoryUser = await _mediator.Send(new GetInventoryUserByEmailQuery(employee.Email));
+                    var prevInventoryUsers = await _mediator.Send(new GetInventoryUserByEmailQuery(employee.Email));
 
-                    if (prevInventoryUser == null)
+                    var isExistRole = prevInventoryUsers.Where(x => x.Role.Contains(userRole.Name, StringComparison.InvariantCultureIgnoreCase)).Any();
+
+                    if (prevInventoryUsers.Count == 0 || !isExistRole)
                     {
                         inventoryUser.EmployeeName = employee.Name;
                         inventoryUser.Company = userRole != null ? ((Company)userRole.CompanyId).ToString() : Company.BrainStation.ToString();

@@ -12,6 +12,7 @@ using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Customers;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Sales;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Web;
@@ -19,6 +20,7 @@ using System.Web;
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class SalesController : Controller
     {
         #region Fields

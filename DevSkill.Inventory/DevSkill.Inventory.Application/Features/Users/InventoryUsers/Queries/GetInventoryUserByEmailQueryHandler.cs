@@ -4,7 +4,7 @@ using MediatR;
 
 namespace DevSkill.Inventory.Application.Features.Users.InventoryUsers.Queries
 {
-    public class GetInventoryUserByEmailQueryHandler : IRequestHandler<GetInventoryUserByEmailQuery, InventoryUser>
+    public class GetInventoryUserByEmailQueryHandler : IRequestHandler<GetInventoryUserByEmailQuery, IList<InventoryUser>>
     {
         #region Fields
         private readonly IApplicationUnitOfWork _applicationUnitOfWork;
@@ -18,7 +18,7 @@ namespace DevSkill.Inventory.Application.Features.Users.InventoryUsers.Queries
         #endregion
 
         #region Methods
-        public async Task<InventoryUser> Handle(GetInventoryUserByEmailQuery request, CancellationToken cancellationToken)
+        public async Task<IList<InventoryUser>> Handle(GetInventoryUserByEmailQuery request, CancellationToken cancellationToken)
         {
             var inventoryUser = await _applicationUnitOfWork.InventoryUserRepository.GetAllWithFilterAsync(x => x.Email == request.Email);
 
@@ -27,7 +27,7 @@ namespace DevSkill.Inventory.Application.Features.Users.InventoryUsers.Queries
                 return null;
             }
 
-            return inventoryUser.FirstOrDefault();
+            return inventoryUser;
         }
         #endregion
     }
