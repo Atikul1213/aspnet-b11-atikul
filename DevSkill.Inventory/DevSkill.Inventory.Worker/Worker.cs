@@ -10,10 +10,15 @@ namespace DevSkill.Inventory.Worker
 {
     public class Worker : BackgroundService
     {
+        #region Fields
+
         private readonly ILogger<Worker> _logger;
         private readonly IApplicationUnitOfWork _applicationUnitOfWork;
         private readonly AwsOptions _awsOptions;
 
+        #endregion
+
+        #region Ctor
         public Worker(ILogger<Worker> logger,
             IOptions<AwsOptions> awsOptions,
             IApplicationUnitOfWork applicationUnitOfWork)
@@ -22,6 +27,10 @@ namespace DevSkill.Inventory.Worker
             _applicationUnitOfWork = applicationUnitOfWork;
             _awsOptions = awsOptions.Value;
         }
+
+        #endregion
+
+        #region Methods
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -40,7 +49,7 @@ namespace DevSkill.Inventory.Worker
 
                     var request = new ReceiveMessageRequest
                     {
-                        QueueUrl = "https://sqs.us-east-1.amazonaws.com/424557340333/aspnet-b11-queue",
+                        QueueUrl = "https://sqs.us-east-1.amazonaws.com/847888492411/aspnetb11",
                         AttributeNames = attributeNames,
                         MaxNumberOfMessages = maxNumberOfMessages,
                         VisibilityTimeout = visibilityTimeout,
@@ -100,7 +109,7 @@ namespace DevSkill.Inventory.Worker
 
                                 var delRequest = new DeleteMessageRequest
                                 {
-                                    QueueUrl = "https://sqs.us-east-1.amazonaws.com/424557340333/aspnet-b11-queue",
+                                    QueueUrl = "https://sqs.us-east-1.amazonaws.com/847888492411/aspnetb11",
                                     ReceiptHandle = message.ReceiptHandle,
                                 };
 
@@ -122,5 +131,7 @@ namespace DevSkill.Inventory.Worker
                 await Task.Delay(1000 * 60 * 5, stoppingToken);
             }
         }
+
+        #endregion
     }
 }

@@ -294,12 +294,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     break;
             }
 
-            result.Insert(0, new SelectListItem()
-            {
-                Text = "Select Account No.",
-                Value = Guid.Empty.ToString()
-            });
-
             return result;
         }
 

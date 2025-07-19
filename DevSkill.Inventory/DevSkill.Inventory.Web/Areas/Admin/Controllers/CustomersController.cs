@@ -73,6 +73,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                         model.ImageUrl = Path.Combine(@"/images/customers", fileName);
                     }
 
+                    model.CurrentBalance = model.OpeningBalance;
                     var customer = _mapper.Map<CustomerAddCommand>(model);
                     await _mediator.Send(customer);
 
@@ -191,7 +192,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                                 HttpUtility.HtmlEncode(record.MobileNumber),
                                 HttpUtility.HtmlEncode(record.Address),
                                 HttpUtility.HtmlEncode(record.Email),
-                                HttpUtility.HtmlEncode(record.OpeningBalance),
+                                HttpUtility.HtmlEncode(record.CurrentBalance),
                                 HttpUtility.HtmlEncode(((Status)record.StatusId).ToString()),
                                 record.Id.ToString()
                             }).ToArray()
