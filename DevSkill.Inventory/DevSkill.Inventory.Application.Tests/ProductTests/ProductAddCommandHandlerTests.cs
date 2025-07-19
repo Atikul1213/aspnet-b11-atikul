@@ -113,40 +113,6 @@ public class ProductAddCommandHandlerTests
         _applicationUnitOfWorkMock.Verify(u => u.SaveAsync(), Times.Once);
 
 
-        //var product = _mapperMock.Object.Map<Product>(command);
-
-        //var product = new Product
-        //{
-        //    Name = "Test Product",
-        //    BarCode = "P-SUN000207",
-        //    CategoryId = new Guid(),
-        //    CategoryName = "",
-        //    UnitId = new Guid(),
-        //    BarcodeImagePath = "",
-        //    MRPPrice = 100.00m,
-        //    WholeSalePrice = 90.00m,
-        //    PurchasePrice = 80.00m,
-        //    Stock = 50,
-        //    LowStock = 10,
-        //    DamageStock = 5,
-        //    ImageUrl = ""
-        //};
-
-        //_applicationUnitOfWorkMock.SetupGet(p => p.ProductRepository).Returns(_productRepositoryMock.Object);
-
-        //_productRepositoryMock.Setup(p => p.CheckBarCodeDuplicateAsync(product.BarCode, null))
-        //   .ReturnsAsync(false).Verifiable();
-
-        //_productRepositoryMock.Setup(p => p.AddAsync(product)).Verifiable();
-        //_applicationUnitOfWorkMock.Setup(p => p.SaveAsync()).Verifiable();
-
-
-        //_applicationUnitOfWorkMock.Object.ProductRepository.AddAsync(product);
-
-        //this.ShouldSatisfyAllConditions(
-        //        _productRepositoryMock.VerifyAll,
-        //        _applicationUnitOfWorkMock.VerifyAll
-        //    );
     }
 
     [Test]
