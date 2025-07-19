@@ -97,8 +97,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
 
-        [Authorize(Roles = "Admin")]
-
         [HttpPost]
         public async Task<IActionResult> GetCQRSBalanceTransferJsonData([FromBody] GetBalanceTransferListQuery model)
         {
