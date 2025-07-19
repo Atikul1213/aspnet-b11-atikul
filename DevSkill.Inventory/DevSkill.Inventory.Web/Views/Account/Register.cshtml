@@ -30,6 +30,11 @@
                 <label asp-for="Email">Email</label>
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+            <div class="form-floating mb-3">
+                <input asp-for="PhoneNumber" class="form-control" autocomplete="phoneNumber" aria-required="true" placeholder="Enter your phone number" />
+                <label asp-for="PhoneNumber">PhoneNumber</label>
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
 
             <div class="form-floating mb-3">
                 <input asp-for="DateOfBirth" type="datetime" class="form-control" autocomplete="dateofbirth" aria-required="true" placeholder="Enter your date of birth" />

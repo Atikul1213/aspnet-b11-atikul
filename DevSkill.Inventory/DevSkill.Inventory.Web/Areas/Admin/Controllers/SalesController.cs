@@ -50,6 +50,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
         #region SalesIndex / AddSales / UpdateSales / ShowSales / DeleteSales
 
+        [Authorize(Roles = "Admin,Registered")]
         public async Task<IActionResult> SalesIndex()
         {
             var model = new SalesListModel();
@@ -60,6 +61,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddSales()
         {
             var model = new AddSalesModel();
@@ -98,6 +101,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddSales(AddSalesModel model)
         {
             try
@@ -171,6 +175,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return RedirectToAction("SalesIndex");
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateSales(Guid id)
         {
             try
@@ -219,6 +224,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateSales(UpdateSalesModel model)
         {
@@ -294,6 +300,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return RedirectToAction("SalesIndex");
         }
 
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ShowSales(Guid id)
         {
             try
@@ -335,6 +343,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteSales(Guid id)
         {

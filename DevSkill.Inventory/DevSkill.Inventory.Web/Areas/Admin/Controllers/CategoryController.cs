@@ -5,6 +5,7 @@ using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Category;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
@@ -30,6 +31,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         #endregion
 
         #region Index AddCategory UpdateCategory RemoveCategory
+
+        [Authorize(Roles = "Admin,Registered")]
         public async Task<IActionResult> Index()
         {
             var getCategoryListQuery = new GetCategoryListQuery();
@@ -54,6 +57,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddCategory(AddCategoryModel model)
         {
@@ -79,6 +83,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
+
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCategory(UpdateCategoryModel model)
         {
@@ -103,6 +109,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveCategory(Guid id)
         {
             try

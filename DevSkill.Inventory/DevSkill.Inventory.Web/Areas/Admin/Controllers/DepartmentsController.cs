@@ -5,6 +5,7 @@ using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Department;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
@@ -30,6 +31,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         #endregion
 
         #region Index AddDepartment UpdateDepartment RemoveDepartment
+
+        [Authorize(Roles = "Admin,Registered")]
         public async Task<IActionResult> Index()
         {
             var getDepartmentListQuery = new GetDepartmentListQuery();
@@ -54,6 +57,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddDepartment(AddDepartmentModel model)
         {
@@ -79,6 +83,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateDepartment(UpdateDepartmentModel model)
         {
@@ -103,6 +108,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveDepartment(Guid id)
         {
             try

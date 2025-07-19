@@ -5,6 +5,7 @@ using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.CashAccounts;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
@@ -30,6 +31,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         #endregion
 
         #region Index AddCashAccount UpdateCashAccount RemoveCashAccount
+
+        [Authorize(Roles = "Admin,Registered")]
         public async Task<IActionResult> Index()
         {
             var getCashAccountListQuery = new GetCashAccountListQuery();
@@ -52,6 +55,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+
+
+        [Authorize(Roles = "Admin")]
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddCashAccount(AddCashAccountModel model)
@@ -80,6 +86,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         [HttpPost, ValidateAntiForgeryToken]
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCashAccount(UpdateCashAccountModel model)
         {
             if (ModelState.IsValid)
@@ -103,6 +111,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveCashAccount(Guid id)
         {
             try

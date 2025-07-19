@@ -11,6 +11,7 @@ using DevSkill.Inventory.Infrastructure.Utilities;
 using DevSkill.Inventory.Web.Areas.Admin.Models.InventoryUsers;
 using DevSkill.Inventory.Web.Models.IdentityModel;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -60,6 +61,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         #endregion
 
         #region Index AddInventoryUser UpdateInventoryUser RemoveInventoryUser
+
+        [Authorize(Roles = "Admin,Registered")]
         public async Task<IActionResult> Index()
         {
             var model = new InventoryUserListModel();
@@ -88,6 +91,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddInventoryUser(AddInventoryUserModel model)
         {
@@ -145,6 +149,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateInventoryUser(UpdateInventoryUserModel model)
         {
             if (ModelState.IsValid)
@@ -194,6 +199,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveInventoryUser(Guid id)
         {
             try

@@ -5,6 +5,7 @@ using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.BankAccounts;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
@@ -34,6 +35,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         #endregion
 
         #region Index AddBankAccount UpdateBankAccount RemoveBankAccount
+
+        [Authorize(Roles = "Admin,Registered")]
         public async Task<IActionResult> Index()
         {
             var getBankAccountListQuery = new GetBankAccountListQuery();
@@ -57,6 +60,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+
+        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddBankAccount(AddBankAccountModel model)
         {
@@ -83,6 +88,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
+
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateBankAccount(UpdateBankAccountModel model)
         {
@@ -107,6 +114,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveBankAccount(Guid id)
         {
             try

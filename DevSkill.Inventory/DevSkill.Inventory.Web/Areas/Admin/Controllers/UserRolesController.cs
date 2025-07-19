@@ -4,6 +4,7 @@ using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Infrastructure.Identity;
 using DevSkill.Inventory.Web.Areas.Admin.Models.UserRole;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         #endregion
 
         #region Index AddUserRole UpdateUserRole RemoveUserRole
+
+        [Authorize(Roles = "Admin,Registered")]
         public async Task<IActionResult> Index()
         {
             var userRoles = await _roleManager.Roles.ToListAsync();
@@ -58,7 +61,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddUserRole(AddUserRoleModel model)
         {
@@ -87,6 +90,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateUserRole(UpdateUserRoleModel model)
         {
@@ -122,6 +126,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveUserRole(Guid id)
         {
             try

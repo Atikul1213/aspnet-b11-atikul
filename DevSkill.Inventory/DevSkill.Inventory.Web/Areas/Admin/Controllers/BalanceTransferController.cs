@@ -9,6 +9,7 @@ using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.BalanceTransfers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Web;
@@ -42,6 +43,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         #endregion
 
         #region Index AddBalanceTransfer RemoveBalanceTransfer
+
+        [Authorize(Roles = "Admin,Registered")]
         public async Task<IActionResult> Index()
         {
             var model = new BalanceTransferListModel();
@@ -52,6 +55,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddBalanceTransfer(AddBalanceTransferModel model)
         {
@@ -90,6 +94,10 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+
+        [Authorize(Roles = "Admin")]
 
         [HttpPost]
         public async Task<IActionResult> GetCQRSBalanceTransferJsonData([FromBody] GetBalanceTransferListQuery model)
@@ -238,6 +246,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveBalanceTransfer(Guid id)
         {
             try

@@ -6,7 +6,6 @@ using DevSkill.Inventory.Infrastructure.Identity;
 using DevSkill.Inventory.Infrastructure.Utilities;
 using DevSkill.Inventory.Web.Areas.Admin.Models.UserModel;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,7 +14,6 @@ using Microsoft.EntityFrameworkCore;
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         #region Fields

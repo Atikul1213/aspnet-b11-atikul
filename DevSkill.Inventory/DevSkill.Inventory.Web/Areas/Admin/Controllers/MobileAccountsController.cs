@@ -5,6 +5,7 @@ using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.MobileAccount;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
@@ -34,6 +35,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         #endregion
 
         #region Index AddMobileAccount UpdateMobileAccount RemoveMobileAccount
+
+        [Authorize(Roles = "Admin,Registered")]
         public async Task<IActionResult> Index()
         {
             var getMobileAccountListQuery = new GetMobileAccountListQuery();
@@ -56,6 +59,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+
+        [Authorize(Roles = "Admin")]
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddMobileAccount(AddMobileAccountModel model)
@@ -83,6 +88,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
+
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateMobileAccount(UpdateMobileAccountModel model)
         {
@@ -107,6 +114,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveMobileAccount(Guid id)
         {
             try

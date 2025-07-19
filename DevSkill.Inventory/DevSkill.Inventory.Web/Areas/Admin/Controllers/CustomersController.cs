@@ -6,6 +6,7 @@ using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Customers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Web;
 
@@ -35,6 +36,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         #endregion
 
         #region Index AddCustomer UpdateCustomer RemoveCustomer
+
+        [Authorize(Roles = "Admin,Registered")]
         public async Task<IActionResult> Index()
         {
             var model = new CustomerListModel();
@@ -47,6 +50,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddCustomer(AddCustomerModel model, IFormFile? file)
         {
@@ -87,6 +91,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCustomer(UpdateCustomerModel model, IFormFile? file)
         {
@@ -123,6 +128,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ShowCustomer(Guid id)
         {
             try
@@ -148,7 +154,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
 
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveCustomer(Guid id)
         {
             try

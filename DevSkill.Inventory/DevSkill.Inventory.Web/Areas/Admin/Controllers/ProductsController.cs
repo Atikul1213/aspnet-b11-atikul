@@ -16,6 +16,7 @@ using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
 using DevSkill.Inventory.Web.Extensions;
 using DevSkill.Inventory.Web.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Web;
@@ -61,6 +62,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
         #region Product IndexSP AddProduct UpdateProduct DeleteProduct GetCQRSProductSPJsonData
 
+        [Authorize(Roles = "Admin,Registered")]
         public async Task<IActionResult> IndexSP()
         {
             var model = new ProductListModel();
@@ -80,6 +82,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddProduct(AddProductModel model, IFormFile? file)
         {
             var fullPath = string.Empty;
@@ -163,6 +166,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             var result = await AWSManager.SendMessage(client, _awsOptions.SQSUrl, body, messageAttributes);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProduct(Guid id)
         {
             try
@@ -192,6 +196,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProduct(UpdateProductModel model, IFormFile? file)
         {
@@ -243,6 +248,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             try
