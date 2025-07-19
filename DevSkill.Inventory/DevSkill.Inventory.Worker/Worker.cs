@@ -74,7 +74,7 @@ namespace DevSkill.Inventory.Worker
                                             var key = Path.GetFileName(filePath);
                                             var uploadRequest = new PutObjectRequest
                                             {
-                                                BucketName = "products-asp-net-b11",
+                                                BucketName = "aspnetb11",
                                                 Key = $"products/{key}",
                                                 InputStream = fileStream,
                                                 ContentType = "image/jpeg",
