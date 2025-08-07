@@ -1,0 +1,137 @@
+﻿@model UserRoleListModel
+
+@{
+    ViewData["Title"] = "User Role";
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0 fw-bold">User Role</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">User Role</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-8">
+                <div class="card">
+                    <div class="card-header bg-info"><h3 class="card-title fw-bold">User Role</h3></div>
+
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="userRole-table" class="table table-bordered p-3 text-center table-hover">
+                            <thead>
+                                <tr class="table-primary">
+                                    <th class="text-center">#SN.</th>
+                                    <th class="text-center">User Role</th>
+                                    <th class="text-center">Company</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Check if there are any userRole to display -->
+                                @if (Model.UserRoles.Any())
+                                {
+                                    <!-- Loop through each userRole in the model's userRole list -->
+                                    var idx = 1;
+                                    @foreach (var userRole in Model.UserRoles)
+                                    {
+                                        var rowClass = (idx % 2 == 0) ? "table-info" : "table-success";
+                                        <tr class="@rowClass">
+                                            <td class="text-center">@idx</td>
+                                            <td class="text-center">@userRole.Name</td>
+                                            <td class="text-center">@userRole.Company</td>
+                                            <td class="text-center">@userRole.Status</td>
+                                            <td class="text-center">
+                                                <div class="w-75 btn-group" role="group">
+                                                    <a data-id="@userRole.Id" data-name="@userRole.Name" data-statusid="@userRole.StatusId" data-companyId="@userRole.CompanyId"
+                                                       data-toggle="modal" data-target="#update-userRole" class="btn btn-primary btn-edit-userRole"><i class="bi bi-pencil-fill"></i></a>
+
+                                                    <a asp-area="Admin" asp-controller="UserRoles" asp-action="RemoveUserRole" asp-route-id="@userRole.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        idx++;
+                                    }
+                                    @Html.Partial("_UpdateUserRoleInfo", Model.UpdateUserRoleModel)
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">😞 No userRole found.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-primary">
+                                    <th class="text-center">#SN.</th>
+                                    <th class="text-center">User Role</th>
+                                    <th class="text-center">Company</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+
+                </div>
+                <!-- /.card -->
+            </div>
+            <div class="col-4  card">
+                <div class="card-header"><h3 class="card-title fw-bold">User Role Information</h3></div>
+                @Html.Partial("_UserRoleInfo", Model.AddUserRoleModel)
+                <div class="card-body">
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Handle Edit Category button click
+            $(".btn-edit-userRole").on("click", function () {
+                const id = $(this).data("id");
+                const name = $(this).data("name");
+                const statusId = $(this).data("statusid");
+                const companyId = $(this).data("companyid");
+                console.log("companyId: ", companyId);
+
+                $("#Id").val(id);
+                $("#Name").val(name);
+                $("#statusId").val(statusId);
+                $("#companyId").val(companyId);
+
+                $("#update-userRole").modal("show");
+            });
+        });
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

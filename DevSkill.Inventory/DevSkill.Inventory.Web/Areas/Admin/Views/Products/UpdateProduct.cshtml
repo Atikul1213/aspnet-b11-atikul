@@ -1,0 +1,153 @@
+﻿@model UpdateProductModel
+
+@{
+    ViewData["Title"] = "Product";
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Product</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Product</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+        <a class="btn btn-primary" asp-area="Admin" asp-controller="Products" asp-action="IndexSP">
+            Back to product list
+        </a>
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row g-4">
+            <!--begin::Col-->
+            <div class="col-md-12">
+                <!--begin::Quick Example-->
+                <div class="card card-primary card-outline mb-4">
+                    <!--begin::Header-->
+                    <div class="card-header"><div class="card-title">Update Product</div></div>
+                    <!--end::Header-->
+                     <!--begin::Form-->
+                    <form asp-area="Admin" asp-controller="Products" asp-action="UpdateProduct" asp-antiforgery="true" method="post" enctype="multipart/form-data">
+                        <!--begin::Body-->
+                        <div style="background-color:#738199;" class="card-body  p-3  text-white">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="row">
+                                    <div class="col-6">
+                                        <input asp-for="Id" hidden />
+                                        <input asp-for="Stock" hidden />
+                                        <input asp-for="BarcodeImagePath" hidden />
+                                        <input asp-for="ImageUrl" hidden />
+                                        <div class="mb-3">
+                                            <label asp-for="BarCode" class="form-label fw-bold">Product Code </label>
+                                            <input type="text" class="form-control" asp-for="BarCode" id="BarCode" placeholder="Product code" aria-describedby="titleHelp" />
+                                            <span asp-validation-for="BarCode" class="text-danger"></span>
+                                            <div id="titleHelp" class="form-text"> </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label asp-for="CategoryId" class="form-label fw-bold">Category</label>
+                                            <select class="form-select" asp-for="CategoryId" asp-items="Model.Categories" id="CategoryId" required>
+                                            </select>
+                                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label asp-for="PurchasePrice" class="form-label fw-bold">Purchase price</label>
+                                            <input type="text" class="form-control" asp-for="PurchasePrice" id="PurchasePrice" placeholder="Purchase price" aria-describedby="titleHelp" />
+                                            <span asp-validation-for="PurchasePrice" class="text-danger"></span>
+                                            <div id="titleHelp" class="form-text"> </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label asp-for="WholeSalePrice" class="form-label fw-bold">Whole sale Price</label>
+                                            <input type="text" class="form-control" asp-for="WholeSalePrice" id="WholeSalePrice" placeholder="Whole salse price" aria-describedby="titleHelp" />
+                                            <span asp-validation-for="WholeSalePrice" class="text-danger"></span>
+                                            <div id="titleHelp" class="form-text"> </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label asp-for="ImageUrl" class="form-label fw-bold">Product Image</label>
+                                            <input type="file" class="form-control" name="file" asp-for="ImageUrl" id="ImageUrl" aria-describedby="titleHelp" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <label asp-for="Name" class="form-label fw-bold">Product Name </label>
+                                            <input type="text" class="form-control" asp-for="Name" id="Name" placeholder="Product Name" aria-describedby="titleHelp" />
+                                            <span asp-validation-for="Name" class="text-danger"></span>
+                                            <div id="titleHelp" class="form-text"> </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label asp-for="UnitId" class="form-label fw-bold">Unit</label>
+                                            <select class="form-select" asp-for="UnitId" asp-items="Model.Units" id="UnitId" required>
+                                            </select>
+                                            <span asp-validation-for="UnitId" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label asp-for="MRPPrice" class="form-label fw-bold">MRP Price</label>
+                                            <input type="text" class="form-control" asp-for="MRPPrice" id="MRPPrice" placeholder="MRP price" aria-describedby="titleHelp" />
+                                            <span asp-validation-for="MRPPrice" class="text-danger"></span>
+                                            <div id="titleHelp" class="form-text"> </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label asp-for="LowStock" class="form-label fw-bold">Low Stock</label>
+                                            <input type="text" class="form-control" asp-for="LowStock" id="LowStock" placeholder="Low stock" aria-describedby="titleHelp" />
+                                            <span asp-validation-for="LowStock" class="text-danger"></span>
+                                            <div id="titleHelp" class="form-text"> </div>
+                                        </div>
+                                    </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                                    {
+                                        <img src="@Url.Content(Model.ImageUrl)" alt="Customer Image"
+                                             class="img-thumbnail"
+                                             style="width: 350px; height: 350px; object-fit: cover; border-radius: 50%;" />
+
+                                        <div class="text-center fw-bold m-3">@Model.Name</div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model.BarcodeImagePath))
+                                    {
+                                        <img src="@Url.Content(Model.BarcodeImagePath)" alt="Customer Image"
+                                             class="img-thumbnail"/>
+                                    }
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--end::Body-->
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button type="submit" class="btn btn-primary text-center">Submit</button>
+                        </div>
+                    </form>
+                    <!--end::Form--> 
+                </div>
+                <!--end::Quick Example-->
+
+            </div>
+            <!--end::Col-->
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

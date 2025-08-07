@@ -1,0 +1,134 @@
+﻿@model UnitListModel
+
+@{
+    ViewData["Title"] = "Unit";
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0 fw-bold">Units</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Unit</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-8">
+                <div class="card">
+                    <div class="card-header bg-info"><h3 class="card-title  fw-bold">Unit List</h3></div>
+
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="unit-table" class="table table-bordered p-3 text-center table-hover">
+                            <thead>
+                                <tr class="table-primary">
+                                    <th class="text-center">#SN.</th>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Created Date</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Check if there are any unit to display -->
+                                @if (Model.Units.Any())
+                                {
+                                    <!-- Loop through each unit in the model's unit list -->
+                                    var idx = 1;
+                                    @foreach (var unit in Model.Units)
+                                    {
+                                        var rowClass = (idx % 2 == 0) ? "table-info" : "table-success";
+                                        <tr class="@rowClass">
+                                            <td class="text-center">@idx</td>
+                                            <td class="text-center">@unit.Name</td>
+                                            <td class="text-center">@unit.Status</td>
+                                            <td class="text-center">@unit.CreateOnUtc</td>
+                                            <td class="text-center">
+                                                <div class="w-75 btn-group" role="group">
+                                                    <a data-id="@unit.Id" data-name="@unit.Name" data-statusid="@unit.StatusId"
+                                                       data-toggle="modal" data-target="#update-unit" class="btn btn-primary btn-edit-unit"><i class="bi bi-pencil-fill"></i></a>
+
+                                                    <a asp-area="Admin" asp-controller="Units" asp-action="RemoveUnit" asp-route-id="@unit.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        idx++;
+                                    }
+                                    @Html.Partial("_UpdateUnitInfo", Model.UpdateUnitModel)
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">😞 No unit found.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-primary">
+                                    <th class="text-center">#SN.</th>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Created Date</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+
+                </div>
+                <!-- /.card -->
+            </div>
+            <div class="col-4  card">
+                <div class="card-header"><h3 class="card-title fw-bold">Unit Information</h3></div>
+                @Html.Partial("_UnitInfo", Model.AddUnitModel)
+                <div class="card-body">
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Handle Edit Category button click
+            $(".btn-edit-unit").on("click", function () {
+                const id = $(this).data("id");
+                const name = $(this).data("name");
+                const statusId = $(this).data("statusid");
+
+                $("#Id").val(id);
+                $("#Name").val(name);
+                $("#statusId").val(statusId);
+
+                $("#update-unit").modal("show");
+            });
+        });
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

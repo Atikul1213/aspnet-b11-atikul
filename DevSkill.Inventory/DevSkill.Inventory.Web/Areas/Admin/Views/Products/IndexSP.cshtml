@@ -1,0 +1,268 @@
+﻿@model ProductListModel
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.min.css">
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Product Table</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Product Tables</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-6  fw-bold"><div>Search Product</div></div>
+                        <div class="col-md-6 text-end">
+                            <button type="button" class="btn btn-primary btn-add-product">
+                                <i class="bi bi-bookmark-plus-fill"></i> New Product
+                            </button>
+                        </div>
+                    </div>
+                    @* <h3 class="card-title"><i class="fas fa-search mr-1"></i>Search Product</h3> *@
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <!-- /.card-tools -->
+                </div>
+                <!-- /.card-header -->
+                <div style="background-color:#738199;" class="card-body  p-3 text-white">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" asp-for="SearchItem.Name" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Bar code</label>
+                                <input type="text" asp-for="SearchItem.BarCode" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Category</label>
+                                <input type="text" asp-for="SearchItem.Category" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>MRP From</label>
+                                <input type="number" asp-for="SearchItem.MRPFrom" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>MRP To</label>
+                                <input type="number" asp-for="SearchItem.MRPTo" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Stock From</label>
+                                <input type="number" asp-for="SearchItem.StockFrom" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Stock To</label>
+                                <input type="number" asp-for="SearchItem.StockTo" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <button id="searchButton" type="submit" class="btn btn-primary float-right">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title">Available Products</h3></div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        @* <partial name="_ModalPartial" /> *@
+                        <table id="product-table" class="table table-bordered p-3 text-center table-hover">
+                            <thead>
+                                <tr class="table-primary">
+                                    <th>Image</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Purchase</th>
+                                    <th>MRP</th>
+                                    <th>Wholesale</th>
+                                    <th>Stock</th>
+                                    <th>Low Stock</th>
+                                    <th>Damage Stock</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-primary">
+                                     <th>Image</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Purchase</th>
+                                    <th>MRP</th>
+                                    <th>Wholesale</th>
+                                    <th>Stock</th>
+                                    <th>Low Stock</th>
+                                    <th>Damage Stock</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+
+                </div>
+                <!-- /.card -->
+                @Html.Partial("_ProductInfo", Model.AddProductModel)
+            </div>
+            <!-- /.col -->
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+
+@section Scripts {
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
+        <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+
+
+
+        @* <script src="https://cdn.datatables.net/buttons/3.2.4/js/dataTables.buttons.js"></script> *@
+ 
+        <script>
+           $(function(){
+                $("#product-table").DataTable({
+                    processing: true,
+                    serverSide: true,
+                    responsive: true,
+                    searching: false,
+                    // paging: true,
+                    lengthChange: true,
+                    autoWidth: false,
+                    lengthMenu: [
+                        [10, 25, 50, -1],
+                        [10, 25, 50, 'All']
+                    ],
+                    dom: `Bfrtip`,
+                    buttons: [
+                         'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
+
+                    ajax: {
+                      url: '@Url.Action("GetCQRSProductSPJsonData", "Products")',
+                         type: 'POST',
+                         contentType: "application/json",
+                         datatype: 'json',
+                         data: function (d) {
+                             d.SearchItem = {
+                                Name: $("#SearchItem_Name").val(),
+                                BarCode: $("#SearchItem_BarCode").val(),
+                                Category: $("#SearchItem_Category").val(),
+                                MRPFrom: $("#SearchItem_MRPFrom").val() == "" ? null : $("#SearchItem_MRPFrom").val(),
+                                MRPTo: $("#SearchItem_MRPTo").val() == "" ? null : $("#SearchItem_MRPTo").val(),
+                                StockFrom: $("#SearchItem_StockFrom").val() == "" ? null : $("#SearchItem_StockFrom").val(),
+                                StockTo: $("#SearchItem_StockTo").val() == "" ? null : $("#SearchItem_StockTo").val()
+                             };
+                             return JSON.stringify(d);
+                         }
+                    },
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            orderable: false,
+                            render: function (data, type, row) {
+                                return `<img src="${data}" alt="Product Image" width="80" height="80" style="object-fit: contain;" />`;
+                            }
+                        },
+                        {
+                            orderable: false,
+                            targets: 10,
+                            render: function(data, type, row){
+                                 return `<a href="/Admin/Products/UpdateProduct/${data}" data-id="${data}"   value='${data}' class="btn btn-primary">
+                                             <i class="bi bi-pencil-fill"></i></a>
+
+                                    <a href="/Admin/Products/DeleteProduct/${data}"  value='${data}' class="btn btn-danger">
+                                             <i class="bi bi-trash-fill"></i></a>`;
+                            }
+                        }
+                    ],
+                });
+
+
+             // new DataTable('#product-table', {
+             //        layout: {
+             //            topStart: {
+             //                buttons: ['pageLength']
+             //            }
+             //        }
+             //    });
+
+
+              $("#searchButton").on('click', function(){
+                  $("#product-table").DataTable().ajax.reload(null, false);
+              });
+
+           });
+
+        </script>
+
+    <script>
+        $(document).ready(function () {
+            // Handle Edit product button click
+            $(".btn-add-product").on("click", function () {
+                $("#add-product-modal").modal("show");
+            });
+        });
+    </script>
+}

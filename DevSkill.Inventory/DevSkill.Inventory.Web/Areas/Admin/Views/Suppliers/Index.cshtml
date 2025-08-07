@@ -1,0 +1,200 @@
+﻿@model SupplierListModel
+
+@{
+    ViewData["Title"] = "Supplier";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.min.css">
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0 fw-bold">Supplier</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Supplier</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="row">
+                <div class="card">
+                    <div class="card-header bg-info">
+                    <div class="row">
+                            <div class="col-md-6  fw-bold"><div>Supplier List</div></div>
+                        <div class="col-md-6 text-end">
+                            <button type="button" class="btn btn-primary btn-add-supplier">
+                                    <i class="bi bi-bookmark-plus-fill"></i> New Supplier
+                            </button>
+                        </div>
+                    </div>
+                        
+                    </div>
+
+
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="supplier-table" class="table table-bordered p-3 text-center table-hover">
+                            <thead>
+                                <tr class="table-primary">
+                                    <th>Name</th>
+                                    <th>Company</th>
+                                    <th>Mobile</th>
+                                    <th>Address</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                           
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-primary">
+                                    <th>Name</th>
+                                    <th>Company</th>
+                                    <th>Mobile</th>
+                                    <th>Address</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+
+                </div>
+                <!-- /.card -->
+            </div>
+            @Html.Partial("_SupplierInfo", Model.AddSupplierModel)
+            @Html.Partial("_UpdateSupplierInfo", Model.UpdateSupplierModel)
+
+            <!-- /.col -->
+        </div>
+
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+
+
+    <script>
+        $(function(){
+             $("#supplier-table").DataTable({
+                 processing: true,
+                 serverSide: true,
+                 responsive: true,
+                 lengthChange: true,
+                 autoWidth: false,
+                 lengthMenu: [
+                     [10, 25, 50, -1],
+                     [10, 25, 50, 'All']
+                 ],
+                 dom: `Bfrtip`,
+                 buttons: [
+                      'copy', 'csv', 'excel', 'pdf', 'print'
+                 ],
+
+                 ajax: {
+                      url: '@Url.Action("GetCQRSSupplierJsonData", "Suppliers")',
+                      type: 'POST',
+                      contentType: "application/json",
+                      datatype: 'json',
+                      data: function (d) {
+                          d.SearchItem = {
+
+                          };
+                          return JSON.stringify(d);
+                      }
+                 },
+                 columnDefs: [
+                     {
+                         orderable: false,
+                         targets: 5,
+                         render: function(data, type, row){
+                                return ` <a data-id="${data}"
+                                                data-toggle="modal" data-target="#update-supplier-modal" class="btn btn-primary btn-edit-supplier"><i class="bi bi-pencil-fill"></i></a>
+
+                                        <a href="/Admin/Suppliers/RemoveSupplier/${data}"  value='${data}' class="btn btn-danger">
+                                                <i class="bi bi-trash-fill"></i></a>`;
+                         }
+                     }
+                 ],
+             });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Handle Edit Supplier button click
+            $(".btn-add-supplier").on("click", function () {
+                $("#add-supplier-modal").modal("show");
+            });
+        });
+    </script>
+
+    <script>
+        // Handle Edit Supplier button click
+        $(document).on("click", ".btn-edit-supplier", function () {
+                let supplierId = $(this).data("id");
+                var postData ={
+                    supplierId: supplierId
+                };
+               $.ajax({
+                    cache: false,
+                     url: '@Url.Action("GetSupplierDataById", "Suppliers")',
+                     type: 'GET',
+                     contentType: "application/json",
+                     dataType: 'json',
+                     data: postData,
+                     success: function(data){
+                         // console.log("data: ",data);
+                         // console.log("test: ",data.id);
+                        $("#update-supplier-modal #Id").val(data.id);
+                        $("#update-supplier-modal #Name").val(data.name);
+                        $("#update-supplier-modal #Company").val(data.company);
+                        $("#update-supplier-modal #MobileNumber").val(data.mobileNumber);
+                        $("#update-supplier-modal #Address").val(data.address);
+                        $("#update-supplier-modal #statusId").val(data.statusId);
+                        $("#update-supplier-modal #OpeningBalance").val(data.openingBalance);
+                        $("#update-supplier-modal #Email").val(data.email);
+                     },
+                     error: function (xhr, status, error) {
+                        console.error("AJAX Error:", error);
+                    }
+                }),
+
+                $("#update-supplier-modal").modal("show");
+            });
+
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

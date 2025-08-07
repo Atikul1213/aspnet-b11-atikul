@@ -1,0 +1,75 @@
+﻿@model AddBankAccountModel
+
+
+<!-- Modal -->
+<div class="modal fade" id="add-bankAccount-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="exampleModalLabel">Bank Account Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!--begin::Form-->
+                <form style="background-color:#738199;" class="p-3  text-white" asp-area="Admin" asp-controller="BankAccounts" asp-action="AddBankAccount" asp-antiforgery="true" method="post">
+                    <!--begin::Body-->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col-6">
+                                <label asp-for="Name" class="form-label fw-bold">Account Name </label>
+                                <input type="text" class="form-control" asp-for="Name" id="Name" placeholder="Account Name" aria-describedby="titleHelp" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                                <div id="titleHelp" class="form-text"> </div>
+                            </div>
+
+                            <div class="mb-3 col-6">
+                                <label asp-for="AccountNo" class="form-label fw-bold">Account No</label>
+                                <input type="text" class="form-control" asp-for="AccountNo" id="AccountNo" placeholder="Account No" aria-describedby="titleHelp" />
+                                <span asp-validation-for="AccountNo" class="text-danger"></span>
+                                <div id="titleHelp" class="form-text"> </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-6">
+                                <label asp-for="BankName" class="form-label fw-bold">Bank Name</label>
+                                <input type="text" class="form-control" asp-for="BankName" id="BankName" placeholder="Bank Name" aria-describedby="titleHelp" />
+                                <span asp-validation-for="BankName" class="text-danger"></span>
+                                <div id="titleHelp" class="form-text"> </div>
+                            </div>
+
+                            <div class="mb-3 col-6">
+                                <label asp-for="BranchName" class="form-label fw-bold">Branch Name</label>
+                                <input type="text" class="form-control" asp-for="BranchName" id="BranchName" placeholder="Branch Name" aria-describedby="titleHelp" />
+                                <span asp-validation-for="BranchName" class="text-danger"></span>
+                                <div id="titleHelp" class="form-text"> </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="mb-3 col-6">
+                                <label asp-for="OpeningBalance" class="form-label fw-bold">Opening Balance</label>
+                                <input type="text" class="form-control" asp-for="OpeningBalance" id="OpeningBalance" placeholder="Opening Balance" aria-describedby="titleHelp" />
+                                <span asp-validation-for="OpeningBalance" class="text-danger"></span>
+                                <div id="titleHelp" class="form-text"> </div>
+                            </div>
+                            <div class="mb-3 col-6">
+                                <label asp-for="StatusId" class="form-label fw-bold">Status</label>
+                                <select class="form-select" asp-for="StatusId" asp-items="Model.Status" id="statusId" required>
+                                </select>
+                                <span asp-validation-for="StatusId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Body-->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+                <!--end::Form-->
+            </div>
+        </div>
+    </div>
+</div>

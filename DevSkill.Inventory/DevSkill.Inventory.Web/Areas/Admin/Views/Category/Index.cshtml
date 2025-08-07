@@ -1,0 +1,133 @@
+﻿@model CategoryListModel
+
+@{
+    ViewData["Title"] = "Category";
+}
+
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0 fw-bold ">Category</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Category</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-8">
+                <div class="card">
+                    <div class="card-header bg-info"><h3 class="card-title fw-bold">Category List</h3></div>
+                  
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="category-table" class="table table-bordered p-3 text-center table-hover">
+                            <thead>
+                                <tr class="table-primary">
+                                    <th class="text-center">#SN.</th>
+                                    <th class="text-center">Category Name</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Created Date</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Check if there are any category to display -->
+                                @if (Model.Categories.Any())
+                                {
+                                    <!-- Loop through each category in the model's category list -->
+                                    var idx = 1;
+                                    @foreach (var category in Model.Categories)
+                                    {
+                                        var rowClass = (idx % 2 == 0) ? "table-info" : "table-success";
+                                        <tr class="@rowClass">
+                                            <td class="text-center">@idx</td>
+                                            <td class="text-center">@category.Name</td>
+                                            <td class="text-center">@category.Status</td>
+                                            <td class="text-center">@category.CreateOnUtc</td>
+                                            <td class="text-center">
+                                                <div class="w-75 btn-group" role="group">
+                                                    <a data-id="@category.Id" data-name="@category.Name" data-statusid="@category.StatusId"
+                                                       data-toggle="modal" data-target="#update-category" class="btn btn-primary btn-edit-category"><i class="bi bi-pencil-fill"></i></a>
+
+                                                    <a asp-area="Admin" asp-controller="Category" asp-action="RemoveCategory" asp-route-id="@category.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        idx++;
+                                    }
+                                   @Html.Partial("_UpdateCategoryInfo", Model.UpdateCategoryModel)
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">😞 No category found.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-primary">
+                                    <th class="text-center">#SN.</th>
+                                    <th class="text-center">Category Name</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Created Date</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+
+                </div>
+                <!-- /.card -->
+            </div>
+            <div class="col-4  card">
+                <div class="card-header"><h3 class="card-title fw-bold">Category Information</h3></div>
+                    @Html.Partial("_CategoryInfo", Model.AddCategoryModel)
+                <div class="card-body">
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+                  
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Handle Edit Category button click
+            $(".btn-edit-category").on("click", function () {
+                const id = $(this).data("id");
+                const name = $(this).data("name");
+                const statusId = $(this).data("statusid");
+                
+                $("#Id").val(id);
+                $("#Name").val(name);
+                $("#statusId").val(statusId);
+
+                $("#update-category").modal("show");
+            });
+        });
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+}
