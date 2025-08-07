@@ -19,13 +19,14 @@ A comprehensive Inventory Management System built with ASP.NET Core 9, following
 - Sales Management- Process orders and generate invoices for customers
 - Balance Transfer- Track and manage financial transaction between account
 
-  # Worker Service
-  A background service build with .NET Worker Service that handles:
-  - Get the command from the AWS SQS command
-  - AWS S3 Uploads (Take the image from the local storage and upload the image into the S3 bucket as per the SQS command)
 
-  # Testing
-  - NUnit
-  - Shouldly
-  - Moq
-  - Assembly, Act, Assert
+# Worker Service
+-  A background service build with .NET Worker Service that handles:
+- Get the command from the AWS SQS command
+- AWS S3 Uploads (Take the image from the local storage and upload the image into the S3 bucket as per the SQS command)
+
+# Testing
+- NUnit
+- Shouldly
+- Moq
+- Assembly, Act, Assert
