@@ -7,6 +7,7 @@ using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web;
 using DevSkill.Inventory.Web.Extensions;
 using DevSkill.Inventory.Web.Models;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -56,6 +57,12 @@ try
 
     #region AutoMapper Configuration
     builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+    #endregion
+
+    #region Mapster Configuration
+    var config = TypeAdapterConfig.GlobalSettings;
+    config.Scan(typeof(MapsterConfig).Assembly);
+    builder.Services.AddSingleton(config);
     #endregion
 
     #region Identity Configuration

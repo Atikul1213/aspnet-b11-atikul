@@ -1,0 +1,19 @@
+﻿@using DevSkill.Inventory.Infrastructure.Extensions
+
+@if (TempData.Peek<ResponseModel>("ResponseMessage") != null)
+{
+    var response = TempData.Get<ResponseModel>("ResponseMessage");
+
+    if (response.Type == ResponseTypes.Success)
+    {
+        <script>
+            successToast('@response.Message');
+        </script>
+    }
+    if (response.Type == ResponseTypes.Danger)
+    {
+        <script>
+            errorToast('@response.Message');
+        </script>
+    }
+}

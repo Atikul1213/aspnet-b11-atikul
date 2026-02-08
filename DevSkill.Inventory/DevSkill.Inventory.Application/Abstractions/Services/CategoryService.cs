@@ -2,7 +2,7 @@
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
 
-namespace DevSkill.Inventory.Application.Services
+namespace DevSkill.Inventory.Application.Abstractions.Services
 {
     public class CategoryService : ICategoryService
     {

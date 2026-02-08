@@ -21,4 +21,13 @@
     <ProjectReference Include="..\DevSkill.Inventory.Domain\DevSkill.Inventory.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configurations\" />
+    <Folder Include="Filters\" />
+    <Folder Include="Templates\" />
+    <Folder Include="Stores\" />
+    <Folder Include="Settings\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

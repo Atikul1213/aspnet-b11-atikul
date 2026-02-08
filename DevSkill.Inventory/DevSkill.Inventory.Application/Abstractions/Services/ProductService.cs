@@ -4,7 +4,7 @@ using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
 
-namespace DevSkill.Inventory.Application.Services
+namespace DevSkill.Inventory.Application.Abstractions.Services
 {
     public class ProductService : IProductService
     {

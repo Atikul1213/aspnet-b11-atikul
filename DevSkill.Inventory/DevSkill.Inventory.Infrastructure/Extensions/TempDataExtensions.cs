@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.Text.Json;
 
-namespace DevSkill.Inventory.Infrastructure
+namespace DevSkill.Inventory.Infrastructure.Extensions
 {
     public static class TempDataExtensions
     {

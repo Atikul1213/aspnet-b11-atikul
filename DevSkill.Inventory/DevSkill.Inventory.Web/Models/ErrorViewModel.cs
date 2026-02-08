@@ -2,8 +2,9 @@ namespace DevSkill.Inventory.Web.Models
 {
     public class ErrorViewModel
     {
-        public string? RequestId { get; set; }
-
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+        public int StatusCode { get; set; }
+        public string Title { get; set; } = null!;
+        public string ErrorMessage { get; set; } = null!;
+        public string? TraceId { get; set; }
     }
 }

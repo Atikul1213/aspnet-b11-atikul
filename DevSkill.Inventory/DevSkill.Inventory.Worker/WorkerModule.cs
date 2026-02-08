@@ -1,6 +1,6 @@
 ﻿using Autofac;
+using DevSkill.Inventory.Application.Abstractions.Services;
 using DevSkill.Inventory.Application.Features.Products.Commands;
-using DevSkill.Inventory.Application.Services;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Repositories;
 using DevSkill.Inventory.Domain.Services;
