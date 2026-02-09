@@ -41,46 +41,6 @@ namespace DevSkill.Inventory.Worker
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<ProductAddCommand>().AsSelf();
-
-            builder.RegisterType<CategoryService>().As<ICategoryService>()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<CategoryRepository>().As<ICategoryRepository>()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<ProductUnitRepository>().As<IProductUnitRepository>()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<DepartmentRepository>().As<IDepartmentRepository>()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<UserRoleRepository>().As<IUserRoleRepository>()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<SupplierRepository>().As<ISupplierRepository>()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<EmployeeRepository>().As<IEmployeeRepository>()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<InventoryUserRepository>().As<IInventoryUserRepository>()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<CustomerRepository>().As<ICustomerRepository>()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<CashAccountRepository>().As<ICashAccountRepository>()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<BankAccountRepository>().As<IBankAccountRepository>()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<MobileAccountRepository>().As<IMobileAccountRepository>()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<BalanceTransferRepository>().As<IBalanceTransferRepository>()
-                .InstancePerLifetimeScope();
-
             base.Load(builder);
         }
     }

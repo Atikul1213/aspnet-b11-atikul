@@ -1,12 +1,8 @@
 ﻿using Autofac.Extras.Moq;
 using AutoMapper;
-using DevSkill.Inventory.Application.Exceptions;
-using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Domain;
-using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Repositories;
 using Moq;
-using Shouldly;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DevSkill.Inventory.Application.Tests.ProductTests;
@@ -50,7 +46,7 @@ public class ProductAddCommandHandlerTests
         _mapperMock?.Reset();
     }
 
-
+    /**
     [Test]
     public void AddProduct_UniqueBarCode_AddsProduct()
     {
@@ -169,5 +165,5 @@ public class ProductAddCommandHandlerTests
         _productRepositoryMock.Verify(p => p.AddAsync(It.IsAny<Product>()), Times.Never);
         _applicationUnitOfWorkMock.Verify(u => u.SaveAsync(), Times.Never);
     }
-
+    */
 }

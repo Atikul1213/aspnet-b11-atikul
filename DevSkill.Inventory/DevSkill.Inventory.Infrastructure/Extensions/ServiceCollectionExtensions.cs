@@ -78,12 +78,10 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
             string connectionString, string migrationAssembly)
         {
             services.AddScoped<ApplicationDbContext>(provider =>
-            new ApplicationDbContext(connectionString, migrationAssembly));
+           new ApplicationDbContext(connectionString, migrationAssembly));
 
-            services.AddScoped<DbContextBase<ApplicationUser, ApplicationRole,
-                ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin,
-                ApplicationRoleClaim, ApplicationUserToken>>(provider =>
-                     new ApplicationDbContext(connectionString, migrationAssembly));
+            services.AddScoped<DbContextBase<ApplicationUser, ApplicationRole, ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin, ApplicationRoleClaim, ApplicationUserToken>>(provider =>
+                new ApplicationDbContext(connectionString, migrationAssembly));
 
             services.AddScoped<IApplicationUnitOfWork, ApplicationUnitOfWork>();
             services.AddScoped<IUnitOfWorkBase, ApplicationUnitOfWork>();
@@ -96,27 +94,8 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
             services.AddScoped<ICustomUserRepository, UserRepository>();
             services.AddScoped<IServerTime, ServerTime>();
             services.AddScoped<IEmailUtility, EmailUtility>();
-            //services.AddScoped<IEmailTrackerRepository, EmailTrackerRepository>();
-            //services.AddScoped<IEmailQueueItemRepository, EmailQueueItemRepository>();
-            //services.AddScoped<IFailedEmailQueueItemRepository, FailedEmailQueueItemRepository>();
-
-
 
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<IProductUnitRepository, ProductUnitRepository>();
-            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
-            services.AddScoped<ISupplierRepository, SupplierRepository>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            services.AddScoped<IInventoryUserRepository, InventoryUserRepository>();
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
-            services.AddScoped<ICashAccountRepository, CashAccountRepository>();
-            services.AddScoped<IBankAccountRepository, BankAccountRepository>();
-            services.AddScoped<IMobileAccountRepository, MobileAccountRepository>();
-            services.AddScoped<IBalanceTransferRepository, BalanceTransferRepository>();
-            services.AddScoped<ISalesRepository, SalesRepository>();
-            services.AddScoped<ISaleProductRepository, SaleProductRepository>();
 
             return services;
         }

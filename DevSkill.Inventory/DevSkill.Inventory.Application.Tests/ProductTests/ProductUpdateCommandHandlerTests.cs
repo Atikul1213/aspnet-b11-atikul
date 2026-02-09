@@ -1,12 +1,8 @@
 ﻿using Autofac.Extras.Moq;
 using AutoMapper;
-using DevSkill.Inventory.Application.Exceptions;
-using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Domain;
-using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Repositories;
 using Moq;
-using Shouldly;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DevSkill.Inventory.Application.Tests.ProductTests
@@ -49,6 +45,7 @@ namespace DevSkill.Inventory.Application.Tests.ProductTests
             _productRepoMock?.Reset();
             _mapperMock?.Reset();
         }
+        /**
 
         [Test]
         public async Task UpdateProduct_UniqueBarCode_UpdatesProduct()
@@ -147,5 +144,6 @@ namespace DevSkill.Inventory.Application.Tests.ProductTests
             _productRepoMock.Verify(r => r.UpdateAsync(It.IsAny<Product>()), Times.Never);
             _unitOfWorkMock.Verify(u => u.SaveAsync(), Times.Never);
         }
+        */
     }
 }

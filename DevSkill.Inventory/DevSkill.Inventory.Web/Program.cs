@@ -1,3 +1,4 @@
+using DevSkill.Core.Infrastructure.Extensions;
 using DevSkill.Inventory.Application.Abstractions.Services;
 using DevSkill.Inventory.Application.Extensions;
 using DevSkill.Inventory.Domain;
@@ -5,6 +6,7 @@ using DevSkill.Inventory.Domain.Abstractions;
 using DevSkill.Inventory.Domain.Services;
 using DevSkill.Inventory.Infrastructure;
 using DevSkill.Inventory.Infrastructure.Extensions;
+using DevSkill.Inventory.Infrastructure.Identity;
 using DevSkill.Inventory.Web;
 using DevSkill.Inventory.Web.Extensions;
 using DevSkill.Inventory.Web.Models;
@@ -81,17 +83,19 @@ try
     #endregion
 
     #region Dependency Injection
+
     builder.Services.AddDependencyInjection(connectionString, migrationAssembly.FullName!);
     builder.Services.AddScoped<IUserInfoService, UserInfoService>();
     builder.Services.AddScoped<IProductService, ProductService>();
-    builder.Services.AddScoped<ICategoryService, CategoryService>();
 
     #endregion
 
     #region Docker_Configuration
     //builder.WebHost.UseUrls("http://*:80");
     #endregion
-
+    builder.Services.AddEmailMessagingServices
+      <ApplicationUser, ApplicationRole, ApplicationUserClaim, ApplicationUserRole,
+      ApplicationUserLogin, ApplicationRoleClaim, ApplicationUserToken>();
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly)));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();

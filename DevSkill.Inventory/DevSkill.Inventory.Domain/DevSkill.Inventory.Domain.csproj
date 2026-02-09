@@ -7,13 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\BalanceTransfers\**" />
+    <Compile Remove="Features\Customers\**" />
+    <Compile Remove="Features\Sales\**" />
+    <Compile Remove="Features\Users\**" />
+    <EmbeddedResource Remove="Features\BalanceTransfers\**" />
+    <EmbeddedResource Remove="Features\Customers\**" />
+    <EmbeddedResource Remove="Features\Sales\**" />
+    <EmbeddedResource Remove="Features\Users\**" />
+    <None Remove="Features\BalanceTransfers\**" />
+    <None Remove="Features\Customers\**" />
+    <None Remove="Features\Sales\**" />
+    <None Remove="Features\Users\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DevSkill.Core.Domain" Version="9.0.0.6" />
-    <Folder Include="Features\BalanceTransfers\Commands\" />
-    <Folder Include="Features\Customers\Commands\" />
-    <Folder Include="Features\Sales\Commands\" />
-    <Folder Include="Features\Users\Employees\Commands\" />
-    <Folder Include="Features\Users\InventoryUsers\Commands\" />
-    <Folder Include="Features\Users\Suppliers\Commands\" />
     <Folder Include="Enums\" />
     <Folder Include="Exceptions\" />
   </ItemGroup>

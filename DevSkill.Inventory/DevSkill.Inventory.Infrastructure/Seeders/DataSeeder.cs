@@ -10,7 +10,7 @@ namespace DevSkill.Inventory.Infrastructure.Seeders
         private readonly IRoleSeeder _roleSeeder;
         private readonly IClaimSeeder _claimSeeder;
         private readonly IAdminSeeder _adminSeeder;
-        private readonly ILogger _logger;
+        private readonly ILogger<DataSeeder> _logger;
 
         #endregion
 
@@ -18,7 +18,7 @@ namespace DevSkill.Inventory.Infrastructure.Seeders
         public DataSeeder(IRoleSeeder roleSeeder,
             IClaimSeeder claimSeeder,
             IAdminSeeder adminSeeder,
-            ILogger logger)
+            ILogger<DataSeeder> logger)
         {
             _roleSeeder = roleSeeder;
             _claimSeeder = claimSeeder;

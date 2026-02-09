@@ -8,15 +8,20 @@ namespace DevSkill.Inventory.Infrastructure.Utilities
 {
     public class SqlUtility : ISqlUtility
     {
+        #region Fields
         private readonly DbConnection _connection;
         private readonly int _timeout;
+        #endregion
 
+        #region Ctor
         public SqlUtility(DbConnection connection, int timeout = 0)
         {
             _connection = connection;
             _timeout = timeout;
         }
+        #endregion
 
+        #region Methods
         public virtual IDictionary<string, object> ExecuteStoredProcedure(string storedProcedureName,
             IDictionary<string, object> parameters = null, IDictionary<string, Type> outParameters = null)
         {
@@ -291,6 +296,8 @@ namespace DevSkill.Inventory.Infrastructure.Utilities
 
             return result;
         }
+
+        #endregion
     }
 }
 

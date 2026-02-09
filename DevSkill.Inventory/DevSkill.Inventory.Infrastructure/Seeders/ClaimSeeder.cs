@@ -12,14 +12,14 @@ namespace DevSkill.Inventory.Infrastructure.Seeds
         #region Fields
 
         private readonly RoleManager<ApplicationRole> _roleManager;
-        private readonly ILogger _logger;
+        private readonly ILogger<ClaimSeeder> _logger;
 
         #endregion
 
         #region Ctor
 
         public ClaimSeeder(RoleManager<ApplicationRole> roleManager,
-            ILogger logger)
+            ILogger<ClaimSeeder> logger)
         {
             _roleManager = roleManager;
             _logger = logger;

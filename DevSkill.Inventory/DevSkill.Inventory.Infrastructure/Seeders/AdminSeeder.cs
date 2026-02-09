@@ -13,14 +13,14 @@ namespace DevSkill.Inventory.Infrastructure.Seeders
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
-        private readonly ILogger _logger;
+        private readonly ILogger<AdminSeeder> _logger;
 
         #endregion
 
         #region Ctor
         public AdminSeeder(UserManager<ApplicationUser> userManager,
             IConfiguration configuration,
-            ILogger logger)
+            ILogger<AdminSeeder> logger)
         {
             _configuration = configuration;
             _userManager = userManager;

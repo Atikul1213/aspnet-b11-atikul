@@ -1,5 +1,4 @@
 ﻿using DevSkill.Core.Infrastructure;
-using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,32 +24,16 @@ namespace DevSkill.Inventory.Infrastructure
         #endregion
 
         #region Properties
-
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<ProductUnit> ProductUnits { get; set; }
-        public DbSet<Department> Departments { get; set; }
-        public DbSet<Supplier> Suppliers { get; set; }
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<InventoryUser> InventoryUser { get; set; }
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<CashAccount> CashAccounts { get; set; }
-        public DbSet<BankAccount> BankAccounts { get; set; }
-        public DbSet<MobileAccount> MobileAccounts { get; set; }
-        public DbSet<BalanceTransfer> BalanceTransfers { get; set; }
-        public DbSet<Sales> Sales { get; set; }
-        public DbSet<SaleProduct> SaleProducts { get; set; }
+        //public DbSet<Product> Products { get; set; }
         #endregion
 
         #region Methods
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(_connectionString, (x) => x.MigrationsAssembly(_migrationAssembly));
             }
-
             base.OnConfiguring(optionsBuilder);
         }
 

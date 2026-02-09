@@ -1,22 +1,14 @@
 ﻿using Amazon;
 using Amazon.SQS;
-using Amazon.SQS.Model;
 using AutoMapper;
 using DevSkill.Inventory.Application.Exceptions;
-using DevSkill.Inventory.Application.Features.Products.Commands;
-using DevSkill.Inventory.Application.Features.Products.Queries;
-using DevSkill.Inventory.Application.Features.Settings.Categories.Queries;
-using DevSkill.Inventory.Application.Features.Settings.Units.Queries;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
-using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
-using DevSkill.Inventory.Web.Extensions;
 using DevSkill.Inventory.Web.Models;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Web;
@@ -59,7 +51,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             client = new AmazonSQSClient(ServiceRegion);
         }
         #endregion
-
+        /**
         #region Product IndexSP AddProduct UpdateProduct DeleteProduct GetCQRSProductSPJsonData
 
         [Authorize(Roles = "Admin,Registered")]
@@ -67,11 +59,11 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             var model = new ProductListModel();
 
-            var categories = await _mediator.Send(new GetActiveCategoryListQuery());
-            var units = await _mediator.Send(new GetActiveUnitListQuery());
+            //var categories = await _mediator.Send(new GetActiveCategoryListQuery());
+            //var units = await _mediator.Send(new GetActiveUnitListQuery());
 
-            model.AddProductModel.Categories = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
-            model.AddProductModel.Units = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
+            //model.AddProductModel.Categories = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
+            //model.AddProductModel.Units = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
 
             Random random = new Random();
             int threeDigitNumber = random.Next(100, 1000);
@@ -117,8 +109,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     string imagePath = BarcodeHelper.GenerateProductBarcode(model.Name, model.BarCode, model.WholeSalePrice, savePath);
                     model.BarcodeImagePath = Path.Combine(@"/images/barcodes", fileNameBarcode);
 
-                    var category = await _mediator.Send(new GetCategoryByIdQuery(model.CategoryId));
-                    model.CategoryName = category.Name;
+                    //var category = await _mediator.Send(new GetCategoryByIdQuery(model.CategoryId));
+                    //model.CategoryName = category.Name;
 
                     model.Stock = model.LowStock;
                     var productAddCommand = _mapper.Map<ProductAddCommand>(model);
@@ -177,12 +169,12 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     return RedirectToAction("IndexSP");
 
                 var model = _mapper.Map<UpdateProductModel>(product);
-                var categories = await _mediator.Send(new GetActiveCategoryListQuery());
-                var units = await _mediator.Send(new GetActiveUnitListQuery());
+                //var categories = await _mediator.Send(new GetActiveCategoryListQuery());
+                //var units = await _mediator.Send(new GetActiveUnitListQuery());
 
-                model.Categories = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
+                //model.Categories = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
 
-                model.Units = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
+                //model.Units = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
 
                 return View(model);
             }
@@ -218,8 +210,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                         model.ImageUrl = Path.Combine(@"/images/products", fileName);
                     }
 
-                    var category = await _mediator.Send(new GetCategoryByIdQuery(model.CategoryId));
-                    model.CategoryName = category.Name;
+                    //var category = await _mediator.Send(new GetCategoryByIdQuery(model.CategoryId));
+                    //model.CategoryName = category.Name;
 
                     var productUpdateCommand = _mapper.Map<ProductUpdateCommand>(model);
                     await _mediator.Send(productUpdateCommand);
@@ -238,12 +230,12 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 TempData["error"] = "Failed to edit product.";
                 _logger.LogError(ex, "There was an error while updating product");
             }
-            var categories = await _mediator.Send(new GetCategoryListQuery());
-            var units = await _mediator.Send(new GetUnitListQuery());
+            //var categories = await _mediator.Send(new GetCategoryListQuery());
+            //var units = await _mediator.Send(new GetUnitListQuery());
 
 
-            model.Categories = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
-            model.Units = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
+            //model.Categories = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
+            //model.Units = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
 
             return View(model);
         }
@@ -305,7 +297,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
         #endregion
-
+        */
         #region Index Create Edit Delete GetProductJsonData   without CQRS
         public IActionResult Index()
         {
