@@ -1,11 +1,14 @@
 ﻿
+using DevSkill.Core.Application;
 using DevSkill.Core.Domain;
 using DevSkill.Core.Infrastructure;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Abstractions;
+using DevSkill.Inventory.Domain.Repositories;
 using DevSkill.Inventory.Domain.Utilities;
 using DevSkill.Inventory.Infrastructure.Identity;
 using DevSkill.Inventory.Infrastructure.Identity.Requirement;
+using DevSkill.Inventory.Infrastructure.Repositories;
 using DevSkill.Inventory.Infrastructure.Seeders;
 using DevSkill.Inventory.Infrastructure.Seeds;
 using DevSkill.Inventory.Infrastructure.Utilities;
@@ -90,6 +93,31 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
             services.AddScoped<IRoleSeeder, RoleSeeder>();
             services.AddScoped<IClaimSeeder, ClaimSeeder>();
             services.AddScoped<IDataSeeder, DataSeeder>();
+            services.AddScoped<ICustomUserRepository, UserRepository>();
+            services.AddScoped<IServerTime, ServerTime>();
+            services.AddScoped<IEmailUtility, EmailUtility>();
+            //services.AddScoped<IEmailTrackerRepository, EmailTrackerRepository>();
+            //services.AddScoped<IEmailQueueItemRepository, EmailQueueItemRepository>();
+            //services.AddScoped<IFailedEmailQueueItemRepository, FailedEmailQueueItemRepository>();
+
+
+
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductUnitRepository, ProductUnitRepository>();
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<ISupplierRepository, SupplierRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IInventoryUserRepository, InventoryUserRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<ICashAccountRepository, CashAccountRepository>();
+            services.AddScoped<IBankAccountRepository, BankAccountRepository>();
+            services.AddScoped<IMobileAccountRepository, MobileAccountRepository>();
+            services.AddScoped<IBalanceTransferRepository, BalanceTransferRepository>();
+            services.AddScoped<ISalesRepository, SalesRepository>();
+            services.AddScoped<ISaleProductRepository, SaleProductRepository>();
+
             return services;
         }
 

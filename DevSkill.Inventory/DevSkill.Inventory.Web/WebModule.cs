@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿/**
+using Autofac;
 using DevSkill.Inventory.Application.Abstractions.Services;
 using DevSkill.Inventory.Application.Features.Products.Commands;
 using DevSkill.Inventory.Domain.Repositories;
@@ -87,3 +88,5 @@ namespace DevSkill.Inventory.Web
         }
     }
 }
+
+*/

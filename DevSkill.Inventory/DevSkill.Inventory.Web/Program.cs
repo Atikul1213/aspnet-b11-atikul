@@ -1,7 +1,8 @@
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
+using DevSkill.Inventory.Application.Abstractions.Services;
 using DevSkill.Inventory.Application.Extensions;
 using DevSkill.Inventory.Domain;
+using DevSkill.Inventory.Domain.Abstractions;
+using DevSkill.Inventory.Domain.Services;
 using DevSkill.Inventory.Infrastructure;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web;
@@ -36,11 +37,11 @@ try
     var migrationAssembly = Assembly.GetExecutingAssembly();
 
     #region Autofac Configuration
-    builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-    builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
-    {
-        containerBuilder.RegisterModule(new WebModule(connectionString, migrationAssembly?.FullName));
-    });
+    //builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+    //builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+    //{
+    //    containerBuilder.RegisterModule(new WebModule(connectionString, migrationAssembly?.FullName));
+    //});
     #endregion
 
     #region Serilog configure
@@ -69,6 +70,7 @@ try
     #region Add Identity
 
     builder.Services.AddIdentity();
+
     //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -81,6 +83,9 @@ try
     #region Dependency Injection
     builder.Services.AddDependencyInjection(connectionString, migrationAssembly.FullName!);
     builder.Services.AddScoped<IUserInfoService, UserInfoService>();
+    builder.Services.AddScoped<IProductService, ProductService>();
+    builder.Services.AddScoped<ICategoryService, CategoryService>();
+
     #endregion
 
     #region Docker_Configuration
@@ -143,12 +148,27 @@ try
         pattern: "{controller=Home}/{action=Index}/{id?}");
     app.MapRazorPages();
 
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        try
+        {
+            var dataSeeder = services.GetRequiredService<IDataSeeder>();
+            await dataSeeder.SeedAsync();
+            Log.Information("Data seeding completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "An error occurred during data seeding.");
+        }
+    }
+
     Log.Information("Application started successfully.");
     app.Run();
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Application crashed");
+    Log.Fatal(ex, "Application start-up failed");
 }
 finally
 {
