@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DevSkill.Core.Infrastructure.Features.Membership;
 
 namespace DevSkill.Inventory.Infrastructure.Identity
 {
-    public class ApplicationUserRole : IdentityUserRole<Guid>
+    public class ApplicationUserRole : SystemUserRole
     {
     }
 }

@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DevSkill.Core.Infrastructure.Features.Membership;
 
 namespace DevSkill.Inventory.Infrastructure.Identity
 {
-    public class ApplicationUserToken : IdentityUserToken<Guid>
+    public class ApplicationUserToken : SystemUserToken
     {
     }
 }

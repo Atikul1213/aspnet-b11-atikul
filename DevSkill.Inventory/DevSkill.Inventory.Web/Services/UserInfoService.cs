@@ -41,7 +41,7 @@ namespace DevSkill.Inventory.Web.Services
                     model.FirstName = user.FirstName;
                     model.LastName = user.LastName;
                     model.Email = user.Email;
-                    model.ProfilePicturePath = null;
+                    model.ProfilePicturePath = user.ProfilePicture;
                 }
             }
 

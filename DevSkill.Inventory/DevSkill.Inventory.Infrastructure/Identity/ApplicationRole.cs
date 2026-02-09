@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DevSkill.Core.Infrastructure.Features.Membership;
 
 namespace DevSkill.Inventory.Infrastructure.Identity
 {
-    public class ApplicationRole : IdentityRole<Guid>
+    public class ApplicationRole : SystemRole
     {
-        public int StatusId { get; set; }
-        public int CompanyId { get; set; }
     }
 }

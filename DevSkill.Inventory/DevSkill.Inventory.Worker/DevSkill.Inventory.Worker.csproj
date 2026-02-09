@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DevSkill.Inventory.Application\DevSkill.Inventory.Application.csproj" />
-    <ProjectReference Include="..\DevSkill.Inventory.Domain\DevSkill.Inventory.Domain.csproj" />
     <ProjectReference Include="..\DevSkill.Inventory.Infrastructure\DevSkill.Inventory.Infrastructure.csproj" />
     <ProjectReference Include="..\DevSkill.Inventory.Web\DevSkill.Inventory.Web.csproj" />
   </ItemGroup>

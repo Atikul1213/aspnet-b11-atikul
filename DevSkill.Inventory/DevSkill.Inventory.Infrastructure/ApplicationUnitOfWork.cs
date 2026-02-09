@@ -1,14 +1,24 @@
-﻿using DevSkill.Inventory.Domain;
+﻿using DevSkill.Core.Domain.EmailRepositoryContracts;
+using DevSkill.Core.Infrastructure;
+using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Repositories;
+using DevSkill.Inventory.Infrastructure.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevSkill.Inventory.Infrastructure
 {
-    public class ApplicationUnitOfWork : UnitOfWork, IApplicationUnitOfWork
+    public class ApplicationUnitOfWork : UnitOfWorkBase<ApplicationUser, ApplicationRole, ApplicationUserClaim,
+            ApplicationUserRole, ApplicationUserLogin, ApplicationRoleClaim,
+            ApplicationUserToken>, IApplicationUnitOfWork
     {
         #region Ctor
         public ApplicationUnitOfWork(ApplicationDbContext context,
+            ICustomUserRepository userRepository,
+            IEmailTrackerRepository emailTrackerRepository,
+            IEmailQueueItemRepository emailQueueItemRepository,
+            IFailedEmailQueueItemRepository failedEmailQueueItemRepository,
             IProductRepository productRepository,
             ICategoryRepository categoryRepository,
             IProductUnitRepository productUnitRepository,
@@ -23,8 +33,13 @@ namespace DevSkill.Inventory.Infrastructure
             IMobileAccountRepository mobileAccountRepository,
             IBalanceTransferRepository balanceTransferRepository,
             ISalesRepository salesRepository,
-            ISaleProductRepository saleProductRepository) : base(context)
+            ISaleProductRepository saleProductRepository) : base(context,
+                                                                 userRepository,
+                                                                 emailTrackerRepository,
+                                                                 emailQueueItemRepository,
+                                                                 failedEmailQueueItemRepository)
         {
+            sqlUtility = new DevSkill.Inventory.Infrastructure.Utilities.SqlUtility(context.Database.GetDbConnection());
             ProductRepository = productRepository;
             CategoryRepository = categoryRepository;
             ProductUnitRepository = productUnitRepository;
@@ -45,7 +60,7 @@ namespace DevSkill.Inventory.Infrastructure
         #endregion
 
         #region Fields
-
+        public DevSkill.Inventory.Domain.Utilities.ISqlUtility sqlUtility { get; private set; }
         public IProductRepository ProductRepository { get; private set; }
         public ICategoryRepository CategoryRepository { get; private set; }
         public IProductUnitRepository ProductUnitRepository { get; private set; }
@@ -68,7 +83,7 @@ namespace DevSkill.Inventory.Infrastructure
         {
             var procedureName = "GetProducts";
 
-            var result = await sqlUtility.QueryWithStoredProcedureAsync<Product>(procedureName,
+            var result = await SqlUtility.QueryWithStoredProcedureAsync<Product>(procedureName,
                 new Dictionary<string, object>
                 {
                     {"PageIndex", pageIndex },

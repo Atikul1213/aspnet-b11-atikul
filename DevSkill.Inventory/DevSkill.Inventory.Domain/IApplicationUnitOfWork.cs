@@ -1,11 +1,14 @@
-﻿using DevSkill.Inventory.Domain.Dtos;
+﻿
+using DevSkill.Core.Domain;
+using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Repositories;
 
 namespace DevSkill.Inventory.Domain
 {
-    public interface IApplicationUnitOfWork : IUnitOfWork
+    public interface IApplicationUnitOfWork : IUnitOfWorkBase
     {
+        DevSkill.Inventory.Domain.Utilities.ISqlUtility sqlUtility { get; }
         public IProductRepository ProductRepository { get; }
         public ICategoryRepository CategoryRepository { get; }
         public IProductUnitRepository ProductUnitRepository { get; }

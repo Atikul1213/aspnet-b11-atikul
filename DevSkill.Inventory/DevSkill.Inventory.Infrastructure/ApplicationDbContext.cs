@@ -1,15 +1,12 @@
-﻿using DevSkill.Inventory.Domain.Entities;
+﻿using DevSkill.Core.Infrastructure;
+using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Infrastructure.Identity;
-using DevSkill.Inventory.Infrastructure.Seeds;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevSkill.Inventory.Infrastructure
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser,
-        ApplicationRole, Guid, ApplicationUserClaim,
-        ApplicationUserRole, ApplicationUserLogin,
-        ApplicationRoleClaim, ApplicationUserToken>
+    public class ApplicationDbContext : DbContextBase<ApplicationUser, ApplicationRole, ApplicationUserClaim,
+        ApplicationUserRole, ApplicationUserLogin, ApplicationRoleClaim, ApplicationUserToken>
     {
         #region Fields
 
@@ -60,9 +57,9 @@ namespace DevSkill.Inventory.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<ApplicationRole>().HasData(RoleSeed.GetRoles());
+            //builder.Entity<ApplicationRole>().HasData(RoleSeeder.GetRoles());
             //builder.Entity<ApplicationUserClaim>().HasData(ClaimSeed.GetClaims());
-
+            builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
             base.OnModelCreating(builder);
         }
         #endregion

@@ -7,6 +7,7 @@ using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web;
 using DevSkill.Inventory.Web.Extensions;
 using DevSkill.Inventory.Web.Models;
+using DevSkill.Inventory.Web.Services;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -65,7 +66,7 @@ try
     builder.Services.AddSingleton(config);
     #endregion
 
-    #region Identity Configuration
+    #region Add Identity
 
     builder.Services.AddIdentity();
     //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -73,8 +74,13 @@ try
 
     #endregion
 
-    #region Add Policy Authorization
+    #region Policy Based Authorization
     builder.Services.AddPolicy();
+    #endregion
+
+    #region Dependency Injection
+    builder.Services.AddDependencyInjection(connectionString, migrationAssembly.FullName!);
+    builder.Services.AddScoped<IUserInfoService, UserInfoService>();
     #endregion
 
     #region Docker_Configuration

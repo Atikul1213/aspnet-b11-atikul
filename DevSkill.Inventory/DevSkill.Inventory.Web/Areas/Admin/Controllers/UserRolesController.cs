@@ -52,8 +52,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             foreach (var userRole in userRoles)
             {
                 var userRoleModel = _mapper.Map<UserRoleModel>(userRole);
-                userRoleModel.Status = ((Status)userRole.StatusId).ToString();
-                userRoleModel.Company = ((Company)userRole.CompanyId).ToString();
+                //userRoleModel.Status = ((Status)userRole.StatusId).ToString();
+                //userRoleModel.Company = ((Company)userRole.CompanyId).ToString();
 
                 model.UserRoles.Add(userRoleModel);
             }
@@ -104,8 +104,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     {
                         prevRole.Name = model.Name;
                         prevRole.NormalizedName = model.Name.ToUpperInvariant();
-                        prevRole.StatusId = model.StatusId;
-                        prevRole.CompanyId = model.CompanyId;
+                        //prevRole.StatusId = model.StatusId;
+                        //prevRole.CompanyId = model.CompanyId;
                         prevRole.ConcurrencyStamp = Guid.NewGuid().ToString();
 
                         await _roleManager.UpdateAsync(prevRole);

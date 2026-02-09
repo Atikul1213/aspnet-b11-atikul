@@ -111,7 +111,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     if (prevInventoryUsers.Count == 0 || !isExistRole)
                     {
                         inventoryUser.EmployeeName = employee.Name;
-                        inventoryUser.Company = userRole != null ? ((Company)userRole.CompanyId).ToString() : Company.BrainStation.ToString();
+                        //inventoryUser.Company = userRole != null ? ((Company)userRole.CompanyId).ToString() : Company.BrainStation.ToString();
                         inventoryUser.Email = employee.Email;
                         inventoryUser.MobileNumber = employee.MobileNumber;
                         inventoryUser.Role = userRole?.Name ?? string.Empty;
@@ -164,7 +164,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     var prevInventoryUser = await _mediator.Send(new GetInventoryUserByEmailQuery(employee.Email));
 
                     inventoryUser.EmployeeName = employee.Name;
-                    inventoryUser.Company = ((Company)userRole.CompanyId).ToString();
+                    //inventoryUser.Company = ((Company)userRole.CompanyId).ToString();
                     inventoryUser.Email = employee.Email;
                     inventoryUser.MobileNumber = employee.MobileNumber;
                     inventoryUser.Role = userRole.Name;
