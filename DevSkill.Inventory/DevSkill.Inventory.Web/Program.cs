@@ -18,13 +18,10 @@ using Serilog.Events;
 using System.Reflection;
 
 #region BootStrap Logger
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json")
-    .Build();
 
 Log.Logger = new LoggerConfiguration()
-             .ReadFrom.Configuration(configuration)
+             .WriteTo.File("Logs/web-log-.txt",
+             rollingInterval: RollingInterval.Day)
              .CreateBootstrapLogger();
 #endregion
 
@@ -84,18 +81,23 @@ try
 
     #region Dependency Injection
 
+    builder.Services.AddEmailMessagingServices
+      <ApplicationUser, ApplicationRole, ApplicationUserClaim, ApplicationUserRole,
+      ApplicationUserLogin, ApplicationRoleClaim, ApplicationUserToken>();
     builder.Services.AddDependencyInjection(connectionString, migrationAssembly.FullName!);
+    builder.Services.AddFacebookAuthentication(builder.Configuration["Authentication:Facebook:AppId"]!, builder.Configuration["Authentication:Facebook:AppSecret"]!);
+    builder.Services.AddGoogleAuthentication(builder.Configuration["Authentication:Google:ClientId"]!, builder.Configuration["Authentication:Google:ClientSecret"]!);
+
     builder.Services.AddScoped<IUserInfoService, UserInfoService>();
     builder.Services.AddScoped<IProductService, ProductService>();
+    builder.Services.AddCaptchaService();
+    builder.Services.AddHttpContextAccessor();
 
     #endregion
 
     #region Docker_Configuration
     //builder.WebHost.UseUrls("http://*:80");
     #endregion
-    builder.Services.AddEmailMessagingServices
-      <ApplicationUser, ApplicationRole, ApplicationUserClaim, ApplicationUserRole,
-      ApplicationUserLogin, ApplicationRoleClaim, ApplicationUserToken>();
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly)));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();

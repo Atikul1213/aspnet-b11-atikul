@@ -5,11 +5,13 @@ namespace DevSkill.Inventory.Web.Models.IdentityModel
 {
     public class LoginModel
     {
-        [Required]
+        [Required(ErrorMessage = "Email is required")]
+        [Display(Name = "Email")]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Password is required")]
+        [Display(Name = "Password")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

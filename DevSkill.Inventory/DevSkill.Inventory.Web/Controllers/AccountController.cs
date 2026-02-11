@@ -1,4 +1,7 @@
-﻿using DevSkill.Inventory.Domain.Utilities;
+﻿using DevSkill.Core.Application.UtilitiesContracts;
+using DevSkill.Inventory.Domain.Abstractions;
+using DevSkill.Inventory.Domain.Constants;
+using DevSkill.Inventory.Domain.Utilities;
 using DevSkill.Inventory.Infrastructure.Identity;
 using DevSkill.Inventory.Infrastructure.Utilities;
 using DevSkill.Inventory.Web.Models.IdentityModel;
@@ -9,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
 
 namespace DevSkill.Inventory.Web.Controllers
 {
@@ -23,6 +26,8 @@ namespace DevSkill.Inventory.Web.Controllers
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailUtility _emailUtility;
+        private readonly ICaptchaService _captchaService;
+        private readonly IUserRedirectionService _userRedirectionService;
 
         #endregion
 
@@ -31,8 +36,9 @@ namespace DevSkill.Inventory.Web.Controllers
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailUtility emailUtility
-            )
+            IEmailUtility emailUtility,
+            ICaptchaService captchaService,
+            IUserRedirectionService userRedirectionService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -40,87 +46,27 @@ namespace DevSkill.Inventory.Web.Controllers
             _signInManager = signInManager;
             _logger = logger;
             _emailUtility = emailUtility;
+            _captchaService = captchaService;
+            _userRedirectionService = userRedirectionService;
         }
         #endregion
 
-        #region Register Login Logout
+        #region Login Register Logout
 
-        [AllowAnonymous]
-        public async Task<IActionResult> RegisterAsync(string returnUrl = null)
-        {
-            var model = new RegisterModel();
-            model.ReturnUrl = returnUrl;
-            model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            model.DateOfBirth = DateTime.UtcNow.AddYears(-18);
-
-            return View(model);
-        }
-
-        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
-        public async Task<IActionResult> RegisterAsync(RegisterModel model)
-        {
-            model.ReturnUrl ??= Url.Content("~/");
-            model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-            if (ModelState.IsValid)
-            {
-                var user = IdentityHelper.CreateUser();
-
-                await _userStore.SetUserNameAsync(user, model.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, model.Email, CancellationToken.None);
-                user.FirstName = model.FirstName;
-                user.LastName = model.LastName;
-                user.DateOfBirth = model.DateOfBirth;
-
-                var result = await _userManager.CreateAsync(user, model.Password);
-                await _userManager.AddToRoleAsync(user, "Registered");
-
-                var age = DateTime.UtcNow.Subtract(model.DateOfBirth).TotalDays / 365;
-
-                await _userManager.AddClaimAsync(user, new Claim("registered", "registeredAllowed"));
-                // await _userManager.AddClaimAsync(user, new Claim("age", age.ToString()));
-
-                if (result.Succeeded)
-                {
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-
-                    var callbackUrl = Url.Action(
-                        "ConfirmEmail",
-                        "Account",
-                        values: new { area = "", userId = userId, code = code, returnUrl = model.ReturnUrl },
-                        protocol: Request.Scheme);
-
-                    _emailUtility.SendEmail(model.Email, $"{model.FirstName} {model.LastName}",
-                        "Confirm your email", $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = model.Email, returnUrl = model.ReturnUrl });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(model.ReturnUrl);
-                    }
-                }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-            }
-
-            return View(model);
-        }
-
-
-        [AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> LoginAsync(string returnUrl = null)
         {
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                TempData["success"] = "You are already logged in.";
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+
+                return RedirectToAction("Dashboard", "Home");
+            }
+
             var model = new LoginModel();
 
             if (!string.IsNullOrEmpty(model.ErrorMessage))
@@ -141,39 +87,284 @@ namespace DevSkill.Inventory.Web.Controllers
         }
 
 
-        [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> LoginAsync(LoginModel model)
         {
+            // Redirect authenticated users away from login page
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                TempData["InfoMessage"] = "You are already logged in.";
+                if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                {
+                    return Redirect(model.ReturnUrl);
+                }
+                return RedirectToAction("Index", "Home");
+            }
+
             model.ReturnUrl ??= Url.Content("~/");
 
             model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
-                    return LocalRedirect(model.ReturnUrl);
-                }
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                }
+                return View(model);
+            }
+
+            var reCaptchaToken = Request.Form["g-recaptcha-response"];
+            if (string.IsNullOrEmpty(reCaptchaToken))
+            {
+                ModelState.AddModelError(string.Empty, "ReCaptcha validation failed. Please try again.");
+            }
+
+            var captchaResult = await _captchaService.VerifyAsync(reCaptchaToken);
+
+            if (!captchaResult.IsValid && false)
+            {
+                ModelState.AddModelError(string.Empty, captchaResult.ErrorMessage);
+                return View(model);
+            }
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                return View(model);
+            }
+
+
+
+            // This doesn't count login failures towards account lockout
+            // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+            if (result.Succeeded)
+            {
+                return LocalRedirect(model.ReturnUrl);
+            }
+            if (result.RequiresTwoFactor)
+            {
+                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+            }
+            if (result.IsLockedOut)
+            {
+                _logger.LogWarning("User account locked out.");
+                return RedirectToPage("./Lockout");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             }
 
             return View(model);
         }
+
+
+        [HttpGet, AllowAnonymous]
+        public async Task<IActionResult> RegisterAsync(string returnUrl = null)
+        {
+            var model = new RegisterModel();
+            model.ReturnUrl ??= Url.Content("~/");
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            model.DateOfBirth = DateTime.UtcNow.AddYears(-18);
+
+            return View(model);
+        }
+
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegisterAsync(RegisterModel model)
+        {
+            model.ReturnUrl ??= Url.Content("~/");
+            model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var reCaptchaToken = Request.Form["g-recaptcha-response"];
+            if (string.IsNullOrEmpty(reCaptchaToken))
+            {
+                ModelState.AddModelError(string.Empty, "ReCaptcha validation failed. Please try again.");
+            }
+
+            var captchaResult = await _captchaService.VerifyAsync(reCaptchaToken);
+            if (!captchaResult.IsValid && false)
+            {
+                ModelState.AddModelError(string.Empty, captchaResult.ErrorMessage);
+                return View(model);
+            }
+
+            var user = IdentityHelper.CreateUser();
+
+            await _userStore.SetUserNameAsync(user, model.Email, CancellationToken.None);
+            await _emailStore.SetEmailAsync(user, model.Email, CancellationToken.None);
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.DateOfBirth = model.DateOfBirth;
+            user.PhoneNumber = model.PhoneNumber;
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, ApplicationRoles.Memeber);
+                return RedirectToAction("RegisterConfirmation", new
+                {
+                    email = user.Email,
+                    returnUrl = model.ReturnUrl
+                });
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            return View(model);
+        }
+
+        [HttpGet, AllowAnonymous]
+        public async Task<IActionResult> RegisterConfirmation(string email,
+            string? returnUrl = null, string? message = null)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("Register");
+            }
+
+            var model = new RegisterConfirmationModel
+            {
+                Email = email,
+                ReturnUrl = returnUrl,
+                Message = message
+            };
+
+            return View(model);
+        }
+
+        [HttpGet, AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code, string? returnUrl = null)
+        {
+            var model = new ConfirmEmailModel();
+            model.returnUrl ??= Url.Content("~/");
+
+            if (userId == null || code == null)
+            {
+                model.ErrorMessage = "Invalid email confirmation link.";
+                return View(model);
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                model.ErrorMessage = $"Unable to load user with ID {userId}";
+                return View(model);
+            }
+
+            if (user.EmailConfirmed)
+            {
+                model.IsSuccess = true;
+                model.ErrorMessage = "Your email is already confirmed. You can now log in.";
+                return View(model);
+            }
+
+            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+
+            if (result.Succeeded)
+            {
+                model.IsSuccess = true;
+                return View(model);
+            }
+            else
+            {
+                model.IsSuccess = false;
+                model.ErrorMessage = "The confirmation link is invalid or has expired. A new confirmation email has been sent to your email address.";
+                model.email = user.Email;
+                await SendEmailConfirmationAsync(user, returnUrl);
+
+                return View(model);
+            }
+        }
+
+        [HttpPost, AllowAnonymous]
+        public async Task<IActionResult> ResendConfirmationEmail(string email,
+            string? returnUrl = null)
+        {
+            if (string.IsNullOrEmpty(email))
+                return RedirectToAction("Login");
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null || !user.EmailConfirmed)
+            {
+                return RedirectToAction("Login");
+            }
+
+            await SendEmailConfirmationAsync(user, returnUrl);
+            return RedirectToAction("RegisterConfirmation", new { email, returnUrl });
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult ExternalLogin(string provider, string? returnUrl = null)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return Challenge(properties, provider);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null,
+            string? remoteError = null)
+        {
+            returnUrl ??= Url.Content("~/");
+            if (remoteError != null)
+            {
+                TempData["error"] = $"Error from external provider: {remoteError}";
+                return RedirectToAction(nameof(RegisterAsync));
+            }
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
+                info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
+            if (result.Succeeded)
+            {
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                var firstName = info.Principal.FindFirstValue(ClaimTypes.GivenName);
+                var lastName = info.Principal.FindFirstValue(ClaimTypes.Surname);
+                var profilePicture = GetProfilePictureUrl(info.ProviderDisplayName, info);
+
+                if (string.IsNullOrEmpty(email))
+                    email = $"{info.ProviderKey}@{info.LoginProvider}.com";
+
+                var user = IdentityHelper.CreateUser();
+                user.UserName = info.ProviderKey;
+                user.Email = email;
+                user.FirstName = firstName;
+                user.LastName = lastName;
+                user.ProfilePicture = profilePicture;
+
+                var createResult = await _userManager.CreateAsync(user);
+                if (createResult.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, ApplicationRoles.Memeber);
+                    await _userManager.AddLoginAsync(user, info);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                }
+            }
+
+            if (string.IsNullOrEmpty(returnUrl) || returnUrl == "/" || !Url.IsLocalUrl(returnUrl))
+            {
+                var redirectUrl = _userRedirectionService.GetRedirectUrlAfterLoginAsync(User).Result;
+                return Redirect(redirectUrl);
+            }
+            return LocalRedirect(returnUrl);
+        }
+
 
 
         [Authorize]
@@ -187,10 +378,155 @@ namespace DevSkill.Inventory.Web.Controllers
             return LocalRedirect(returnUrl);
         }
 
+        [HttpGet, AllowAnonymous]
         public IActionResult AccessDenied()
         {
 
-            return View();
+            return RedirectToAction(
+                actionName: "HttpStatusCodeHandler",
+                controllerName: "Error",
+                routeValues: new { StatusCode = 403 }
+                );
+        }
+
+        #endregion
+
+        #region Password Rest Functionality
+
+        [HttpGet, AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            var model = new ForgotPasswordModel();
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, AllowAnonymous]
+        public async Task<IActionResult> ForgotPasswordAsync(ForgotPasswordModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user != null)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+                var callbackUrl = Url.Action("ResetPassword", "Account",
+                    new { userId = user.Id, token }, Request.Scheme);
+
+            }
+
+            return RedirectToAction("ForgotPasswordConfirmation", "Account",
+                new
+                {
+                    email = model.Email
+                });
+        }
+
+        [HttpGet, AllowAnonymous]
+        public IActionResult ForgotPasswordConfirmation(string email)
+        {
+            var model = new ForgotPasswordModel
+            {
+                Email = email
+            };
+
+            return View(model);
+        }
+
+        [HttpGet, AllowAnonymous]
+        public async Task<IActionResult> ResetPasswordAsync(string userId, string token)
+        {
+            var model = new ResetPasswordModel
+            {
+                Token = token
+            };
+
+            if (userId == null || token == null)
+            {
+                model.IsSuccess = false;
+                model.ErrorMessage = "Invalid password reset link.";
+                return View(model);
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                model.IsSuccess = false;
+                model.ErrorMessage = $"Unable to load user with ID {userId}";
+            }
+            model.Email = user?.Email;
+
+            return View(model);
+        }
+
+
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPasswordAsync(ResetPasswordModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                model.IsSuccess = false;
+                model.ErrorMessage = "Unable to load user.";
+                return View(model);
+            }
+
+            var token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(model.Token));
+            var resetPassResult = await _userManager.ResetPasswordAsync(user,
+                token, model.Password);
+
+            if (!resetPassResult.Succeeded)
+            {
+                model.IsSuccess = false;
+                model.ErrorMessage = $"Password reset failed. Link invalid or expired.";
+                model.Token = null;
+                return View(model);
+            }
+
+            return RedirectToAction("Login");
+        }
+
+        #endregion
+
+        #region Utilities
+
+        private string GetProfilePictureUrl(string provider, ExternalLoginInfo info)
+        {
+            if (provider == "Google")
+                return info.Principal.FindFirst("urn:google:picture")?.Value;
+
+            else if (provider == "Facebook")
+            {
+                var jsonData = info.Principal.FindFirst("urn:facebook:picture")?.Value;
+                // Regex expression for matching
+                var regex = new Regex(@"""url"":""([^""]+)""");
+                var match = regex.Match(jsonData);
+
+                var url = match.Groups[1].Value;
+
+                return url.Replace("\\", "");
+            }
+            else
+                return "~/sneat/assets/img/avatars/0.png";
+        }
+
+        private async Task SendEmailConfirmationAsync(ApplicationUser user, string? returnUrl)
+        {
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+            var callbackUrl = Url.Action("ConfirmEmail", "Account",
+                values: new { area = "", userId = user.Id, code, returnUrl },
+                protocol: Request.Scheme);
+
+            var subject = "Confirm your email";
+
         }
 
         #endregion

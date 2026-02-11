@@ -11,7 +11,9 @@ using DevSkill.Inventory.Infrastructure.Identity.Requirement;
 using DevSkill.Inventory.Infrastructure.Repositories;
 using DevSkill.Inventory.Infrastructure.Seeders;
 using DevSkill.Inventory.Infrastructure.Seeds;
+using DevSkill.Inventory.Infrastructure.Services;
 using DevSkill.Inventory.Infrastructure.Utilities;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -94,12 +96,58 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
             services.AddScoped<ICustomUserRepository, UserRepository>();
             services.AddScoped<IServerTime, ServerTime>();
             services.AddScoped<IEmailUtility, EmailUtility>();
+            services.AddScoped<IUserRedirectionService, UserRedirectionService>();
 
             services.AddScoped<IProductRepository, ProductRepository>();
 
             return services;
         }
 
+
+        #endregion
+
+        #region Facebook Google Authentication
+
+        public static IServiceCollection AddFacebookAuthentication(this IServiceCollection services,
+            string appId, string appSecret)
+        {
+            services.AddAuthentication().AddFacebook(options =>
+            {
+                options.AppId = appId;
+                options.AppSecret = appSecret;
+                options.Scope.Add("email");
+                options.Scope.Add("public_profile");
+                options.Fields.Add("email");
+                options.Fields.Add("name");
+                options.Fields.Add("first_name");
+                options.Fields.Add("last_name");
+                options.Fields.Add("picture");
+                options.ClaimActions.MapJsonSubKey("urn:facebook:picture", "picture", "data", "url");
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection AddGoogleAuthentication(this IServiceCollection services,
+            string clientId, string clientSecret)
+        {
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = clientId;
+                googleOptions.ClientSecret = clientSecret;
+                googleOptions.Scope.Add("https://www.googleapis.com/auth/userinfo.profile");
+                googleOptions.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
+                googleOptions.Events.OnRemoteFailure = context =>
+                {
+                    context.Response.Redirect("/Account/Register");
+                    context.HandleResponse();
+
+                    return Task.CompletedTask;
+                };
+            });
+
+            return services;
+        }
 
         #endregion
 

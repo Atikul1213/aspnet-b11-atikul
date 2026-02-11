@@ -1,0 +1,10 @@
+﻿<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+    function onRecaptchaSubmit(token) {
+      var recaptchaButton = document.querySelector('.g-recaptcha[data-callback="onRecaptchaSubmit"]');
+      var form = recaptchaButton.closest('form');
+      if (form) {
+        form.submit();
+      }
+    }
+</script>

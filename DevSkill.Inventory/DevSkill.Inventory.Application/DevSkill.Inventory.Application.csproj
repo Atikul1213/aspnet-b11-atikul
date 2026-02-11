@@ -20,7 +20,6 @@
     <Folder Include="Abstractions\Filters\" />
     <Folder Include="Abstractions\Stores\" />
     <Folder Include="Behaviors\" />
-    <Folder Include="Abstractions\Templates\" />
   </ItemGroup>
 
 </Project>

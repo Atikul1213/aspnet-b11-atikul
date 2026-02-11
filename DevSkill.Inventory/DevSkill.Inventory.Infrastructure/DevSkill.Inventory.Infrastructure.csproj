@@ -9,6 +9,8 @@
   <ItemGroup>
 	 <PackageReference Include="DevSkill.Core.Infrastructure" Version="9.0.0.10" />
     <PackageReference Include="MailKit" Version="4.12.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="9.0.8" />
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
 	<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.8" />
@@ -26,10 +28,12 @@
   <ItemGroup>
     <Folder Include="Configurations\" />
     <Folder Include="Filters\" />
-    <Folder Include="Templates\" />
     <Folder Include="Stores\" />
     <Folder Include="Settings\" />
-    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>
