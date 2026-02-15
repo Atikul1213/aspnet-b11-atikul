@@ -12,7 +12,7 @@
 
 
 <!-- content -->
-<div class="authentication-wrapper authentication-basic container-p-y">
+<div class="authentication-wrapper authentication-basic container-p-y" style="padding: 477px;">
     <div class="authentication-inner">
         <!-- Login -->
         <div class="card px-sm-6 px-0">
@@ -105,11 +105,15 @@
                     </div>
                     <div class="my-6">
                         <button type="submit" class="g-recaptcha btn btn-primary d-grid w-100"
+                                data-action="submit">
+                            Login
+                        </button>
+                      @*   <button type="submit" class="g-recaptcha btn btn-primary d-grid w-100"
                                 data-sitekey="@reCaptchaSiteKey"
                                 data-callback="onRecaptchaSubmit"
                                 data-action="submit">
                             Login
-                        </button>
+                        </button> *@
                     </div>
                 </form>
 

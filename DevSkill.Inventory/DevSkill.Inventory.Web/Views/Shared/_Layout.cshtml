@@ -30,7 +30,7 @@
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
-    <header id="header" class="header fixed-top">
+    <header id="header" @* class="header fixed-top" *@>
         <div class="branding d-flex align-items-cente">
             <div class="container position-relative d-flex align-items-center justify-content-between">
                 <a href="/" class="logo d-flex align-items-center">
@@ -39,7 +39,7 @@
                 </a>
                 <nav id="navmenu" class="navmenu">
                     <ul>
-                        <li><a href="/#hero-animation" class="active">Home</a></li>
+                        <li><a asp-area="Admin" asp-controller="Products" asp-action="Index" class="active">Home</a></li>
                         <li><a href="/#features">Features</a></li>
                         <li><a href="/#team">Team</a></li>
                         <li class="dropdown">
