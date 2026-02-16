@@ -1,17 +1,16 @@
+using Cortex.Mediator.DependencyInjection;
 using DevSkill.Core.Infrastructure.Extensions;
 using DevSkill.Inventory.Application.Abstractions.Services;
-using DevSkill.Inventory.Application.Extensions;
+using DevSkill.Inventory.Application.Features.Products.Commands.CreateProduct;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Abstractions;
 using DevSkill.Inventory.Domain.Services;
 using DevSkill.Inventory.Infrastructure;
 using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Infrastructure.Identity;
-using DevSkill.Inventory.Web;
 using DevSkill.Inventory.Web.Extensions;
 using DevSkill.Inventory.Web.Models;
 using DevSkill.Inventory.Web.Services;
-using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -52,18 +51,21 @@ try
       );
     #endregion
 
-    #region MediatR Configuration
-    builder.Services.AddCustomMediator(migrationAssembly);
+    #region Cortex.Mediator Configuration
+
+    builder.Services.AddCortexMediator(
+        builder.Configuration,
+        [typeof(Program), typeof(CreateProductCommandHandler)],
+        options =>
+        {
+            options.AddDefaultBehaviors();
+        }
+     );
+
     #endregion
 
     #region AutoMapper Configuration
     builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-    #endregion
-
-    #region Mapster Configuration
-    var config = TypeAdapterConfig.GlobalSettings;
-    config.Scan(typeof(MapsterConfig).Assembly);
-    builder.Services.AddSingleton(config);
     #endregion
 
     #region Add Identity

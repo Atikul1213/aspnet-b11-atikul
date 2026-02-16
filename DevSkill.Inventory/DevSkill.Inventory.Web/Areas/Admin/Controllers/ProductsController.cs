@@ -1,14 +1,19 @@
 ﻿using Amazon;
 using Amazon.SQS;
+using Amazon.SQS.Model;
 using AutoMapper;
+using Cortex.Mediator;
+using DevSkill.Core.Application;
 using DevSkill.Inventory.Application.Exceptions;
+using DevSkill.Inventory.Application.Features.Products.Commands.CreateProduct;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Domain.Services;
+using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
+using DevSkill.Inventory.Web.Extensions;
 using DevSkill.Inventory.Web.Models;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Web;
@@ -51,10 +56,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             client = new AmazonSQSClient(ServiceRegion);
         }
         #endregion
-        /**
+
         #region Product IndexSP AddProduct UpdateProduct DeleteProduct GetCQRSProductSPJsonData
 
-        [Authorize(Roles = "Admin,Registered")]
         public async Task<IActionResult> IndexSP()
         {
             var model = new ProductListModel();
@@ -72,32 +76,32 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> AddProduct()
+        {
+            var model = new AddProductModel();
+            return View(model);
+        }
 
         [HttpPost, ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddProduct(AddProductModel model, IFormFile? file)
         {
             var fullPath = string.Empty;
             try
             {
-
                 if (ModelState.IsValid)
                 {
-
                     string wwwRootPath = _webHostEnvironment.WebRootPath;
-
                     if (file != null)
                     {
                         string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                         string productImagePath = Path.Combine(wwwRootPath, @"images\products");
-
                         fullPath = Path.Combine(productImagePath, fileName);
 
                         using (var fileStream = new FileStream(Path.Combine(productImagePath, fileName), FileMode.Create))
                         {
                             file.CopyTo(fileStream);
                         }
-
                         model.ImageUrl = Path.Combine(@"/images/products", fileName);
                     }
 
@@ -113,9 +117,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     //model.CategoryName = category.Name;
 
                     model.Stock = model.LowStock;
-                    var productAddCommand = _mapper.Map<ProductAddCommand>(model);
+                    var productAddCommand = _mapper.Map<CreateProductCommand>(model);
 
-                    await _mediator.Send(productAddCommand);
+                    var result = await _mediator.SendCommandAsync<CreateProductCommand, ResultResponse>(productAddCommand);
 
                     if (model.ImageUrl != null)
                     {
@@ -141,23 +145,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
-        private async Task SentMessageInSQS(AddProductModel model, string fullPath)
-        {
-            //var createQueueResponse = await CreateQueue(client, QueueName);
 
-            Dictionary<string, MessageAttributeValue> messageAttributes = new Dictionary<string, MessageAttributeValue>
-            {
-                { "ProductName",   new MessageAttributeValue { DataType = "String", StringValue = model.Name } },
-                { "BarCode",  new MessageAttributeValue { DataType = "String", StringValue = model.BarCode } },
-                { "ImageUrl",  new MessageAttributeValue { DataType = "String", StringValue = model.ImageUrl } },
-                { "ImagePath",  new MessageAttributeValue { DataType = "String", StringValue = fullPath } },
-                { "WholeSalePrice", new MessageAttributeValue { DataType = "String", StringValue = model.WholeSalePrice.ToString() } },
-            };
-
-            var body = $"Add {model.Name} into the SQS message queue";
-            var result = await AWSManager.SendMessage(client, _awsOptions.SQSUrl, body, messageAttributes);
-        }
-
+        /**
+        
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProduct(Guid id)
         {
@@ -295,9 +285,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 return Json(DataTables.EmptyResult);
             }
         }
-
-        #endregion
         */
+        #endregion
+
         #region Index Create Edit Delete GetProductJsonData   without CQRS
         public IActionResult Index()
         {
@@ -421,7 +411,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             try
             {
                 var result = await _productService.GetAllProductsAsync(model.PageIndex, model.PageSize, model.FormatSortExpression("Name", "Id"), model.Search);
-
+                int index = 0;
                 var products = new
                 {
                     recordsTotal = result.total,
@@ -429,12 +419,17 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     data = (from record in result.data
                             select new string[]
                             {
+                                (++index).ToString(),
+                                HttpUtility.HtmlEncode(record.ImageUrl),
+                                HttpUtility.HtmlEncode(record.BarCode),
                                 HttpUtility.HtmlEncode(record.Name),
-                                //HttpUtility.HtmlEncode(record.Sku),
-                                //record.Price.ToString("C"),
-                                //record.Quantity.ToString(),
-                                //record.IsAvailable ? "True" : "False",
-                                //record.CreateOnUtc.ToString("dd/MM/yyyy"),
+                                HttpUtility.HtmlEncode(record.CategoryName),
+                                record.PurchasePrice.ToString("C"),
+                                record.MRPPrice.ToString("C"),
+                                record.WholeSalePrice.ToString("C"),
+                                record.Stock.ToString(),
+                                record.LowStock.ToString(),
+                                record.DamageStock.ToString(),
                                 record.Id.ToString()
                             }).ToArray()
                 };
@@ -486,5 +481,28 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
         #endregion
+
+
+        #region Utilities
+
+        private async Task SentMessageInSQS(AddProductModel model, string fullPath)
+        {
+            //var createQueueResponse = await CreateQueue(client, QueueName);
+
+            Dictionary<string, MessageAttributeValue> messageAttributes = new Dictionary<string, MessageAttributeValue>
+            {
+                { "ProductName",   new MessageAttributeValue { DataType = "String", StringValue = model.Name } },
+                { "BarCode",  new MessageAttributeValue { DataType = "String", StringValue = model.BarCode } },
+                { "ImageUrl",  new MessageAttributeValue { DataType = "String", StringValue = model.ImageUrl } },
+                { "ImagePath",  new MessageAttributeValue { DataType = "String", StringValue = fullPath } },
+                { "WholeSalePrice", new MessageAttributeValue { DataType = "String", StringValue = model.WholeSalePrice.ToString() } },
+            };
+
+            var body = $"Add {model.Name} into the SQS message queue";
+            var result = await AWSManager.SendMessage(client, _awsOptions.SQSUrl, body, messageAttributes);
+        }
+
+        #endregion
+
     }
 }

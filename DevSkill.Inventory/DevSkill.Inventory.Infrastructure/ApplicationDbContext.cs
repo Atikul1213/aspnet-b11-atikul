@@ -1,4 +1,5 @@
 ﻿using DevSkill.Core.Infrastructure;
+using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +25,7 @@ namespace DevSkill.Inventory.Infrastructure
         #endregion
 
         #region Properties
-        //public DbSet<Product> Products { get; set; }
+        public DbSet<Product> Products { get; set; }
         #endregion
 
         #region Methods

@@ -1,4 +1,4 @@
-﻿namespace DevSkill.Inventory.Application.Features.Products.Commands
+﻿namespace DevSkill.Inventory.Application.Features.Products.Commands.PrevCommand
 {
     //public class ProductAddCommandHandler : IRequestHandler<ProductAddCommand>
     //{

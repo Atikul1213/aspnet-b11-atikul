@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using Cortex.Mediator.Commands;
+using DevSkill.Core.Application;
 
-namespace DevSkill.Inventory.Application.Features.Products.Commands
+namespace DevSkill.Inventory.Application.Features.Products.Commands.CreateProduct
 {
-    public class ProductAddCommand : IRequest
+    public class CreateProductCommand : ICommand<ResultResponse>
     {
         public string BarCode { get; set; }
         public string Name { get; set; }

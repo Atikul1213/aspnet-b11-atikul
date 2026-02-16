@@ -1,9 +1,9 @@
-﻿using DevSkill.Inventory.Domain.Entities;
-using MediatR;
+﻿//using DevSkill.Inventory.Domain.Entities;
+//using MediatR;
 
-namespace DevSkill.Inventory.Application.Features.Products.Queries
-{
-    public class GetProductListQuery : IRequest<IList<Product>>
-    {
-    }
-}
+//namespace DevSkill.Inventory.Application.Features.Products.Queries
+//{
+//    public class GetProductListQuery : IRequest<IList<Product>>
+//    {
+//    }
+//}

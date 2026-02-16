@@ -1,4 +1,5 @@
-﻿@model ProductUpdateCommand
+﻿@* @using DevSkill.Inventory.Application.Features.Products.Commands.PrevCommand *@
+@* @model ProductUpdateCommand *@
 
 @{
     ViewData["Title"] = "Update Product";
@@ -40,9 +41,9 @@
                     <div class="card-header"><div class="card-title">Update Product</div></div>
                     <!--end::Header-->
                     <!--begin::Form-->
-                    <form asp-area="Admin" asp-controller="Products" asp-action="EditProduct" asp-antiforgery="true" method="post">
+                    @* <form asp-area="Admin" asp-controller="Products" asp-action="EditProduct" asp-antiforgery="true" method="post"> *@
                         <!--begin::Body-->
-                        <input asp-for="Id" type="hidden" />
+                      @*   <input asp-for="Id" type="hidden" />
                         <div class="card-body">
                             <div class="mb-3">
                                 <label asp-for="Name" class="form-label">Product Name</label>
@@ -55,7 +56,7 @@
                                 <input type="text" class="form-control" asp-for="BarCode" id="Sku" aria-describedby="titleHelp" />
                                 <span asp-validation-for="BarCode" class="text-danger"></span>
                                 <div id="titleHelp" class="form-text"> </div>
-                            </div>
+                            </div> *@
                           @*   <div class="mb-3">
                                 <label asp-for="Price" class="form-label">Price</label>
                                 <input type="number" class="form-control" asp-for="Price" id="Price" />
@@ -79,7 +80,7 @@
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
                         <!--end::Footer-->
-                    </form>
+                    @* </form> *@
                     <!--end::Form-->
                 </div>
                 <!--end::Quick Example-->

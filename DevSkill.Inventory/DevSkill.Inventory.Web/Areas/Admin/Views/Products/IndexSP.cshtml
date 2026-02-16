@@ -1,5 +1,4 @@
 ﻿@model ProductListModel
-
 @{
     ViewData["Title"] = "Products";
 }
@@ -7,200 +6,224 @@
 @section Styles {
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+        .select2-container--bootstrap-5 .select2-selection {
+            min-height: calc(1.5em + 0.75rem + 2px);
+            font-size: 1rem;
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+            background-color: #fff;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection--single {
+            height: calc(1.5em + 0.75rem + 2px) !important;
+            padding: 0.375rem 0.75rem;
+        }
+
+            .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+                padding-left: 0;
+                padding-right: 20px;
+                line-height: 1.5;
+                color: #384551;
+            }
+
+            .select2-container--bootstrap-5 .select2-selection--single .select2-selection__placeholder {
+                color: #384551 !important;
+                opacity: 0.5;
+            }
+
+            .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered:not(.select2-selection__placeholder) {
+                color: #212529 !important;
+                opacity: 1;
+            }
+
+            .select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
+                height: calc(1.5em + 0.75rem);
+                right: 3px;
+            }
+
+        .select2-container--bootstrap-5.select2-container--focus .select2-selection,
+        .select2-container--bootstrap-5.select2-container--open .select2-selection {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+    </style>
 }
 
-<!--begin::App Content Header-->
-<div class="app-content-header">
-    <!--begin::Container-->
-    <div class="container-fluid">
-        <!--begin::Row-->
-        <div class="row">
-            <div class="col-sm-6"><h3 class="mb-0">Product Table</h3></div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-end">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Product Tables</li>
-                </ol>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header border-bottom">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                     <h5 class="card-title mb-0">Search Filters</h5>
+                    <a asp-controller="Products" asp-action="AddProduct" class="btn btn-primary align-content-end text-ri">
+                        <i class="bx bx-plus me-1"></i>
+                        Add New Product
+                    </a>
+                </div>
+            </div>
+            <div class="card-body pb-0">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" asp-for="SearchItem.Name" class="form-control" placeholder="Search in product name" />
+                        <span asp-validation-for="SearchItem.Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">BarCode</label>
+                        <input type="text" asp-for="SearchItem.BarCode" class="form-control" placeholder="BarCode" />
+                        <span asp-validation-for="SearchItem.BarCode" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Category</label>
+                        <input type="text" asp-for="SearchItem.Category" class="form-control" placeholder="Category" />
+                        <span asp-validation-for="SearchItem.Category" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">MRPFrom</label>
+                        <input type="number" asp-for="SearchItem.MRPFrom" class="form-control" placeholder="MRPFrom" />
+                        <span asp-validation-for="SearchItem.MRPFrom" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">MRPTo</label>
+                        <input type="number" asp-for="SearchItem.MRPTo" class="form-control" placeholder="MRPTo" />
+                        <span asp-validation-for="SearchItem.MRPTo" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">StockFrom</label>
+                        <input type="number" asp-for="SearchItem.StockFrom" class="form-control" placeholder="StockFrom" />
+                        <span asp-validation-for="SearchItem.StockFrom" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">StockTo</label>
+                        <input type="number" asp-for="SearchItem.StockTo" class="form-control" placeholder="StockTo" />
+                        <span asp-validation-for="SearchItem.StockTo" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-1">
+                    <button id="searchButton" type="button" class="btn btn-primary">Search</button>
+                    <button id="resetButton" type="button" class="btn btn-outline-secondary">Reset</button>
+                </div>
             </div>
         </div>
-        <!--end::Row-->
+
+        <div class="card">
+            <h5 class="card-header">Available Products</h5>
+                <div class="card-body table-responsive pt-0">
+                    <partial name="_ModalPartial" />
+                    <table id="product-table" class="table table-bordered table-hover w-100">
+                        <thead>
+                            <tr>
+                                <th>SL No</th>
+                                <th>Image</th>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Purchase</th>
+                                <th>MRP</th>
+                                <th>Wholesale</th>
+                                <th>Stock</th>
+                                <th>Low Stock</th>
+                                <th>Damage Stock</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th>SL No</th>
+                                <th>Image</th>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Purchase</th>
+                                <th>MRP</th>
+                                <th>Wholesale</th>
+                                <th>Stock</th>
+                                <th>Low Stock</th>
+                                <th>Damage Stock</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+              </div>
+        </div>
     </div>
-    <!--end::Container-->
 </div>
-<!--end::App Content Header-->
-<!--begin::App Content-->
-<div class="app-content">
-    <!--begin::Container-->
-    <div class="container-fluid">
-
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col-md-6  fw-bold"><div>Search Product</div></div>
-                        <div class="col-md-6 text-end">
-                            <button type="button" class="btn btn-primary btn-add-product">
-                                <i class="bi bi-bookmark-plus-fill"></i> New Product
-                            </button>
-                        </div>
-                    </div>
-                    @* <h3 class="card-title"><i class="fas fa-search mr-1"></i>Search Product</h3> *@
-
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                    <!-- /.card-tools -->
-                </div>
-                <!-- /.card-header -->
-                <div style="background-color:#738199;" class="card-body  p-3 text-white">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label>Name</label>
-                                <input type="text" asp-for="SearchItem.Name" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label>Bar code</label>
-                                <input type="text" asp-for="SearchItem.BarCode" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label>Category</label>
-                                <input type="text" asp-for="SearchItem.Category" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label>MRP From</label>
-                                <input type="number" asp-for="SearchItem.MRPFrom" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label>MRP To</label>
-                                <input type="number" asp-for="SearchItem.MRPTo" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label>Stock From</label>
-                                <input type="number" asp-for="SearchItem.StockFrom" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label>Stock To</label>
-                                <input type="number" asp-for="SearchItem.StockTo" class="form-control" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                    <button id="searchButton" type="submit" class="btn btn-primary float-right">Search</button>
-                </div>
-            </div>
-        </div>
-
-        <!--begin::Row-->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header"><h3 class="card-title">Available Products</h3></div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        @* <partial name="_ModalPartial" /> *@
-                        <table id="product-table" class="table table-bordered p-3 text-center table-hover">
-                            <thead>
-                                <tr class="table-primary">
-                                    <th>Image</th>
-                                    <th>Code</th>
-                                    <th>Name</th>
-                                    <th>Category</th>
-                                    <th>Purchase</th>
-                                    <th>MRP</th>
-                                    <th>Wholesale</th>
-                                    <th>Stock</th>
-                                    <th>Low Stock</th>
-                                    <th>Damage Stock</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                            <tfoot>
-                                <tr class="table-primary">
-                                     <th>Image</th>
-                                    <th>Code</th>
-                                    <th>Name</th>
-                                    <th>Category</th>
-                                    <th>Purchase</th>
-                                    <th>MRP</th>
-                                    <th>Wholesale</th>
-                                    <th>Stock</th>
-                                    <th>Low Stock</th>
-                                    <th>Damage Stock</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-
-                </div>
-                <!-- /.card -->
-                @Html.Partial("_ProductInfo", Model.AddProductModel)
-            </div>
-            <!-- /.col -->
-        </div>
-        <!--end::Row-->
-    </div>
-    <!--end::Container-->
-</div>
-<!--end::App Content-->
-
+       
 @section Scripts {
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
 
-        <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-        <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
 
+    <!-- DataTables Core v2 -->
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
 
+    <!-- DataTables Buttons Extension -->
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
 
-        @* <script src="https://cdn.datatables.net/buttons/3.2.4/js/dataTables.buttons.js"></script> *@
- 
-        <script>
+    <!-- Required for Excel/PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+    <!-- Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
            $(function(){
                 $("#product-table").DataTable({
                     processing: true,
                     serverSide: true,
                     responsive: true,
                     searching: false,
-                    // paging: true,
                     lengthChange: true,
                     autoWidth: false,
-                    lengthMenu: [
-                        [10, 25, 50, -1],
-                        [10, 25, 50, 'All']
-                    ],
-                    dom: `Bfrtip`,
-                    buttons: [
-                         'copy', 'csv', 'excel', 'pdf', 'print'
-                    ],
+                    pagingType: "simple_numbers",
+                    language: {
+                        paginate: {
+                            previous: "<i class='bx bx-chevron-left'></i>",
+                            next: "<i class='bx bx-chevron-right'></i>"
+                        }
+                    },
+                    layout: {
+                        topStart: {
+                            // Left side: Length dropdown
+                            pageLength: {
+                                menu: [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
+                                text: "Show _MENU_ entries"
+                            }
+                        },
+                        topMid: {
+                            buttons:[
+                                 { extend: 'copy',  exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9,10] } },
+                                 { extend: 'csv',   exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9,10] } },
+                                 { extend: 'excel', exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9,10] } },
+                                 { extend: 'pdf',   exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9,10] } },
+                                 { extend: 'print', exportOptions: { columns: [0,1,2,3,4,5,6,7,8,9,10] } }
+                            ]
+                        },
+                    },
 
                     ajax: {
-                      url: '@Url.Action("GetCQRSProductSPJsonData", "Products")',
+                         url: '@Url.Action("GetProductJsonData", "Products")',
                          type: 'POST',
                          contentType: "application/json",
                          datatype: 'json',
@@ -219,7 +242,15 @@
                     },
                     columnDefs: [
                         {
-                            targets: 0,
+                             targets: "_all",
+                             className: 'dt-left'
+                         },
+                         {
+                             orderable: false,
+                             targets: 0,
+                         },
+                        {
+                            targets: 1,
                             orderable: false,
                             render: function (data, type, row) {
                                 return `<img src="${data}" alt="Product Image" width="80" height="80" style="object-fit: contain;" />`;
@@ -227,27 +258,27 @@
                         },
                         {
                             orderable: false,
-                            targets: 10,
+                            targets: -1,
                             render: function(data, type, row){
-                                 return `<a href="/Admin/Products/UpdateProduct/${data}" data-id="${data}"   value='${data}' class="btn btn-primary">
-                                             <i class="bi bi-pencil-fill"></i></a>
-
-                                    <a href="/Admin/Products/DeleteProduct/${data}"  value='${data}' class="btn btn-danger">
-                                             <i class="bi bi-trash-fill"></i></a>`;
+                              return `<div class="dropdown">
+                                 <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                     Actions
+                                 </button>
+                                 <ul class="dropdown-menu">
+                                     <li><a class="dropdown-item text-info" href="/Admin/Products/UpdateProduct/${data}" data-id="${data}" value='${data}'>View</a></li>
+                                     <li><a class="dropdown-item text-warning" href="/Admin/Products/UpdateProduct/${data}" data-id="${data}" value='${data}'>Edit</a></li>
+                                     <li><button class="dropdown-item text-danger show-bs-modal" href="/Admin/Products/DeleteProduct/${data}"  value='${data}'">Delete</button></li>
+                                 </ul>
+                             </div>`;
                             }
                         }
                     ],
                 });
 
-
-             // new DataTable('#product-table', {
-             //        layout: {
-             //            topStart: {
-             //                buttons: ['pageLength']
-             //            }
-             //        }
-             //    });
-
+             $('.select2').select2({
+                  theme: 'bootstrap-5',
+                  width: '100%'
+              });
 
               $("#searchButton").on('click', function(){
                   $("#product-table").DataTable().ajax.reload(null, false);
@@ -255,14 +286,37 @@
 
            });
 
-        </script>
+            $("#product-table").on('click', '.show-bs-modal', function(){
+              let id = $(this).data("id");
+              let deleteModel = $("#modal-delete");
 
-    <script>
-        $(document).ready(function () {
-            // Handle Edit product button click
-            $(".btn-add-product").on("click", function () {
-                $("#add-product-modal").modal("show");
+              deleteModel.find('.modal-body p').text('Are you sure you want to delete the product');
+              $("#delete-id").val(id);
+              $("#delete-form").attr('action', '/admin/products/delete');
+              deleteModel.modal('show');
             });
-        });
-    </script>
+
+             $("#delete-button").click(function(){
+                  $("#delete-form").submit();
+             });
+
+            function resetFilters(){
+                $("#SearchItem_Name").val('');
+                $("#SearchItem_BarCode").val('');
+                $("#SearchItem_Category").val('');
+                $("#SearchItem_MRPFrom").val('');
+                $("#SearchItem_MRPTo").val('');
+                $("#SearchItem_StockFrom").val('');
+                $("#SearchItem_StockTo").val('');
+            }
+
+            $(document).ready(function () {
+                $('#resetButton').on('click', function (e) {
+                    e.preventDefault();
+                    resetFilters();
+                    $('#product-table').DataTable().ajax.reload();
+                });
+            });
+     </script>
+ 
 }

@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using DevSkill.Inventory.Application.Abstractions.Services;
-using DevSkill.Inventory.Application.Features.Products.Commands;
+using DevSkill.Inventory.Application.Features.Products.Commands.CreateProduct;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Repositories;
 using DevSkill.Inventory.Domain.Services;
@@ -40,7 +40,7 @@ namespace DevSkill.Inventory.Worker
             builder.RegisterType<EmailUtility>().As<IEmailUtility>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<ProductAddCommand>().AsSelf();
+            builder.RegisterType<CreateProductCommand>().AsSelf();
             base.Load(builder);
         }
     }
