@@ -18,6 +18,7 @@ namespace DevSkill.Inventory.Infrastructure
             IEmailTrackerRepository emailTrackerRepository,
             IEmailQueueItemRepository emailQueueItemRepository,
             IFailedEmailQueueItemRepository failedEmailQueueItemRepository,
+            IContactUsInfoRepository contactUsInfoRepository,
             IProductRepository productRepository,
             ICustomUserRepository userRepository)
             : base(context,
@@ -27,6 +28,7 @@ namespace DevSkill.Inventory.Infrastructure
                 failedEmailQueueItemRepository)
         {
             sqlUtility = new DevSkill.Inventory.Infrastructure.Utilities.SqlUtility(context.Database.GetDbConnection());
+            ContactUsInfoRepository = contactUsInfoRepository;
             ProductRepository = productRepository;
             UserRepository = userRepository;
         }
@@ -35,8 +37,9 @@ namespace DevSkill.Inventory.Infrastructure
 
         #region Fields
         public DevSkill.Inventory.Domain.Utilities.ISqlUtility sqlUtility { get; private set; }
+        public IContactUsInfoRepository ContactUsInfoRepository { get; private set; }
         public IProductRepository ProductRepository { get; private set; }
-        public new ICustomUserRepository UserRepository { get; private set; }
+        public ICustomUserRepository UserRepository { get; private set; }
         #endregion
 
         #region Methods

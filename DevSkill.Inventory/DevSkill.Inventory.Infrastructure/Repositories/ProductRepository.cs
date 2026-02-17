@@ -9,12 +9,20 @@ namespace DevSkill.Inventory.Infrastructure.Repositories
 {
     public class ProductRepository : Repository<Product, Guid>, IProductRepository
     {
+        #region Fields
+
         private readonly ApplicationDbContext _applicationDbContext;
+
+        #endregion
+
+        #region Ctor
         public ProductRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
             _applicationDbContext = dbContext;
         }
+        #endregion
 
+        #region Methods
         public async Task<(IList<Product> data, int total, int totalDisplay)> GetAllPagedProductAsync(int pageIndex, int pageSize, string? order, ProductSearchDto search)
         {
             Expression<Func<Product, bool>> filter = null;
@@ -62,5 +70,7 @@ namespace DevSkill.Inventory.Infrastructure.Repositories
             return await SingleOrDefaultAsync(selector: x => x, // full entity
                 predicate: x => x.ImageUrl != null && x.ImageUrl.Contains(imageUrl, StringComparison.OrdinalIgnoreCase));
         }
+
+        #endregion
     }
 }

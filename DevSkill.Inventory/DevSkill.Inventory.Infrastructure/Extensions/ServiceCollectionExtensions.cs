@@ -97,6 +97,7 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
             services.AddScoped<IServerTime, ServerTime>();
             services.AddScoped<IEmailUtility, EmailUtility>();
             services.AddScoped<IUserRedirectionService, UserRedirectionService>();
+            services.AddScoped<IContactUsInfoRepository, ContactUsInfoRepository>();
 
             services.AddScoped<IProductRepository, ProductRepository>();
 

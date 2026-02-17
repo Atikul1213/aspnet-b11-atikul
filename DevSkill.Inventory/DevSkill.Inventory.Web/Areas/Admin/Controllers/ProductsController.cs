@@ -18,6 +18,7 @@ using DevSkill.Inventory.Infrastructure.Extensions;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
 using DevSkill.Inventory.Web.Extensions;
 using DevSkill.Inventory.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
@@ -26,9 +27,9 @@ using System.Web;
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     //[Authorize(Roles = "Admin, SuperAdmin")]
     //[Authorize(Policy = "AdministratorsPermission")]
-
     public class ProductsController : Controller
     {
         #region Fields
@@ -63,7 +64,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         #endregion
 
         #region  IndexSP AddProduct UpdateProduct DeleteProduct GetCQRSProductSPJsonData with CQRS
-
         public async Task<IActionResult> IndexSP()
         {
             var model = new ProductListModel();
@@ -304,6 +304,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 var getProductListQuery = _mapper.Map<GetProductListQuery>(model);
 
                 var (data, total, totalDisplay) = await _mediator.SendQueryAsync<GetProductListQuery, (IList<Product>, int, int)>(getProductListQuery);
+                int index = 0;
                 var products = new
                 {
                     recordsTotal = total,
@@ -311,17 +312,18 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     data = (from record in data
                             select new string[]
                             {
-                               HttpUtility.HtmlEncode(record.ImageUrl),
-                               HttpUtility.HtmlEncode(record.BarCode),
-                               HttpUtility.HtmlEncode(record.Name),
-                               HttpUtility.HtmlEncode(record.CategoryName),
-                               record.PurchasePrice.ToString("C"),
-                               record.MRPPrice.ToString("C"),
-                               record.WholeSalePrice.ToString("C"),
-                               record.Stock.ToString(),
-                               record.LowStock.ToString(),
-                               record.DamageStock.ToString(),
-                               record.Id.ToString()
+                                (++index).ToString(),
+                                HttpUtility.HtmlEncode(record.ImageUrl),
+                                HttpUtility.HtmlEncode(record.BarCode),
+                                HttpUtility.HtmlEncode(record.Name),
+                                HttpUtility.HtmlEncode(record.CategoryName),
+                                record.PurchasePrice.ToString("C"),
+                                record.MRPPrice.ToString("C"),
+                                record.WholeSalePrice.ToString("C"),
+                                record.Stock.ToString(),
+                                record.LowStock.ToString(),
+                                record.DamageStock.ToString(),
+                                record.Id.ToString()
                             }).ToArray()
                 };
 

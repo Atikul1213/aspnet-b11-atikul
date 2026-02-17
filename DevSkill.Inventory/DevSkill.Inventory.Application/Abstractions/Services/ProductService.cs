@@ -8,11 +8,22 @@ namespace DevSkill.Inventory.Application.Abstractions.Services
 {
     public class ProductService : IProductService
     {
+        #region Fields
+
         private readonly IApplicationUnitOfWork _applicationUnitOfWork;
+
+        #endregion
+
+        #region Ctor
+
         public ProductService(IApplicationUnitOfWork applicationUnitOfWork)
         {
             _applicationUnitOfWork = applicationUnitOfWork;
         }
+
+        #endregion
+
+        #region Methods
         public async Task AddProductAsync(Product product)
         {
             if (!await _applicationUnitOfWork.ProductRepository.CheckBarCodeDuplicateAsync(product.BarCode))
@@ -57,5 +68,7 @@ namespace DevSkill.Inventory.Application.Abstractions.Services
         {
             return await _applicationUnitOfWork.GetProductSPAsync(pageIndex, pageSize, order, search);
         }
+
+        #endregion
     }
 }
