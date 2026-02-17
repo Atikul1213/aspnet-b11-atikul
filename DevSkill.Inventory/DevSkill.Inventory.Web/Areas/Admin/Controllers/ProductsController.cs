@@ -6,6 +6,10 @@ using Cortex.Mediator;
 using DevSkill.Core.Application;
 using DevSkill.Inventory.Application.Exceptions;
 using DevSkill.Inventory.Application.Features.Products.Commands.CreateProduct;
+using DevSkill.Inventory.Application.Features.Products.Commands.DeleteProduct;
+using DevSkill.Inventory.Application.Features.Products.Commands.UpdateProduct;
+using DevSkill.Inventory.Application.Features.Products.Queries.GetProductById;
+using DevSkill.Inventory.Application.Features.Products.Queries.GetProductList;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
@@ -15,6 +19,7 @@ using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
 using DevSkill.Inventory.Web.Extensions;
 using DevSkill.Inventory.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using System.Web;
 
@@ -57,21 +62,11 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
         #endregion
 
-        #region Product IndexSP AddProduct UpdateProduct DeleteProduct GetCQRSProductSPJsonData
+        #region  IndexSP AddProduct UpdateProduct DeleteProduct GetCQRSProductSPJsonData with CQRS
 
         public async Task<IActionResult> IndexSP()
         {
             var model = new ProductListModel();
-
-            //var categories = await _mediator.Send(new GetActiveCategoryListQuery());
-            //var units = await _mediator.Send(new GetActiveUnitListQuery());
-
-            //model.AddProductModel.Categories = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
-            //model.AddProductModel.Units = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
-
-            Random random = new Random();
-            int threeDigitNumber = random.Next(100, 1000);
-            model.AddProductModel.BarCode = $"P-SUN000{threeDigitNumber}";
 
             return View(model);
         }
@@ -80,53 +75,77 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         public async Task<IActionResult> AddProduct()
         {
             var model = new AddProductModel();
+            model.Categories = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = "Select category",
+                    Value = Guid.NewGuid().ToString()
+                }
+            };
+
+            model.Units = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = "Select unit",
+                    Value = Guid.NewGuid().ToString()
+                }
+            };
+
             return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProduct(AddProductModel model, IFormFile? file)
         {
-            var fullPath = string.Empty;
             try
             {
                 if (ModelState.IsValid)
                 {
-                    string wwwRootPath = _webHostEnvironment.WebRootPath;
                     if (file != null)
                     {
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        string productImagePath = Path.Combine(wwwRootPath, @"images\products");
-                        fullPath = Path.Combine(productImagePath, fileName);
+                        string uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), @"images\products");
+                        if (!Directory.Exists(uploadFolderPath))
+                        {
+                            Directory.CreateDirectory(uploadFolderPath);
+                        }
 
-                        using (var fileStream = new FileStream(Path.Combine(productImagePath, fileName), FileMode.Create))
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        var filePath = Path.Combine(uploadFolderPath, fileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
                         {
                             file.CopyTo(fileStream);
                         }
                         model.ImageUrl = Path.Combine(@"/images/products", fileName);
                     }
 
-                    string folder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "barcodes");
-                    Directory.CreateDirectory(folder);
+                    if (model.BarCode != null)
+                    {
+                        var barCodeFolderPath = Path.Combine(Directory.GetCurrentDirectory(), @"images\barcodes");
+                        if (!Directory.Exists(barCodeFolderPath))
+                        {
+                            Directory.CreateDirectory(barCodeFolderPath);
+                        }
 
-                    string fileNameBarcode = $"{model.BarCode}_barcode.png";
-                    string savePath = Path.Combine(folder, fileNameBarcode);
-                    string imagePath = BarcodeHelper.GenerateProductBarcode(model.Name, model.BarCode, model.WholeSalePrice, savePath);
-                    model.BarcodeImagePath = Path.Combine(@"/images/barcodes", fileNameBarcode);
+                        string barCodeFileName = $"{model.BarCode}_barcode.png";
+                        string barCodeFilePath = Path.Combine(barCodeFolderPath, barCodeFileName);
+                        string imagePath = BarcodeHelper.GenerateProductBarcode(model.Name, model.BarCode, model.WholeSalePrice, barCodeFilePath);
 
+                        model.BarcodeImagePath = Path.Combine(@"/images/barcodes", barCodeFileName);
+                    }
                     //var category = await _mediator.Send(new GetCategoryByIdQuery(model.CategoryId));
-                    //model.CategoryName = category.Name;
+                    model.CategoryName = "Electronics";
 
                     model.Stock = model.LowStock;
-                    var productAddCommand = _mapper.Map<CreateProductCommand>(model);
+                    var createProductCommand = _mapper.Map<CreateProductCommand>(model);
 
-                    var result = await _mediator.SendCommandAsync<CreateProductCommand, ResultResponse>(productAddCommand);
+                    var result = await _mediator.SendCommandAsync<CreateProductCommand, ResultResponse>(createProductCommand);
 
-                    if (model.ImageUrl != null)
-                    {
-                        //await SentMessageInSQS(model, fullPath);
-                    }
+                    if (result.IsSuccess)
+                        TempData["success"] = "Product created successfully";
 
-                    TempData["success"] = "Product created successfully";
                     return RedirectToAction("IndexSP");
                 }
             }
@@ -144,27 +163,38 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return RedirectToAction("IndexSP");
         }
 
-
-
-        /**
-        
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProduct(Guid id)
         {
             try
             {
-                var product = await _mediator.Send(new GetProductByIdQuery(id));
+                var getProductByIdQuery = new GetProductByIdQuery(id);
+                var query = await _mediator.SendQueryAsync<GetProductByIdQuery, ResultResponse<Product>>(getProductByIdQuery);
 
-                if (product is null)
+                if (!query.IsSuccess)
+                {
+                    TempData["error"] = "Product does not exist";
                     return RedirectToAction("IndexSP");
+                }
 
-                var model = _mapper.Map<UpdateProductModel>(product);
-                //var categories = await _mediator.Send(new GetActiveCategoryListQuery());
-                //var units = await _mediator.Send(new GetActiveUnitListQuery());
+                var model = _mapper.Map<UpdateProductModel>(query.Data);
 
-                //model.Categories = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
+                model.Categories = new List<SelectListItem>
+                {
+                    new SelectListItem
+                    {
+                        Text = "Select category",
+                        Value = Guid.NewGuid().ToString()
+                    }
+                };
 
-                //model.Units = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
+                model.Units = new List<SelectListItem>
+                {
+                    new SelectListItem
+                    {
+                        Text = "Select unit",
+                        Value = Guid.NewGuid().ToString()
+                    }
+                };
 
                 return View(model);
             }
@@ -178,7 +208,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProduct(UpdateProductModel model, IFormFile? file)
         {
@@ -186,26 +215,30 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    string wwwRootPath = _webHostEnvironment.WebRootPath;
                     if (file != null)
                     {
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        string productImagePath = Path.Combine(wwwRootPath, @"images\products");
+                        string uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), @"images\products");
+                        if (!Directory.Exists(uploadFolderPath))
+                        {
+                            Directory.CreateDirectory(uploadFolderPath);
+                        }
 
-                        using (var fileStream = new FileStream(Path.Combine(productImagePath, fileName), FileMode.Create))
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        var filePath = Path.Combine(uploadFolderPath, fileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
                         {
                             file.CopyTo(fileStream);
                         }
-
                         model.ImageUrl = Path.Combine(@"/images/products", fileName);
                     }
 
-                    //var category = await _mediator.Send(new GetCategoryByIdQuery(model.CategoryId));
-                    //model.CategoryName = category.Name;
+                    var updateProductCommand = _mapper.Map<UpdateProductCommand>(model);
 
-                    var productUpdateCommand = _mapper.Map<ProductUpdateCommand>(model);
-                    await _mediator.Send(productUpdateCommand);
-                    TempData["success"] = "Product updated successfully";
+                    var result = await _mediator.SendCommandAsync<UpdateProductCommand, ResultResponse>(updateProductCommand);
+
+                    if (result.IsSuccess)
+                        TempData["success"] = "Product updated successfully";
 
                     return RedirectToAction("IndexSP");
                 }
@@ -220,25 +253,38 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 TempData["error"] = "Failed to edit product.";
                 _logger.LogError(ex, "There was an error while updating product");
             }
-            //var categories = await _mediator.Send(new GetCategoryListQuery());
-            //var units = await _mediator.Send(new GetUnitListQuery());
 
+            model.Categories = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = "Select category",
+                    Value = Guid.NewGuid().ToString()
+                }
+            };
 
-            //model.Categories = EnumHelper.PrepareSelectListFromEntities(categories, c => c.Id, c => c.Name);
-            //model.Units = EnumHelper.PrepareSelectListFromEntities(units, c => c.Id, c => c.Name);
+            model.Units = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = "Select unit",
+                    Value = Guid.NewGuid().ToString()
+                }
+            };
 
             return View(model);
         }
 
-
-        [Authorize(Roles = "Admin")]
+        [HttpPost]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             try
             {
-                var productDeleteCommand = new ProductDeleteCommand(id);
-                await _mediator.Send(productDeleteCommand);
-                ViewData["success"] = "Product deleted successfully";
+                var deleteProductCommand = new DeleteProductCommand(id);
+                var result = await _mediator.SendCommandAsync<DeleteProductCommand, ResultResponse>(deleteProductCommand);
+
+                if (result.IsSuccess)
+                    ViewData["success"] = "Product deleted successfully";
             }
             catch (Exception ex)
             {
@@ -251,11 +297,13 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> GetCQRSProductSPJsonData([FromBody] GetAllProductQuery model)
+        public async Task<IActionResult> GetCQRSProductSPJsonData([FromBody] ProductListModel model)
         {
             try
             {
-                var (data, total, totalDisplay) = await _mediator.Send(model);
+                var getProductListQuery = _mapper.Map<GetProductListQuery>(model);
+
+                var (data, total, totalDisplay) = await _mediator.SendQueryAsync<GetProductListQuery, (IList<Product>, int, int)>(getProductListQuery);
                 var products = new
                 {
                     recordsTotal = total,
@@ -263,17 +311,17 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     data = (from record in data
                             select new string[]
                             {
-                                HttpUtility.HtmlEncode(record.ImageUrl),
-                                HttpUtility.HtmlEncode(record.BarCode),
-                                HttpUtility.HtmlEncode(record.Name),
-                                HttpUtility.HtmlEncode(record.CategoryName),
-                                record.PurchasePrice.ToString("C"),
-                                record.MRPPrice.ToString("C"),
-                                record.WholeSalePrice.ToString("C"),
-                                record.Stock.ToString(),
-                                record.LowStock.ToString(),
-                                record.DamageStock.ToString(),
-                                record.Id.ToString()
+                               HttpUtility.HtmlEncode(record.ImageUrl),
+                               HttpUtility.HtmlEncode(record.BarCode),
+                               HttpUtility.HtmlEncode(record.Name),
+                               HttpUtility.HtmlEncode(record.CategoryName),
+                               record.PurchasePrice.ToString("C"),
+                               record.MRPPrice.ToString("C"),
+                               record.WholeSalePrice.ToString("C"),
+                               record.Stock.ToString(),
+                               record.LowStock.ToString(),
+                               record.DamageStock.ToString(),
+                               record.Id.ToString()
                             }).ToArray()
                 };
 
@@ -285,7 +333,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 return Json(DataTables.EmptyResult);
             }
         }
-        */
+
         #endregion
 
         #region Index Create Edit Delete GetProductJsonData   without CQRS
@@ -387,8 +435,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         [HttpPost, ValidateAntiForgeryToken]
-        // [Authorize(Policy = "CustomAccess")]
-        // [Authorize(Policy = "AgeRestriction")]  
         public async Task<IActionResult> Delete(Guid id)
         {
             try
@@ -481,7 +527,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         }
 
         #endregion
-
 
         #region Utilities
 

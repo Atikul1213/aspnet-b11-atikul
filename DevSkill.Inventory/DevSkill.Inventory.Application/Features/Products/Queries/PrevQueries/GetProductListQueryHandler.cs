@@ -1,4 +1,4 @@
-﻿namespace DevSkill.Inventory.Application.Features.Products.Queries
+﻿namespace DevSkill.Inventory.Application.Features.Products.Queries.PrevQueries
 {
     //public class GetProductListQueryHandler : IRequestHandler<GetProductListQuery, IList<Product>>
     //{

@@ -2,7 +2,6 @@
 @{
     ViewData["Title"] = "Products";
 }
-
 @section Styles {
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.min.css">
@@ -62,8 +61,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                      <h5 class="card-title mb-0">Search Filters</h5>
                     <a asp-controller="Products" asp-action="AddProduct" class="btn btn-primary align-content-end text-ri">
-                        <i class="bx bx-plus me-1"></i>
-                        Add New Product
+                        <i class="bx bx-plus me-1"></i> Add New Product
                     </a>
                 </div>
             </div>
@@ -84,32 +82,27 @@
                         <input type="text" asp-for="SearchItem.Category" class="form-control" placeholder="Category" />
                         <span asp-validation-for="SearchItem.Category" class="text-danger"></span>
                     </div>
-
                     <div class="col-md-3">
                         <label class="form-label">MRPFrom</label>
                         <input type="number" asp-for="SearchItem.MRPFrom" class="form-control" placeholder="MRPFrom" />
                         <span asp-validation-for="SearchItem.MRPFrom" class="text-danger"></span>
                     </div>
-
                     <div class="col-md-3">
                         <label class="form-label">MRPTo</label>
                         <input type="number" asp-for="SearchItem.MRPTo" class="form-control" placeholder="MRPTo" />
                         <span asp-validation-for="SearchItem.MRPTo" class="text-danger"></span>
                     </div>
-
                     <div class="col-md-3">
                         <label class="form-label">StockFrom</label>
                         <input type="number" asp-for="SearchItem.StockFrom" class="form-control" placeholder="StockFrom" />
                         <span asp-validation-for="SearchItem.StockFrom" class="text-danger"></span>
                     </div>
-
                     <div class="col-md-3">
                         <label class="form-label">StockTo</label>
                         <input type="number" asp-for="SearchItem.StockTo" class="form-control" placeholder="StockTo" />
                         <span asp-validation-for="SearchItem.StockTo" class="text-danger"></span>
                     </div>
                 </div>
-
                 <div class="d-flex justify-content-end gap-2 mt-1">
                     <button id="searchButton" type="button" class="btn btn-primary">Search</button>
                     <button id="resetButton" type="button" class="btn btn-outline-secondary">Reset</button>
@@ -267,7 +260,7 @@
                                  <ul class="dropdown-menu">
                                      <li><a class="dropdown-item text-info" href="/Admin/Products/UpdateProduct/${data}" data-id="${data}" value='${data}'>View</a></li>
                                      <li><a class="dropdown-item text-warning" href="/Admin/Products/UpdateProduct/${data}" data-id="${data}" value='${data}'>Edit</a></li>
-                                     <li><button class="dropdown-item text-danger show-bs-modal" href="/Admin/Products/DeleteProduct/${data}"  value='${data}'">Delete</button></li>
+                                     <li><button class="dropdown-item text-danger show-bs-modal" href="/Admin/Products/DeleteProduct/${data}" data-id="${data}" value='${data}'">Delete</button></li>
                                  </ul>
                              </div>`;
                             }
@@ -292,7 +285,7 @@
 
               deleteModel.find('.modal-body p').text('Are you sure you want to delete the product');
               $("#delete-id").val(id);
-              $("#delete-form").attr('action', '/admin/products/delete');
+              $("#delete-form").attr('action', '/Admin/Products/DeleteProduct');
               deleteModel.modal('show');
             });
 

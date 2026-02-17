@@ -2,15 +2,14 @@
 @{
     ViewData["Title"] = "Add Product";
 }
-
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">Create New Pricing Package</h5>
+                <h5 class="mb-0">Create New Product</h5>
             </div>
             <div class="card-body">
-                <form asp-area="Admin" asp-controller="Products" asp-action="AddProduct" asp-antiforgery="true" method="post">
+                <form asp-area="Admin" asp-controller="Products" asp-action="AddProduct" asp-antiforgery="true" method="post" enctype="multipart/form-data">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -38,36 +37,51 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label asp-for="PurchasePrice" class="form-label">Purchase price</label>
-                                <input type="number" asp-for="PurchasePrice" class="form-control" placeholder="Purchase price" required />
-                                <span asp-validation-for="PurchasePrice" class="text-danger"></span>
+                                <label asp-for="UnitId" class="form-label">Category</label>
+                                <select class="form-select" asp-for="UnitId" asp-items="Model.Units" id="UnitId" required>
+                                </select>
+                                <span asp-validation-for="UnitId" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label asp-for="MRPPrice" class="form-label">MRPPrice</label>
-                                <input asp-for="MRPPrice" class="form-control" type="number" step="1" min="0" value="0" />
+                                <input asp-for="MRPPrice" class="form-control" type="number"/>
                                 <span asp-validation-for="MRPPrice" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label asp-for="Stock" class="form-label">Stock</label>
-                                <input asp-for="Stock" class="form-control" type="number" step="1" min="0" value="0" />
+                                <input asp-for="Stock" class="form-control" type="number"/>
                                 <span asp-validation-for="Stock" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label asp-for="LowStock" class="form-label">Low Stock</label>
-                                <input asp-for="LowStock" class="form-control" placeholder="Low Stock" type="number" min="1" value="1" />
+                                <input asp-for="LowStock" class="form-control" placeholder="Low Stock" type="number" />
                                 <span asp-validation-for="LowStock" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="PurchasePrice" class="form-label">Purchase price</label>
+                                <input type="number" asp-for="PurchasePrice" class="form-control" placeholder="Purchase price" required />
+                                <span asp-validation-for="PurchasePrice" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="WholeSalePrice" class="form-label">Whole sale price</label>
+                                <input type="number" asp-for="WholeSalePrice" class="form-control" placeholder="Whole sale price" required />
+                                <span asp-validation-for="WholeSalePrice" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -77,10 +91,9 @@
                             </div>
                         </div>
                     </div>
-                     
                     <div class="mt-4">
                         <button type="submit" class="btn btn-primary">Submit</button>
-                        <a asp-controller="Products" asp-action="IndexSP"  class="btn btn-secondary">Cancel</a>
+                        <a asp-area="Admin" asp-controller="Products" asp-action="IndexSP" class="btn btn-secondary">Back to product list</a>
                     </div>
                 </form>
             </div>
