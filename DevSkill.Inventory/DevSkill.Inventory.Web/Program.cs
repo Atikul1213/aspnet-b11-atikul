@@ -100,10 +100,14 @@ try
     #region Docker_Configuration
     //builder.WebHost.UseUrls("http://*:80");
     #endregion
+
+
+    #region ApplicationDbContext
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly)));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
     builder.Services.AddControllersWithViews();
+    #endregion
 
     #region Razor pages
     builder.Services.AddRazorPages();
@@ -156,6 +160,7 @@ try
         pattern: "{controller=Home}/{action=Index}/{id?}");
     app.MapRazorPages();
 
+    #region DataSeeder
     using (var scope = app.Services.CreateScope())
     {
         var services = scope.ServiceProvider;
@@ -170,6 +175,7 @@ try
             Log.Error(ex, "An error occurred during data seeding.");
         }
     }
+    #endregion
 
     Log.Information("Application started successfully.");
     app.Run();

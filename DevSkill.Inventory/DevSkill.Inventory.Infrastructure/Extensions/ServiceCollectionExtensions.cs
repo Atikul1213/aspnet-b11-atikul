@@ -96,6 +96,8 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
             services.AddScoped<ICustomUserRepository, UserRepository>();
             services.AddScoped<IServerTime, ServerTime>();
             services.AddScoped<IEmailUtility, EmailUtility>();
+            services.AddSingleton<IAuthorizationHandler, AgeRequirementHandler>();
+            services.AddSingleton<IAuthorizationHandler, RoleRequirementHandler>();
             services.AddScoped<IUserRedirectionService, UserRedirectionService>();
             services.AddScoped<IContactUsInfoRepository, ContactUsInfoRepository>();
 
@@ -103,7 +105,6 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
 
             return services;
         }
-
 
         #endregion
 
@@ -152,35 +153,23 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
 
         #endregion
 
-
+        #region Add Policy
         public static void AddPolicy(this IServiceCollection services)
         {
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("SuperAdminPermission", policy =>
+                options.AddPolicy("AdminOnly", policy =>
                 {
-                    policy.RequireClaim("superAdmin", "superAdminAllowed");
+                    policy.Requirements.Add(new RoleRequirement("Admin"));
                 });
 
-                options.AddPolicy("RegisteredPermission", policy =>
+                options.AddPolicy("MemberOnly", policy =>
                 {
-                    policy.RequireClaim("registered", "registeredAllowed");
-                });
-
-                options.AddPolicy("CustomAccess", policy =>
-                {
-                    policy.RequireRole("Admin");
-                    policy.RequireRole("Registered");
-                });
-
-
-                options.AddPolicy("AgeRestriction", policy =>
-                {
-                    policy.Requirements.Add(new AgeRequirement());
+                    policy.Requirements.Add(new RoleRequirement("Member"));
                 });
             });
-
-            services.AddSingleton<IAuthorizationHandler, AgeRequirementHandler>();
         }
+
+        #endregion
     }
 }
