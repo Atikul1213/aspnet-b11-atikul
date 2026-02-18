@@ -27,6 +27,7 @@ namespace DevSkill.Inventory.Infrastructure
         #region Properties
         public DbSet<ContactUsInfo> ContactUsInfo { get; set; }
         public DbSet<Product> Products { get; set; }
+
         #endregion
 
         #region Methods

@@ -5,10 +5,13 @@ using DevSkill.Inventory.Application.Features.ContactUs.GetContactUsInfo;
 using DevSkill.Inventory.Application.Features.ContactUs.UpsertContactUsInfo;
 using DevSkill.Inventory.Domain.Entities;
 using DevSkill.Inventory.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize(Policy = "AdminOnly")]
     public class ContactUsController : Controller
     {
         #region Fields

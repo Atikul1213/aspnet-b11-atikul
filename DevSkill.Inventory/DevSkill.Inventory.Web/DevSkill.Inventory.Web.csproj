@@ -32,7 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Logs\" />
     <Folder Include="wwwroot\images\customers\" />
     <Folder Include="wwwroot\images\barcodes\" />
     <Folder Include="wwwroot\images\products\" />
