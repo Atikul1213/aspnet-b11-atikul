@@ -1,15 +1,12 @@
 ﻿@inject IConfiguration Configuration
 @model RegisterModel
-
 @{
     ViewData["Title"] = "Register";
     var reCaptchaSiteKey = Configuration["GoogleReCaptcha:SiteKey"];
 }
-
 @section Styles{
     <link rel="stylesheet" href="~/sneat/assets/css/page-auth.css"/>
 }
-
 
 <div class="authentication-wrapper authentication-basic container-p-y">
     <div class="authentication-inner">
@@ -82,7 +79,6 @@
                                    name="FirstName"
                                    placeholder="First Name" />
                             <span asp-validation-for="FirstName" class="invalid-feedback d-block"></span>
-
                         </div>
                         <div class="col-md-6">
                             <label asp-for="LastName" class="form-label">Last Name</label>
@@ -94,7 +90,6 @@
                             <span asp-validation-for="LastName" class="invalid-feedback d-block"></span>
                         </div>
                     </div>
-
                     <div class="mb-6">
                         <label asp-for="Email" class="form-label">Email</label>
                         <input type="text"
@@ -115,14 +110,13 @@
                     </div>
                     <div class="mb-6">
                         <label asp-for="DateOfBirth" class="form-label">Date Of Birth</label>
-                        <input type="datetime"
+                        <input type="date"
                                class="form-control"
                                asp-for="DateOfBirth"
                                name="DateOfBirth"
                                placeholder="Select your DateOfBirth" />
                         <span asp-validation-for="DateOfBirth" class="invalid-feedback d-block"></span>
                     </div>
-
                     <div class="form-password-toggle mb-2">
                         <label class="form-label" asp-for="Password">Password</label>
                         <div class="input-group input-group-merge">
@@ -135,7 +129,6 @@
                             <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                         </div>
                         <span asp-validation-for="Password" class="invalid-feedback d-block"></span>
-
                     </div>
                     <div class="form-password-toggle mb-0">
                         <label class="form-label" asp-for="ConfirmPassword">Confirm Password</label>
@@ -148,7 +141,6 @@
                                    aria-describedby="ConfirmPassword" />
                             <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                         </div>
-
                         <span asp-validation-for="ConfirmPassword" class="invalid-feedback d-block"></span>
                     </div>
                     <div class="my-7">
@@ -159,9 +151,7 @@
                             Sign Up
                         </button>
                     </div>
-
                 </form>
-
 
                 @if (Model.ExternalLogins != null && Model.ExternalLogins.Count > 0)
                 {
@@ -201,7 +191,6 @@
                         }
                     </div>
                 }
-
                 <p class="text-center">
                     <span>Already have an account?</span>
                     <a asp-action="Login" asp-controller="Account">
@@ -213,6 +202,7 @@
         <!-- Register Card -->
     </div>
 </div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/password-toggle.js" asp-append-version="true"></script>

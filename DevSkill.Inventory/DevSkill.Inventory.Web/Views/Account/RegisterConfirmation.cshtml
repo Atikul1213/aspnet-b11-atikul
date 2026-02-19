@@ -3,14 +3,12 @@
     ViewData["Title"] = "Email Confirmation Required";
 }
 
-
 <div class="d-flex justify-content-center align-items-center mt-5">
     <div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 500px; width: 100%;">
         <div class="card-body text-center">
             <div class="mb-3">
                 <i class="bi bi-envelope-check-fill text-warning" style="font-size: 3rem;"></i>
             </div>
-
             @if (!string.IsNullOrEmpty(Model.Message))
             {
                 <h3 class="fw-bold text-warning">Email Confirmation Required</h3>
@@ -23,11 +21,9 @@
                     We've sent a confirmation link to <strong>@Model.Email</strong>.
                 </p>
             }
-
             <p class="text-muted">
                 Please check your inbox (and spam folder) and click the confirmation link to verify your account.
             </p>
-
             <div class="mt-4 p-3 bg-light rounded-3">
                 <p class="text-muted small mb-2">
                     <strong>Didn't receive the email?</strong>
@@ -40,7 +36,6 @@
                     </button>
                 </form>
             </div>
-
             <div class="mt-4">
                 <a class="btn btn-outline-secondary btn-sm rounded-pill px-4 me-2" asp-action="Login" asp-controller="Account">
                     <i class="bi bi-box-arrow-in-right me-2"></i> Back to Login
