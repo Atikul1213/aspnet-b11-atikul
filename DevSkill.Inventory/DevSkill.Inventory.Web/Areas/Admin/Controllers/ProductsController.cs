@@ -8,8 +8,8 @@ using DevSkill.Inventory.Application.Exceptions;
 using DevSkill.Inventory.Application.Features.Products.Commands.CreateProduct;
 using DevSkill.Inventory.Application.Features.Products.Commands.DeleteProduct;
 using DevSkill.Inventory.Application.Features.Products.Commands.UpdateProduct;
+using DevSkill.Inventory.Application.Features.Products.Queries.GetAllProductList;
 using DevSkill.Inventory.Application.Features.Products.Queries.GetProductById;
-using DevSkill.Inventory.Application.Features.Products.Queries.GetProductList;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
@@ -301,9 +301,9 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         {
             try
             {
-                var getProductListQuery = _mapper.Map<GetProductListQuery>(model);
+                var getProductListSPQuery = _mapper.Map<GetProductListSPQuery>(model);
 
-                var (data, total, totalDisplay) = await _mediator.SendQueryAsync<GetProductListQuery, (IList<Product>, int, int)>(getProductListQuery);
+                var (data, total, totalDisplay) = await _mediator.SendQueryAsync<GetProductListSPQuery, (IList<Product>, int, int)>(getProductListSPQuery);
                 int index = 0;
                 var products = new
                 {

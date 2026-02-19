@@ -3,6 +3,7 @@ using DevSkill.Inventory.Application.Features.ContactUs.SendMessage;
 using DevSkill.Inventory.Application.Features.ContactUs.UpsertContactUsInfo;
 using DevSkill.Inventory.Application.Features.Products.Commands.CreateProduct;
 using DevSkill.Inventory.Application.Features.Products.Commands.UpdateProduct;
+using DevSkill.Inventory.Application.Features.Products.Queries.GetAllProductList;
 using DevSkill.Inventory.Application.Features.Products.Queries.GetProductList;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
@@ -31,6 +32,7 @@ namespace DevSkill.Inventory.Web
             CreateMap<AddProductModel, Product>().ReverseMap();
             CreateMap<UpdateProductModel, Product>().ReverseMap();
             CreateMap<ProductListModel, GetProductListQuery>().ReverseMap();
+            CreateMap<ProductListModel, GetProductListSPQuery>().ReverseMap();
             CreateMap<UpdateProductCommand, Product>().ReverseMap();
             CreateMap<UpdateProductCommand, UpdateProductModel>().ReverseMap();
             CreateMap<ProductSearchDto, ProductSearchModel>().ReverseMap();

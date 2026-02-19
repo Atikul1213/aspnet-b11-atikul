@@ -1,6 +1,6 @@
 ﻿namespace DevSkill.Inventory.Domain.Features.Products.Commands
 {
-    public interface IProductAddCommand
+    public interface ICreateProductCommand
     {
         void Execute();
     }

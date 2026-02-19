@@ -47,7 +47,7 @@ namespace DevSkill.Inventory.Infrastructure.Repositories
             else
                 return await GetDynamicAsync(x => x.Name.Contains(search.Value), order, null, pageIndex, pageSize, true);
         }
-        public async Task<(IList<Product> data, int total, int totalDisplay)> GetCQRSPagedProductAsync(IGetProductQuery request)
+        public async Task<(IList<Product> data, int total, int totalDisplay)> GetCQRSPagedProductAsync(IGetProductListQuery request)
         {
             if (string.IsNullOrEmpty(request.Search.Value))
                 return await GetDynamicAsync(null, request.FormatSortExpression("Id", "Name"), null, request.PageIndex, request.PageSize, true);

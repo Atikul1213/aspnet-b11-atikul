@@ -1,6 +1,6 @@
 ﻿namespace DevSkill.Inventory.Domain.Features.Products.Query
 {
-    public interface IGetProductQuery : IDataTable
+    public interface IGetProductListQuery : IDataTable
     {
     }
 }
