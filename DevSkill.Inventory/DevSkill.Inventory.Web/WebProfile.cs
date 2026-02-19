@@ -6,6 +6,7 @@ using DevSkill.Inventory.Application.Features.Products.Commands.UpdateProduct;
 using DevSkill.Inventory.Application.Features.Products.Queries.GetProductList;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
+using DevSkill.Inventory.Web.Areas.Admin.Models;
 using DevSkill.Inventory.Web.Areas.Admin.Models.Products;
 using DevSkill.Inventory.Web.Models;
 
@@ -17,6 +18,8 @@ namespace DevSkill.Inventory.Web
         {
             #region ContactUsInfo
             CreateMap<ContactUsInfo, UpsertContactUsInfoCommand>().ReverseMap();
+            CreateMap<ContactUsModel, UpsertContactUsInfoCommand>().ReverseMap();
+            CreateMap<ContactUsInfo, ContactUsModel>().ReverseMap();
             CreateMap<ContactUsInfo, ContactUsInfoModel>().ReverseMap();
             CreateMap<UpsertContactUsInfoCommand, ContactUsInfoModel>().ReverseMap();
             CreateMap<SendContactUsMessageCommand, ContactUsInfoModel>().ReverseMap();

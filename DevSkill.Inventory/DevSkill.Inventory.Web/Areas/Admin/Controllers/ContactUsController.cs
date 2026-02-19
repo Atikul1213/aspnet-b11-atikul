@@ -4,7 +4,7 @@ using DevSkill.Core.Application;
 using DevSkill.Inventory.Application.Features.ContactUs.GetContactUsInfo;
 using DevSkill.Inventory.Application.Features.ContactUs.UpsertContactUsInfo;
 using DevSkill.Inventory.Domain.Entities;
-using DevSkill.Inventory.Web.Models;
+using DevSkill.Inventory.Web.Areas.Admin.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,7 +39,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             try
             {
                 var contactUsInfo = await _mediator.SendQueryAsync<GetContactUsInfoQuery, ContactUsInfo>(new GetContactUsInfoQuery());
-                var model = _mapper.Map<ContactUsInfoModel>(contactUsInfo);
+                var model = _mapper.Map<ContactUsModel>(contactUsInfo);
 
                 return View(model);
             }
@@ -48,12 +48,12 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 _logger.LogError(ex, "Failed to load contact info.");
                 TempData["error"] = "Failed to load contact info.";
 
-                return View(new ContactUsInfoModel());
+                return View(new ContactUsModel());
             }
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ContactUsInfoModel model)
+        public async Task<IActionResult> Edit(ContactUsModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);

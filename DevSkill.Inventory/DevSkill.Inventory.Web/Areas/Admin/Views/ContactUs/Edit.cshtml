@@ -1,4 +1,4 @@
-﻿@model ContactUsInfoModel
+﻿@model ContactUsModel
 @{
     ViewData["Title"] = "Contact Us";
 }
@@ -8,8 +8,9 @@
         <i class="bi bi-box-arrow-up-right me-1"></i> View Public Page
     </a>
 </div>
-<form asp-action="Edit" method="post" class="row g-3" novalidate>
+<form asp-area="Admin" asp-controller="ContactUs" asp-action="Edit" method="post" class="row g-3" novalidate>
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id"/>
     <div class="col-md-6">
         <label asp-for="HeaderTitle" class="form-label"></label>
         <input asp-for="HeaderTitle" class="form-control" />
@@ -52,7 +53,7 @@
     </div>
     <div class="col-12 d-flex gap-2">
         <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Save</button>
-        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">Back</a>
+        <a asp-area="Admin" asp-controller="Product" asp-action="IndexSP" class="btn btn-secondary">Back</a>
     </div>
 </form>
 @section Scripts {

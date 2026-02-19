@@ -41,8 +41,7 @@ namespace DevSkill.Inventory.Application.Features.ContactUs.UpsertContactUsInfo
             else
             {
                 command.Id = contactUsInfo.Id;
-                contactUsInfo = _mapper.Map<ContactUsInfo>(command);
-                await _applicationUnitOfWork.ContactUsInfoRepository.UpdateAsync(contactUsInfo);
+                _mapper.Map(command, contactUsInfo);
                 await _applicationUnitOfWork.SaveAsync();
             }
 

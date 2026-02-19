@@ -10,24 +10,16 @@ namespace DevSkill.Inventory.Application.Tests.ProductTests;
 [ExcludeFromCodeCoverage]
 public class ProductAddCommandHandlerTests
 {
+    #region Fields
+
     private AutoMock _moq;
     private Mock<IApplicationUnitOfWork> _applicationUnitOfWorkMock;
     private Mock<IProductRepository> _productRepositoryMock;
     private Mock<IMapper> _mapperMock;
 
+    #endregion
 
-    [OneTimeSetUp] // This method is called once before any tests are run
-    public void OneTimeSetup()
-    {
-        _moq = AutoMock.GetLoose();
-    }
-
-    [OneTimeTearDown]
-    public void OneTimeTearDown()
-    {
-        _moq.Dispose();
-    }
-
+    #region SetUp
 
     [SetUp]  // This method is called before each test is run
     public void Setup()
@@ -45,6 +37,22 @@ public class ProductAddCommandHandlerTests
         _productRepositoryMock?.Reset();
         _mapperMock?.Reset();
     }
+
+    [OneTimeSetUp] // This method is called once before any tests are run
+    public void OneTimeSetup()
+    {
+        _moq = AutoMock.GetLoose();
+    }
+
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        _moq.Dispose();
+    }
+
+    #endregion
+
+    #region TestMethod
 
     /**
     [Test]
@@ -111,6 +119,7 @@ public class ProductAddCommandHandlerTests
 
     }
 
+
     [Test]
     public async Task AddProduct_DuplicateBarCode_ThrowException()
     {
@@ -166,4 +175,6 @@ public class ProductAddCommandHandlerTests
         _applicationUnitOfWorkMock.Verify(u => u.SaveAsync(), Times.Never);
     }
     */
+
+    #endregion
 }

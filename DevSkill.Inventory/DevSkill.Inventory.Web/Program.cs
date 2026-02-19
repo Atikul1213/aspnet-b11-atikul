@@ -3,7 +3,6 @@ using DevSkill.Core.Infrastructure.Extensions;
 using DevSkill.Inventory.Application.Abstractions.Services;
 using DevSkill.Inventory.Application.Features.Products.Commands.CreateProduct;
 using DevSkill.Inventory.Domain;
-using DevSkill.Inventory.Domain.Abstractions;
 using DevSkill.Inventory.Domain.Services;
 using DevSkill.Inventory.Infrastructure;
 using DevSkill.Inventory.Infrastructure.Extensions;
@@ -161,6 +160,7 @@ try
     app.MapRazorPages();
 
     #region DataSeeder
+    /**
     using (var scope = app.Services.CreateScope())
     {
         var services = scope.ServiceProvider;
@@ -175,6 +175,7 @@ try
             Log.Error(ex, "An error occurred during data seeding.");
         }
     }
+    */
     #endregion
 
     Log.Information("Application started successfully.");
