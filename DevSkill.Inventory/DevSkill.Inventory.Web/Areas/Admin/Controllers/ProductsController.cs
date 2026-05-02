@@ -275,6 +275,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+
         [HttpPost]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
@@ -357,6 +358,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AddProductModel model)
@@ -498,8 +500,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
             try
             {
                 var productSearchDto = _mapper.Map<ProductSearchDto>(model.SearchItem);
-
                 var result = await _productService.GetAllSPProductsAsync(model.PageIndex, model.PageSize, model.FormatSortExpression("Name", "Sku", "Price", "Id"), productSearchDto);
+                var index = 0;
 
                 var products = new
                 {
@@ -507,15 +509,20 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                     recordsFiltered = result.totalDisplay,
                     data = (from record in result.data
                             select new string[]
-                            {
+                           {
+                                (++index).ToString(),
+                                HttpUtility.HtmlEncode(record.ImageUrl),
+                                HttpUtility.HtmlEncode(record.BarCode),
                                 HttpUtility.HtmlEncode(record.Name),
-                                //HttpUtility.HtmlEncode(record.Sku),
-                                //record.Price.ToString("C"),
-                                //record.Quantity.ToString(),
-                                //record.IsAvailable ? "True" : "False",
-                                //record.CreateOnUtc.ToString("dd/MM/yyyy"),
+                                HttpUtility.HtmlEncode(record.CategoryName),
+                                record.PurchasePrice.ToString("C"),
+                                record.MRPPrice.ToString("C"),
+                                record.WholeSalePrice.ToString("C"),
+                                record.Stock.ToString(),
+                                record.LowStock.ToString(),
+                                record.DamageStock.ToString(),
                                 record.Id.ToString()
-                            }).ToArray()
+                           }).ToArray()
                 };
 
                 return Json(products);
