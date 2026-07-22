@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Cortex.Mediator.Commands;
 using DevSkill.Core.Application;
-using DevSkill.Inventory.Application.Exceptions;
 using DevSkill.Inventory.Domain;
-using DevSkill.Inventory.Domain.Entities;
 
 namespace DevSkill.Inventory.Application.Features.Products.Commands.UpdateProduct
 {
@@ -29,19 +27,23 @@ namespace DevSkill.Inventory.Application.Features.Products.Commands.UpdateProduc
         {
             try
             {
-                var product = _mapper.Map<Product>(command);
-                bool isDuplicate = await _applicationUnitOfWork.ProductRepository.CheckBarCodeDuplicateAsync(product.BarCode);
-
-                if (!isDuplicate)
+                var product = await _applicationUnitOfWork.ProductRepository.GetByIdAsync(command.Id);
+                if (product == null)
                 {
-                    await _applicationUnitOfWork.ProductRepository.UpdateAsync(product);
+                    return ResultResponse.Success(404, "Product not found.");
+                }
+
+                _mapper.Map(command, product);
+
+                if (product.BarCode == command.BarCode)
+                {
                     await _applicationUnitOfWork.SaveAsync();
 
                     return ResultResponse.Success(200, "Product creaated successfully.");
                 }
                 else
                 {
-                    throw new DuplicateProductBarCodeException();
+                    return ResultResponse.Success(300, "Unable to create the product. Product Id or barcode does not match");
                 }
             }
             catch (Exception ex)

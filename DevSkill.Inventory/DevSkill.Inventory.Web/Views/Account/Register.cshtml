@@ -144,9 +144,13 @@
                         <span asp-validation-for="ConfirmPassword" class="invalid-feedback d-block"></span>
                     </div>
                     <div class="my-7">
-                        <button class="g-recaptcha btn btn-primary d-grid w-100"
+                       @*  <button class="g-recaptcha btn btn-primary d-grid w-100"
                                 data-sitekey="@reCaptchaSiteKey"
                                 data-callback="onRecaptchaSubmit"
+                                data-action="submit">
+                            Sign Up
+                        </button> *@
+                        <button type="submit" class="g-recaptcha btn btn-primary d-grid w-100"
                                 data-action="submit">
                             Sign Up
                         </button>

@@ -233,12 +233,17 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                         model.ImageUrl = Path.Combine(@"/images/products", fileName);
                     }
 
+                    model.CategoryName = "Electronics";
+
+                    model.Stock = model.LowStock;
                     var updateProductCommand = _mapper.Map<UpdateProductCommand>(model);
 
                     var result = await _mediator.SendCommandAsync<UpdateProductCommand, ResultResponse>(updateProductCommand);
 
                     if (result.IsSuccess)
                         TempData["success"] = "Product updated successfully";
+                    else
+                        TempData["error"] = "Failed to update product";
 
                     return RedirectToAction("IndexSP");
                 }

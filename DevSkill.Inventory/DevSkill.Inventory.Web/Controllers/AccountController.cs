@@ -79,7 +79,6 @@ namespace DevSkill.Inventory.Web.Controllers
             if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
                 returnUrl = Url.Content("~/");
 
-            // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             var model = new LoginModel()
@@ -100,7 +99,6 @@ namespace DevSkill.Inventory.Web.Controllers
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> LoginAsync(LoginModel model)
         {
-            // Redirect authenticated users away from login page
             if (User.Identity?.IsAuthenticated == true)
             {
                 TempData["success"] = "You are already logged in.";
@@ -160,7 +158,6 @@ namespace DevSkill.Inventory.Web.Controllers
                 });
             }
 
-            // Attempt to sign in with password
             var result = await _signInManager.PasswordSignInAsync(model.EmailOrUserName, model.Password,
                          model.RememberMe, lockoutOnFailure: false);
 
