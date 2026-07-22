@@ -5,11 +5,20 @@ using System.Security.Principal;
 
 namespace DevSkill.Inventory.Infrastructure.Services
 {
-    public class UserRedirectionService(ILogger<UserRedirectionService> logger)
-        : IUserRedirectionService
+    public class UserRedirectionService : IUserRedirectionService
     {
+        #region Fields
         private readonly ILogger<UserRedirectionService> _logger;
+        #endregion
 
+        #region Ctor
+        public UserRedirectionService(ILogger<UserRedirectionService> logger)
+        {
+            _logger = logger;
+        }
+        #endregion
+
+        #region Methods
         public async Task<string> GetRedirectUrlAfterLoginAsync(IPrincipal user)
         {
             try
@@ -22,8 +31,8 @@ namespace DevSkill.Inventory.Infrastructure.Services
 
                 var redirectUrl = user switch
                 {
-                    _ when user!.IsInRole(ApplicationRoles.Admin) => "/Admin/",
-                    _ when user!.IsInRole(ApplicationRoles.Memeber) => "/Exam/",
+                    _ when user!.IsInRole(ApplicationRoles.Admin) => "/Admin/Products/IndexSP",
+                    _ when user!.IsInRole(ApplicationRoles.Memeber) => "/",
                     _ => "/"
                 };
 
@@ -36,5 +45,7 @@ namespace DevSkill.Inventory.Infrastructure.Services
                 return "/";
             }
         }
+
+        #endregion
     }
 }

@@ -1,8 +1,8 @@
 using Cortex.Mediator.DependencyInjection;
+using DevSkill.Core.Domain.BusinessObjects;
 using DevSkill.Core.Infrastructure.Extensions;
 using DevSkill.Inventory.Application.Abstractions.Services;
 using DevSkill.Inventory.Application.Features.Products.Commands.CreateProduct;
-using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Services;
 using DevSkill.Inventory.Infrastructure;
 using DevSkill.Inventory.Infrastructure.Extensions;
@@ -64,7 +64,11 @@ try
     #endregion
 
     #region AutoMapper Configuration
-    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+    builder.Services.AddAutoMapper(
+        cfg => { },
+        AppDomain.CurrentDomain.GetAssemblies());
+
     #endregion
 
     #region Add Identity
@@ -117,7 +121,7 @@ try
     #endregion
 
     #region Email Configuration
-    builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+    builder.Services.Configure<SmtpConfiguration>(builder.Configuration.GetSection("SmtpConfiguration"));
     #endregion
 
     #region AWS Bucket Configuration
