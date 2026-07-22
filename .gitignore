@@ -396,3 +396,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/DevSkill.Inventory/DevSkill.Inventory.Web/wwwroot/images/barcodes
+/DevSkill.Inventory/DevSkill.Inventory.Web/wwwroot/images/products
+/DevSkill.Inventory/DevSkill.Inventory.Web/appsettings.json
+/DevSkill.Inventory/DevSkill.Inventory.Web/appsettings.json
