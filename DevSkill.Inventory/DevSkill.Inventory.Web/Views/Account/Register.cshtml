@@ -210,23 +210,12 @@
     
     <script asp-location="Footer">
         $( function() {
-             $("#DateOfBirth").datepicker({
-            changeMonth: true,
-            changeYear: true,
-            showButtonPanel: true,
-            dateFormat: "mm/dd/yy" // Optional: format the selected date
-        });
-          // $("#DateOfBirth").datepicker({
-          //     changeMonth: true,
-          //     changeYear: true,
-          //     showButtonPanel: true
-          // });
-
-          // $("#DateOfBirth").on("change", function() {
-          //     console.log("value: ", $(this).val());
-          //   $("#datepicker").datepicker( "option", "showAnim", $(this).val());
-          // });
-
+            $("#DateOfBirth").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                showButtonPanel: true,
+                dateFormat: "mm/dd/yy" 
+            }); 
         });
     </script>
 }

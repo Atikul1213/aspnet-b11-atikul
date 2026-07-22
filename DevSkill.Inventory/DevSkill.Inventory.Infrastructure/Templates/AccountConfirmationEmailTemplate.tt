@@ -1,0 +1,12 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+<p>Hi <#=UserName#>,</p>
+<p>Thank you for registering with DevSkill Inventory!</p>
+<p>Please confirm your account by <a href='<#=CallbackUrl#>'>clicking here</a>.</p>
+<p>If you did not create this account, please ignore this email.</p>
+<br/>
+<p>Thanks,<br/>The DevSkill Inventory Team</p>

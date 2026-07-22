@@ -3,7 +3,7 @@
     public interface IAccountConfirmationEmailTemplate
     {
         public string? UserName { get; set; }
-        public string? CallBackUrl { get; set; }
-        public string TransformTest();
+        public string? CallbackUrl { get; set; }
+        public string TransformText();
     }
 }

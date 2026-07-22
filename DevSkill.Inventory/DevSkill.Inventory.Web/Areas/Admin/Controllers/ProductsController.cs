@@ -105,7 +105,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 {
                     if (file != null)
                     {
-                        string uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), @"images\products");
+                        string uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images\products");
                         if (!Directory.Exists(uploadFolderPath))
                         {
                             Directory.CreateDirectory(uploadFolderPath);
@@ -123,7 +123,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                     if (model.BarCode != null)
                     {
-                        var barCodeFolderPath = Path.Combine(Directory.GetCurrentDirectory(), @"images\barcodes");
+                        var barCodeFolderPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images\barcodes");
                         if (!Directory.Exists(barCodeFolderPath))
                         {
                             Directory.CreateDirectory(barCodeFolderPath);
@@ -217,7 +217,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 {
                     if (file != null)
                     {
-                        string uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), @"images\products");
+                        string uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images\products");
                         if (!Directory.Exists(uploadFolderPath))
                         {
                             Directory.CreateDirectory(uploadFolderPath);

@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\images\products\61481fa1-7c81-486e-bf2f-28728018067f.png" />
+    <Content Remove="wwwroot\images\products\b56225ba-b1ed-4fc9-aaf6-9d23c1ad670b.jfif" />
+    <Content Remove="wwwroot\images\products\de35b88e-fdf3-482e-81ea-b4b5080a2c3a.png" />
+    <Content Remove="wwwroot\images\products\e272905d-ae3e-47c3-bd57-26433eb7b202.png" />
+    <Content Remove="wwwroot\images\products\f1a1d885-8328-465e-8329-4b38b5c15020.jfif" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="AWSSDK.S3" Version="4.0.3.1" />
     <PackageReference Include="AWSSDK.SQS" Version="4.0.0.12" />
@@ -35,8 +43,15 @@
     <Folder Include="Logs\" />
     <Folder Include="wwwroot\images\customers\" />
     <Folder Include="wwwroot\images\barcodes\" />
-    <Folder Include="wwwroot\images\products\" />
     <Folder Include="wwwroot\scss\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\images\products\61481fa1-7c81-486e-bf2f-28728018067f.png" />
+    <None Include="wwwroot\images\products\b56225ba-b1ed-4fc9-aaf6-9d23c1ad670b.jfif" />
+    <None Include="wwwroot\images\products\de35b88e-fdf3-482e-81ea-b4b5080a2c3a.png" />
+    <None Include="wwwroot\images\products\e272905d-ae3e-47c3-bd57-26433eb7b202.png" />
+    <None Include="wwwroot\images\products\f1a1d885-8328-465e-8329-4b38b5c15020.jfif" />
   </ItemGroup>
 
   <ItemGroup>

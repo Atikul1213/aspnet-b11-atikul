@@ -5,6 +5,7 @@ using DevSkill.Core.Infrastructure;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Abstractions;
 using DevSkill.Inventory.Domain.Repositories;
+using DevSkill.Inventory.Domain.Templates;
 using DevSkill.Inventory.Domain.Utilities;
 using DevSkill.Inventory.Infrastructure.Identity;
 using DevSkill.Inventory.Infrastructure.Identity.Requirement;
@@ -12,6 +13,7 @@ using DevSkill.Inventory.Infrastructure.Repositories;
 using DevSkill.Inventory.Infrastructure.Seeders;
 using DevSkill.Inventory.Infrastructure.Seeds;
 using DevSkill.Inventory.Infrastructure.Services;
+using DevSkill.Inventory.Infrastructure.Templates;
 using DevSkill.Inventory.Infrastructure.Utilities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -100,7 +102,9 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
             services.AddSingleton<IAuthorizationHandler, RoleRequirementHandler>();
             services.AddScoped<IUserRedirectionService, UserRedirectionService>();
             services.AddScoped<IContactUsInfoRepository, ContactUsInfoRepository>();
-
+            services.AddScoped<IAccountConfirmationEmailTemplate, AccountConfirmationEmailTemplate>();
+            services.AddScoped<IPasswordChangeEmailTemplate, PasswordChangeEmailTemplate>();
+            services.AddScoped<IPasswordResetEmailTemplate, PasswordResetEmailTemplate>();
             services.AddScoped<IProductRepository, ProductRepository>();
 
             return services;

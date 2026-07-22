@@ -1,7 +1,7 @@
 ﻿@inject IConfiguration Configuration
 @model LoginModel
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Login";
     var reCaptchaSiteKey = Configuration["GoogleReCaptcha:SiteKey"];
 }
 @section Styles{
@@ -76,9 +76,9 @@
                          data-callback="onRecaptchaSubmit"
                          data-action="submit"></div>
                     <div class="mb-6">
-                        <label asp-for="Email" class="form-label"></label>
-                        <input asp-for="Email" class="form-control" placeholder="Enter your email" autofocus />
-                        <span asp-validation-for="Email" class="invalid-feedback d-block"></span>
+                        <label asp-for="EmailOrUserName" class="form-label"></label>
+                        <input asp-for="EmailOrUserName" class="form-control" placeholder="Enter your email or username" autofocus />
+                        <span asp-validation-for="EmailOrUserName" class="invalid-feedback d-block"></span>
                     </div>
                     <div class="mb-6 form-password-toggle">
                         <label asp-for="Password" class="form-label"></label>

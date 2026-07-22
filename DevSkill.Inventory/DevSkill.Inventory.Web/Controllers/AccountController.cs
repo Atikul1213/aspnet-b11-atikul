@@ -1,6 +1,8 @@
 ﻿using DevSkill.Core.Application.UtilitiesContracts;
+using DevSkill.Core.Domain.EmailServiceContracts;
 using DevSkill.Inventory.Domain.Abstractions;
 using DevSkill.Inventory.Domain.Constants;
+using DevSkill.Inventory.Domain.Templates;
 using DevSkill.Inventory.Domain.Utilities;
 using DevSkill.Inventory.Infrastructure.Identity;
 using DevSkill.Inventory.Infrastructure.Utilities;
@@ -12,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 
 namespace DevSkill.Inventory.Web.Controllers
@@ -28,6 +31,8 @@ namespace DevSkill.Inventory.Web.Controllers
         private readonly IEmailUtility _emailUtility;
         private readonly ICaptchaService _captchaService;
         private readonly IUserRedirectionService _userRedirectionService;
+        private readonly IEmailService _emailService;
+        private readonly IAccountConfirmationEmailTemplate _accountConfirmationEmailTemplate;
 
         #endregion
 
@@ -38,7 +43,9 @@ namespace DevSkill.Inventory.Web.Controllers
             ILogger<RegisterModel> logger,
             IEmailUtility emailUtility,
             ICaptchaService captchaService,
-            IUserRedirectionService userRedirectionService)
+            IUserRedirectionService userRedirectionService,
+            IEmailService emailService,
+            IAccountConfirmationEmailTemplate accountConfirmationEmailTemplate)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -48,6 +55,8 @@ namespace DevSkill.Inventory.Web.Controllers
             _emailUtility = emailUtility;
             _captchaService = captchaService;
             _userRedirectionService = userRedirectionService;
+            _emailService = emailService;
+            _accountConfirmationEmailTemplate = accountConfirmationEmailTemplate;
         }
         #endregion
 
@@ -64,24 +73,25 @@ namespace DevSkill.Inventory.Web.Controllers
                     return Redirect(returnUrl);
                 }
 
-                return RedirectToAction("Dashboard", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
-            var model = new LoginModel();
+            if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
+                returnUrl = Url.Content("~/");
+
+            // Clear the existing external cookie to ensure a clean login process
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+            var model = new LoginModel()
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList(),
+            };
 
             if (!string.IsNullOrEmpty(model.ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, model.ErrorMessage);
             }
-
-            model.ReturnUrl ??= Url.Content("~/");
-
-            // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-
-            model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-            model.ReturnUrl = returnUrl;
 
             return View(model);
         }
@@ -93,15 +103,13 @@ namespace DevSkill.Inventory.Web.Controllers
             // Redirect authenticated users away from login page
             if (User.Identity?.IsAuthenticated == true)
             {
-                TempData["InfoMessage"] = "You are already logged in.";
+                TempData["success"] = "You are already logged in.";
                 if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                 {
                     return Redirect(model.ReturnUrl);
                 }
                 return RedirectToAction("Index", "Home");
             }
-
-            model.ReturnUrl ??= Url.Content("~/");
 
             model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
@@ -111,6 +119,7 @@ namespace DevSkill.Inventory.Web.Controllers
             }
 
             var reCaptchaToken = Request.Form["g-recaptcha-response"];
+
             if (string.IsNullOrEmpty(reCaptchaToken))
             {
                 ModelState.AddModelError(string.Empty, "ReCaptcha validation failed. Please try again.");
@@ -124,30 +133,65 @@ namespace DevSkill.Inventory.Web.Controllers
                 return View(model);
             }
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            ApplicationUser? user = null;
+
+            if (model.EmailOrUserName!.Contains('@'))
+            {
+                user = await _userManager.FindByEmailAsync(model.EmailOrUserName);
+            }
+            else
+            {
+                user = await _userManager.FindByNameAsync(model.EmailOrUserName);
+            }
             if (user == null)
             {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(model);
             }
 
+            if (!user.EmailConfirmed)
+            {
+                await SendEmailConfirmationAsync(user, model.ReturnUrl);
+                return RedirectToAction("RegisterConfirmation", new
+                {
+                    email = user.Email,
+                    returnUrl = model.ReturnUrl,
+                    message = "You must confirm your email address before you can log in. We've sent a new confirmation email to your address."
+                });
+            }
 
+            // Attempt to sign in with password
+            var result = await _signInManager.PasswordSignInAsync(model.EmailOrUserName, model.Password,
+                         model.RememberMe, lockoutOnFailure: false);
 
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
             if (result.Succeeded)
             {
-                return LocalRedirect(model.ReturnUrl);
+                TempData["success"] = "You have successfully logged in.";
+
+                if (string.IsNullOrEmpty(model.ReturnUrl) || model.ReturnUrl == "/" || !Url.IsLocalUrl(model.ReturnUrl))
+                {
+                    var redirectUrl = await _userRedirectionService.GetRedirectUrlAfterLoginAsync(User);
+                    return Redirect(redirectUrl);
+                }
+                else
+                {
+                    return Redirect(model.ReturnUrl);
+                }
             }
-            if (result.RequiresTwoFactor)
+
+            else if (result.IsLockedOut)
             {
-                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
-            }
-            if (result.IsLockedOut)
-            {
-                _logger.LogWarning("User account locked out.");
+                ModelState.AddModelError(string.Empty, "Your account has been locked out due to multiple failed login attempts. Please try again later.");
                 return RedirectToPage("./Lockout");
+            }
+            else if (result.IsNotAllowed)
+            {
+                ModelState.AddModelError(string.Empty, "Your account is not allowed to sign in. Please confirm your email or contact support.");
+            }
+            else if (result.RequiresTwoFactor)
+            {
+                ModelState.AddModelError(string.Empty, "Requires two factor authentication");
+                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
             }
             else
             {
@@ -159,10 +203,14 @@ namespace DevSkill.Inventory.Web.Controllers
 
 
         [HttpGet, AllowAnonymous]
-        public async Task<IActionResult> RegisterAsync(string returnUrl = null)
+        public async Task<IActionResult> RegisterAsync(string? returnUrl = null)
         {
+            if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
+                returnUrl = Url.Content("~/");
+
             var model = new RegisterModel();
-            model.ReturnUrl ??= Url.Content("~/");
+            model.ReturnUrl = returnUrl;
+
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
             model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             model.DateOfBirth = DateTime.UtcNow.AddYears(-18);
@@ -173,11 +221,14 @@ namespace DevSkill.Inventory.Web.Controllers
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterAsync(RegisterModel model)
         {
-            model.ReturnUrl ??= Url.Content("~/");
+            if (string.IsNullOrEmpty(model.ReturnUrl) || !Url.IsLocalUrl(model.ReturnUrl))
+                model.ReturnUrl = Url.Content("~/");
+
             model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (!ModelState.IsValid)
             {
+                TempData["error"] = "Failed to register. Please correct the errors and try again.";
                 return View(model);
             }
 
@@ -207,7 +258,10 @@ namespace DevSkill.Inventory.Web.Controllers
 
             if (result.Succeeded)
             {
+                TempData["success"] = "Registration successful. Please check your email to confirm your account.";
                 await _userManager.AddToRoleAsync(user, ApplicationRoles.Memeber);
+                await SendEmailConfirmationAsync(user, model.ReturnUrl);
+
                 return RedirectToAction("RegisterConfirmation", new
                 {
                     email = user.Email,
@@ -219,6 +273,9 @@ namespace DevSkill.Inventory.Web.Controllers
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
+
+            TempData["error"] = "Failed to register. Please correct the errors and try again.";
+
             return View(model);
         }
 
@@ -366,13 +423,11 @@ namespace DevSkill.Inventory.Web.Controllers
         }
 
 
-
         [Authorize]
         public async Task<IActionResult> LogoutAsync(string returnUrl = null)
         {
             await _signInManager.SignOutAsync();
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-
             returnUrl ??= Url.Content("~/");
 
             return LocalRedirect(returnUrl);
@@ -381,7 +436,6 @@ namespace DevSkill.Inventory.Web.Controllers
         [HttpGet, AllowAnonymous]
         public IActionResult AccessDenied()
         {
-
             return RedirectToAction(
                 actionName: "HttpStatusCodeHandler",
                 controllerName: "Error",
@@ -527,6 +581,11 @@ namespace DevSkill.Inventory.Web.Controllers
 
             var subject = "Confirm your email";
 
+            _accountConfirmationEmailTemplate.UserName = user.FullName;
+            _accountConfirmationEmailTemplate.CallbackUrl = HtmlEncoder.Default.Encode(callbackUrl!);
+            var message = _accountConfirmationEmailTemplate.TransformText();
+
+            await _emailService.SendSingleEmailAsync(user.FullName, user.Email!, subject, message);
         }
 
         #endregion
