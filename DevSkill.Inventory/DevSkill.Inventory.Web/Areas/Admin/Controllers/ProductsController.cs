@@ -27,8 +27,7 @@ using System.Web;
 namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
-    //[Authorize(Roles = "Admin, SuperAdmin")]
+    [Authorize(Roles = "Admin, SuperAdmin")]
     //[Authorize(Policy = "AdministratorsPermission")]
     public class ProductsController : Controller
     {

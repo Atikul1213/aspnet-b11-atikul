@@ -1,4 +1,5 @@
 ﻿using DevSkill.Core.Application.UtilitiesContracts;
+using DevSkill.Core.Domain;
 using DevSkill.Core.Domain.EmailServiceContracts;
 using DevSkill.Inventory.Domain.Abstractions;
 using DevSkill.Inventory.Domain.Constants;
@@ -33,6 +34,9 @@ namespace DevSkill.Inventory.Web.Controllers
         private readonly IUserRedirectionService _userRedirectionService;
         private readonly IEmailService _emailService;
         private readonly IAccountConfirmationEmailTemplate _accountConfirmationEmailTemplate;
+        private readonly IPasswordResetEmailTemplate _passwordResetEmailTemplate;
+        private readonly IPasswordChangeEmailTemplate _passwordChangeEmailTemplate;
+        private readonly IServerTime _serverTime;
 
         #endregion
 
@@ -45,7 +49,10 @@ namespace DevSkill.Inventory.Web.Controllers
             ICaptchaService captchaService,
             IUserRedirectionService userRedirectionService,
             IEmailService emailService,
-            IAccountConfirmationEmailTemplate accountConfirmationEmailTemplate)
+            IAccountConfirmationEmailTemplate accountConfirmationEmailTemplate,
+            IPasswordResetEmailTemplate passwordResetEmailTemplate,
+            IPasswordChangeEmailTemplate passwordChangeEmailTemplate,
+            IServerTime serverTime)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -57,6 +64,9 @@ namespace DevSkill.Inventory.Web.Controllers
             _userRedirectionService = userRedirectionService;
             _emailService = emailService;
             _accountConfirmationEmailTemplate = accountConfirmationEmailTemplate;
+            _passwordResetEmailTemplate = passwordResetEmailTemplate;
+            _passwordChangeEmailTemplate = passwordChangeEmailTemplate;
+            _serverTime = serverTime;
         }
         #endregion
 
@@ -425,9 +435,15 @@ namespace DevSkill.Inventory.Web.Controllers
         {
             await _signInManager.SignOutAsync();
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-            returnUrl ??= Url.Content("~/");
 
-            return LocalRedirect(returnUrl);
+            TempData["success"] = "You have successfully logged out.";
+
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet, AllowAnonymous]
@@ -458,6 +474,7 @@ namespace DevSkill.Inventory.Web.Controllers
                 return View(model);
 
             var user = await _userManager.FindByEmailAsync(model.Email);
+
             if (user != null)
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -466,13 +483,18 @@ namespace DevSkill.Inventory.Web.Controllers
                 var callbackUrl = Url.Action("ResetPassword", "Account",
                     new { userId = user.Id, token }, Request.Scheme);
 
+                var subject = "Reset Password";
+
+                _passwordResetEmailTemplate.UserName = user.FullName;
+                _passwordResetEmailTemplate.CallbackUrl = HtmlEncoder.Default.Encode(callbackUrl!);
+
+                var message = _passwordResetEmailTemplate.TransformText();
+
+                await _emailService.SendSingleEmailAsync(user.FullName, user.Email!, subject, message);
             }
 
-            return RedirectToAction("ForgotPasswordConfirmation", "Account",
-                new
-                {
-                    email = model.Email
-                });
+            return RedirectToAction(nameof(ForgotPasswordConfirmation), "Account",
+               new { email = model.Email });
         }
 
         [HttpGet, AllowAnonymous]
@@ -541,6 +563,49 @@ namespace DevSkill.Inventory.Web.Controllers
             }
 
             return RedirectToAction("Login");
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
+        {
+            var redirectUrl = string.IsNullOrEmpty(model.Area)
+                      ? Url.Action("Settings", "Home")
+                      : Url.Action("Settings", "Dashboard", new { area = model.Area });
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Please fill all required fields correctly.";
+                return Redirect(redirectUrl!);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found.";
+                return RedirectToAction("Login");
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                TempData["ErrorMessage"] = string.Join(" ", result.Errors.Select(e => e.Description));
+                return Redirect(redirectUrl!);
+            }
+
+            await _signInManager.RefreshSignInAsync(user);
+
+            var subject = "Your Password Has Been Changed";
+            var template = _passwordChangeEmailTemplate;
+            template.UserName = user.UserName;
+            template.DateValue = _serverTime.GetCurrentServerTime().ToString("MMMM dd, yyyy HH:mm") + " UTC";
+            var message = _passwordChangeEmailTemplate.TransformText();
+
+            await _emailService.SendSingleEmailAsync(user.FirstName + " " + user.LastName, user.Email!, subject, message);
+
+            TempData["SuccessMessage"] = "Your password has been changed successfully. A confirmation email has been sent.";
+            return Redirect(redirectUrl!);
         }
 
         #endregion
