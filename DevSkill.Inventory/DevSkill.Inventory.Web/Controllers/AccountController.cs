@@ -189,7 +189,7 @@ namespace DevSkill.Inventory.Web.Controllers
             else if (result.IsLockedOut)
             {
                 ModelState.AddModelError(string.Empty, "Your account has been locked out due to multiple failed login attempts. Please try again later.");
-                return RedirectToPage("./Lockout");
+                return RedirectToAction("Lockout");
             }
             else if (result.IsNotAllowed)
             {
@@ -198,7 +198,7 @@ namespace DevSkill.Inventory.Web.Controllers
             else if (result.RequiresTwoFactor)
             {
                 ModelState.AddModelError(string.Empty, "Requires two factor authentication");
-                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+                return RedirectToAction("LoginWith2fa", new { ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
             }
             else
             {
@@ -520,6 +520,8 @@ namespace DevSkill.Inventory.Web.Controllers
             {
                 model.IsSuccess = false;
                 model.ErrorMessage = "Invalid password reset link.";
+                TempData["error"] = "Invalid password reset link.";
+
                 return View(model);
             }
 
@@ -539,7 +541,11 @@ namespace DevSkill.Inventory.Web.Controllers
         public async Task<IActionResult> ResetPasswordAsync(ResetPasswordModel model)
         {
             if (!ModelState.IsValid)
+            {
+                TempData["error"] = "Failed to reset password. Please correct the errors and try again.";
+
                 return View(model);
+            }
 
             var user = await _userManager.FindByEmailAsync(model.Email);
 
@@ -547,22 +553,54 @@ namespace DevSkill.Inventory.Web.Controllers
             {
                 model.IsSuccess = false;
                 model.ErrorMessage = "Unable to load user.";
+                TempData["error"] = "Failed to reset password. Please correct the errors and try again.";
+
                 return View(model);
             }
 
             var token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(model.Token));
-            var resetPassResult = await _userManager.ResetPasswordAsync(user,
+            var result = await _userManager.ResetPasswordAsync(user,
                 token, model.Password);
 
-            if (!resetPassResult.Succeeded)
+            if (!result.Succeeded)
             {
                 model.IsSuccess = false;
                 model.ErrorMessage = $"Password reset failed. Link invalid or expired.";
                 model.Token = null;
+                TempData["error"] = "Failed to reset password. Please correct the errors and try again.";
+
                 return View(model);
             }
 
-            return RedirectToAction("Login");
+            return RedirectToAction(nameof(ResetPasswordConfirmation));
+        }
+
+
+        [HttpGet, AllowAnonymous]
+        public async Task<IActionResult> ResetPasswordConfirmation()
+        {
+            var model = new ResetPasswordConfirmationModel();
+            return View(model);
+        }
+
+
+        [HttpGet, AllowAnonymous]
+        public async Task<IActionResult> ChangePassword()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            var hasPassword = await _userManager.HasPasswordAsync(user);
+            if (!hasPassword)
+            {
+                return RedirectToAction("SetPassword");
+            }
+            var model = new ResetPasswordConfirmationModel();
+
+            return View(model);
         }
 
         [Authorize]
@@ -586,7 +624,7 @@ namespace DevSkill.Inventory.Web.Controllers
                 return RedirectToAction("Login");
             }
 
-            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
 
             if (!result.Succeeded)
             {
