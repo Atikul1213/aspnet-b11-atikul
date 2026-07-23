@@ -46,14 +46,6 @@ try
 
     #endregion
 
-    #region Add Identity
-
-    builder.Services.AddIdentity();
-
-    //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    //    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-    #endregion
 
     #region Dependency Injection
 
@@ -62,21 +54,27 @@ try
       ApplicationUserLogin, ApplicationRoleClaim, ApplicationUserToken>();
     builder.Services.AddDependencyInjection(connectionString, migrationAssembly.FullName!);
 
-    builder.Services.AddFacebookAuthentication(builder.Configuration["Authentication:Facebook:AppId"]!, builder.Configuration["Authentication:Facebook:AppSecret"]!);
-    builder.Services.AddGoogleAuthentication(builder.Configuration["Authentication:Google:ClientId"]!, builder.Configuration["Authentication:Google:ClientSecret"]!);
-
     builder.Services.AddScoped<IProductService, ProductService>();
     builder.Services.AddCaptchaService();
     builder.Services.AddHttpContextAccessor();
 
     #endregion
 
-
     #region ApplicationDbContext
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly)));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
     builder.Services.AddControllersWithViews();
+    #endregion
+
+    #region Identity Configuration
+    builder.Services.AddIdentity();
+    builder.Services.AddJwtAuthentication(
+        builder.Configuration["Jwt:Key"],
+        builder.Configuration["Jwt:Issuer"],
+        builder.Configuration["Jwt:Audience"]
+    );
+    builder.Services.AddJwtAuthorization();
     #endregion
     // Add services to the container.
 

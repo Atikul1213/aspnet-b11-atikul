@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-	 <PackageReference Include="DevSkill.Core.Infrastructure" Version="9.0.0.10" />
+	<PackageReference Include="DevSkill.Core.Infrastructure" Version="9.0.0.10" />
     <PackageReference Include="MailKit" Version="4.17.0" />
-	  <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="9.0.8" />
-	  <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.8" />
+	<PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="9.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
 	<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.8" />
@@ -19,7 +19,9 @@
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.2" />
 	<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
 	<PackageReference Include="ZXing.Net" Version="0.16.6" />
-	 <PackageReference Include="System.CodeDom" Version="9.0.10" />
+	<PackageReference Include="System.CodeDom" Version="9.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
+
   </ItemGroup>
 
   <ItemGroup>

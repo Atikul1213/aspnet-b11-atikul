@@ -16,10 +16,14 @@ using DevSkill.Inventory.Infrastructure.Services;
 using DevSkill.Inventory.Infrastructure.Templates;
 using DevSkill.Inventory.Infrastructure.Utilities;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace DevSkill.Inventory.Infrastructure.Extensions
 {
@@ -105,6 +109,7 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
             services.AddScoped<IAccountConfirmationEmailTemplate, AccountConfirmationEmailTemplate>();
             services.AddScoped<IPasswordChangeEmailTemplate, PasswordChangeEmailTemplate>();
             services.AddScoped<IPasswordResetEmailTemplate, PasswordResetEmailTemplate>();
+            services.AddScoped<IJwtTokenService, JwtTokenService>();
             services.AddScoped<IProductRepository, ProductRepository>();
 
             return services;
@@ -172,6 +177,57 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
                     policy.Requirements.Add(new RoleRequirement("Member"));
                 });
             });
+        }
+
+        #endregion
+
+        #region JwtAuthentication and Authorization
+        public static void AddJwtAuthentication(this IServiceCollection services,
+          string key, string issuer, string audience)
+        {
+            services.AddAuthentication()
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidIssuer = issuer,
+                        ValidAudience = audience
+                    };
+                });
+        }
+
+        public static void AddJwtAuthorization(this IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ValidLogin", policy =>
+                {
+                    policy.AuthenticationSchemes.Clear();
+                    policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+                    policy.RequireAuthenticatedUser();
+                    //policy.Requirements.Add(new AgeRequirement());
+                });
+            });
+        }
+
+        public static void AddCookieAuthentication(this IServiceCollection services)
+        {
+            services.AddAuthentication()
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                {
+                    options.LoginPath = new PathString("/Account/Login");
+                    options.AccessDeniedPath = new PathString("/Account/Login");
+                    options.LogoutPath = new PathString("/Account/Logout");
+                    options.Cookie.Name = "Demo.Identity";
+                    options.SlidingExpiration = true;
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                });
         }
 
         #endregion
