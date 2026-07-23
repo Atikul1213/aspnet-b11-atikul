@@ -18,7 +18,7 @@ namespace DevSkill.Inventory.Infrastructure.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "D:\Project\DevSkillCourse\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\PasswordResetEmailTemplate.tt"
+    #line 1 "D:\DevSkillTask\Assignment1\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\PasswordResetEmailTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
     public partial class PasswordResetEmailTemplate : PasswordResetEmailTemplateBase
     {
@@ -30,7 +30,7 @@ namespace DevSkill.Inventory.Infrastructure.Templates
         {
             this.Write("\r\n\r\n<p>Hi ");
             
-            #line 8 "D:\Project\DevSkillCourse\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\PasswordResetEmailTemplate.tt"
+            #line 8 "D:\DevSkillTask\Assignment1\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\PasswordResetEmailTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(UserName));
             
             #line default
@@ -38,7 +38,7 @@ namespace DevSkill.Inventory.Infrastructure.Templates
             this.Write(",</p>\r\n<p>We received a request to reset your password for your DevSkill Inventor" +
                     "y account.</p>\r\n<p>To reset your password, <a href=\'");
             
-            #line 10 "D:\Project\DevSkillCourse\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\PasswordResetEmailTemplate.tt"
+            #line 10 "D:\DevSkillTask\Assignment1\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\PasswordResetEmailTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(CallbackUrl));
             
             #line default

@@ -18,7 +18,7 @@ namespace DevSkill.Inventory.Infrastructure.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "D:\Project\DevSkillCourse\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\AccountConfirmationEmailTemplate.tt"
+    #line 1 "D:\DevSkillTask\Assignment1\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\AccountConfirmationEmailTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
     public partial class AccountConfirmationEmailTemplate : AccountConfirmationEmailTemplateBase
     {
@@ -30,7 +30,7 @@ namespace DevSkill.Inventory.Infrastructure.Templates
         {
             this.Write("\r\n<p>Hi ");
             
-            #line 7 "D:\Project\DevSkillCourse\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\AccountConfirmationEmailTemplate.tt"
+            #line 7 "D:\DevSkillTask\Assignment1\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\AccountConfirmationEmailTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(UserName));
             
             #line default
@@ -38,7 +38,7 @@ namespace DevSkill.Inventory.Infrastructure.Templates
             this.Write(",</p>\r\n<p>Thank you for registering with DevSkill Inventory!</p>\r\n<p>Please confi" +
                     "rm your account by <a href=\'");
             
-            #line 9 "D:\Project\DevSkillCourse\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\AccountConfirmationEmailTemplate.tt"
+            #line 9 "D:\DevSkillTask\Assignment1\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\AccountConfirmationEmailTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(CallbackUrl));
             
             #line default

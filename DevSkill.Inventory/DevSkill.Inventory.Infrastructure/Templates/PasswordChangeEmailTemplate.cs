@@ -18,7 +18,7 @@ namespace DevSkill.Inventory.Infrastructure.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "D:\Project\DevSkillCourse\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\PasswordChangeEmailTemplate.tt"
+    #line 1 "D:\DevSkillTask\Assignment1\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\PasswordChangeEmailTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
     public partial class PasswordChangeEmailTemplate : PasswordChangeEmailTemplateBase
     {
@@ -30,7 +30,7 @@ namespace DevSkill.Inventory.Infrastructure.Templates
         {
             this.Write("\r\n\r\n<p>Hi ");
             
-            #line 8 "D:\Project\DevSkillCourse\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\PasswordChangeEmailTemplate.tt"
+            #line 8 "D:\DevSkillTask\Assignment1\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\PasswordChangeEmailTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(UserName));
             
             #line default
@@ -38,7 +38,7 @@ namespace DevSkill.Inventory.Infrastructure.Templates
             this.Write(",</p>\r\n<p>This is a confirmation that your password was successfully changed on <" +
                     "strong>");
             
-            #line 9 "D:\Project\DevSkillCourse\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\PasswordChangeEmailTemplate.tt"
+            #line 9 "D:\DevSkillTask\Assignment1\DevSkill.Inventory\DevSkill.Inventory.Infrastructure\Templates\PasswordChangeEmailTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DateValue));
             
             #line default
