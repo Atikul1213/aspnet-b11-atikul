@@ -58,6 +58,12 @@ namespace DevSkill.Inventory.Application.Abstractions.Services
         {
             return await _applicationUnitOfWork.ProductRepository.GetByIdAsync(id);
         }
+        public async Task<IList<Product>> GetAllProductsAsync()
+        {
+            var products = await _applicationUnitOfWork.ProductRepository.GetAllAsync();
+
+            return products.ToList();
+        }
 
         public async Task<(IList<Product> data, int total, int totalDisplay)> GetAllProductsAsync(int pageIndex, int pageSize, string? order, DataTablesSearch search)
         {
